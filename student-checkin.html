@@ -27,21 +27,32 @@
 <body style="height:100%; background-color:#ffdead"
 	onload="setFocus()">
 <h2>Student Check In</h2>
-<form action="./progress.html" style="height:40%">
+<form action="./student-checkout.html" style="height:40%">
 	Current Time<br>
 	<input type="text" style="width:95%"></input><br>
 	Student First Name<br>
 	<input type="text" style="width:95%"></input><br>
 	Student Last Name<br>
 	<input type="text" style="width:95%"></input><br>
+	School<br>
+	<input type="radio" name="school" value="blackshear"></input>
+	Blackshear<br>
+	<input type="radio" name="school" value="kealing"></input>
+	Kealing<br>
+	<input type="radio" name="school" value="oaksprings"></input>
+	Oak Springs<br>
+	<input type="radio" name="school" value="zavala"></input>
+	Zavala<br>
+	<input type="radio" name="school" value="other"></input>
+	Other<input type="text" id="otherSchool"></input><br>
     <input type="checkbox">Student brought instrument</input><br>
     <input type="checkbox">Student brought book(s)</input><br>
 	<br>
     <input type="submit" value="Submit">
     </input>
 </form>
-    <button onclick="location.href='./teacherlogin.html'" 
-    	ontouchstart="location.href='./teacherlogin.html'" 
+    <button onclick="location.href='./teacher-login.html'" 
+    	ontouchstart="location.href='./teacher-login.html'" 
 	    style="width: 60%; margin: 20%">Teacher Logout
     </button>
 </body>

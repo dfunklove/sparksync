@@ -1,0 +1,50 @@
+
+<!-- Document Type Definition -don't muck with it //-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="EN" style="height:100%">
+
+<!-- This is the HEAD section //-->
+<head>
+<meta http-equiv="Content-type" content="test/html;charset=utf-8">
+<title>Student Progress</title>
+
+<!-- the following tells where to get style information to specify how to
+     format a table, a body a header etc. and define a class or id //-->
+<link rel="stylesheet" href="progress.css" type="text/css">
+
+<script>
+	function setFocus() {
+		var allNputs = document.getElementsByTagName("input");
+		var todaysDate = new Date();
+		allNputs[0].value = todaysDate;
+	}
+</script>
+</head>
+
+<!-- This is what actually gets displayed on the page //-->
+<body style="height:100%; width:100%; background-color:#041a65; color:white"
+	onload="setFocus()">
+<form action="./studentlogin.html" style="height:100%; width:100%">
+    <input type="text" style="width:95%"></input><br>
+    <input type="checkbox">Student brought instrument</input><br>
+    <input type="checkbox">Student brought book(s)</input><br>
+    <div>Student Progress</div>
+    Worst<input type="radio" name="progress"></input>
+    <input type="radio" name="progress"></input>
+    <input type="radio" name="progress"></input>
+    <input type="radio" name="progress"></input>
+    <input type="radio" name="progress">Best</input><br>
+    <div>Student Behavior</div>
+    Worst<input type="radio" name="behavior">
+    <input type="radio" name="behavior"></input>
+    <input type="radio" name="behavior"></input>
+    <input type="radio" name="behavior"></input>
+    <input type="radio" name="behavior">Best</input><br>
+    Notes:<br>
+    <textarea wrap="soft" style="height:50%; width:95%"></textarea>
+    <br>
+    <input type="submit" value="Student checkout"></input>
+</form>
+</body>
+</html>

@@ -1,2 +1,2 @@
 # sparksync
-Music lesson tracker for Sparks
+Music lesson tracker

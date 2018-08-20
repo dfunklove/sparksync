@@ -1,0 +1,36 @@
+<% provide(:title, 'Student Check Out') %>
+<h1>Student Check Out</h1>
+
+<% if @lesson.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @lesson.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@lesson, url: '/lessons/finishCheckout') do |lesson| %>
+  		<%= lesson.label :progress, "Student Progress" %>
+	    <% for i in 1..5 do %>
+	      <%= lesson.radio_button :progress, i %>
+	    <% end %>
+
+  		<%= lesson.label :behavior, "Student Behavior" %>
+	    <% for i in 1..5 do %>
+	      <%= lesson.radio_button :behavior, i %>
+	    <% end %>
+
+      <%= lesson.label :notes %>
+      <%= lesson.text_area :notes %>
+      <%= lesson.submit "Submit", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+<%= link_to "Teacher Logout", logout_path, method: :delete %>

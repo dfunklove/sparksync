@@ -1,0 +1,46 @@
+<% provide(:title, 'Student Check In') %>
+<h1>Student Check In</h1>
+
+<% if @lesson.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @lesson.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(@lesson, url: '/lessons') do |lesson| %>
+	    <%= fields_for @student do |student| %>
+	      <%= student.label :firstName, "Student First Name" %>
+	      <%= student.text_field :firstName %>
+
+	      <%= student.label :lastName, "Student Last Name" %>
+	      <%= student.text_field :lastName %>
+	    <% end %>
+
+      <%= fields_for @school do |school| %>
+        <%= school.label :name, "School" %>
+        <% @allSchools.each do |this_school| %>
+          <%= school.label :name, this_school.name, for: "school_name_"+this_school.name.downcase %>
+          <%= school.radio_button :name, this_school.name %>
+        <% end %>
+      <% end %>
+
+      <%= lesson.label :broughtInstrument, "Student brought instrument" %>
+      <%= lesson.check_box :broughtInstrument %>
+
+      <%= lesson.label :broughtBooks, "Student brought books" %>
+      <%= lesson.check_box :broughtBooks %>
+
+      <%= lesson.submit "Submit", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
+<%= link_to "Teacher Logout", logout_path, method: :delete %>

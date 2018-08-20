@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  teacher: one
+  timeIn: 2018-08-19 15:08:35
+  timeOut: 2018-08-19 15:08:35
+  broughtInstrument: false
+  broughtBooks: false
+  progress: 
+  behavior: 
+  notes: MyText
+
+two:
+  student: two
+  teacher: two
+  timeIn: 2018-08-19 15:08:35
+  timeOut: 2018-08-19 15:08:35
+  broughtInstrument: false
+  broughtBooks: false
+  progress: 
+  behavior: 
+  notes: MyText

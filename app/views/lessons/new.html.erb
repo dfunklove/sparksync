@@ -27,6 +27,7 @@
 
       <%= fields_for @school do |school| %>
         <%= school.label :name, "School" %>
+        <%= school.text_field :name %>
         <% @allSchools.each do |this_school| %>
           <%= school.label :name, this_school.name, for: "school_name_"+this_school.name.downcase %>
           <%= school.radio_button :name, this_school.name %>
@@ -43,4 +44,3 @@
     <% end %>
   </div>
 </div>
-<%= link_to "Teacher Logout", logout_path, method: :delete %>

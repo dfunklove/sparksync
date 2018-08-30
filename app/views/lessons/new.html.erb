@@ -1,6 +1,14 @@
 <% provide(:title, 'Student Check In') %>
 <h1>Student Check In</h1>
 
+<style>
+form * { display:block; }
+label { margin-top: 10px; }
+.btn { margin: 10px; }
+.school_option { display:block; }
+.school_option * { display:inline; }
+</style>
+
 <% if @lesson.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-danger">
@@ -28,8 +36,10 @@
       <%= fields_for @school do |school| %>
         <%= school.label :name, "School" %>
         <% @allSchools.each do |this_school| %>
-          <%= school.label :name, this_school.name, for: "school_name_"+this_school.name.downcase %>
+          <div class="school_option">
           <%= school.radio_button :name, this_school.name %>
+          <%= school.label :name, this_school.name, for: "school_name_"+this_school.name.downcase %>
+          </div>
         <% end %>
       <% end %>
 
@@ -43,4 +53,3 @@
     <% end %>
   </div>
 </div>
-<%= link_to "Teacher Logout", logout_path, method: :delete %>

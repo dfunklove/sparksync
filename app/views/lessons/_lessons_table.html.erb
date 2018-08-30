@@ -1,0 +1,6 @@
+<table>
+<tr><th>Check In Time</th><th>Student</th><th>Teacher</th><th>Instrument</th><th>Books</th></tr>
+<% lessons.each do |lesson| %>
+<tr><td><%= lesson.timeIn %></td><td><%= lesson.student.firstName %> <%= lesson.student.lastName %></td><td><%= lesson.teacher.firstName %> <%= lesson.teacher.lastName %></td><td><%= lesson.broughtInstrument %></td><td><%= lesson.broughtBooks %></td></tr>
+<% end %>
+</table>

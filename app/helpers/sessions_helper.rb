@@ -17,7 +17,7 @@ module SessionsHelper
 
   # Logs out the current user.
   def log_out
-    @login = Login.last_login session[:user_id]
+    @login = Login.where("user_id = ?", session[:user_id]).first
     session.delete(:user_id)
     if @login && !@login.time_out
       @login.update_attributes( time_out: Time.zone.now )

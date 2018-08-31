@@ -7,9 +7,10 @@ class LessonsController < ApplicationController
 
     open_lesson = current_user.lessons_in_progress.first
     if (open_lesson)
+      @lesson = open_lesson
       session[:lesson_id] = open_lesson.id
-      flash[:danger] = 'Please finish open lesson before starting a new one'
-      redirect_to "/lessons/checkout"
+      flash.now[:danger] = 'Please finish open lesson before starting a new one'
+      render "checkout"
     end
   end
 

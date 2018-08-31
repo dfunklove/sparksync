@@ -9,4 +9,8 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 8 }
   has_secure_password
   has_many :login
+
+  def admin?
+  	type == 'Admin'
+  end
 end

@@ -13,11 +13,15 @@ module SessionsHelper
     @current_user ||= User.find_by(id: session[:user_id])
   end
 
+  def logged_in?
+    !current_user.nil?
+  end
+
   # Logs out the current user.
   def log_out
     if current_user.type == 'Teacher'
       @login = Login.where("user_id = ?", session[:user_id]).first
-      if !@login.time_out
+      if @login && !@login.time_out
         @login.update_attributes( time_out: Time.zone.now )
       else
         raise Exception.new('Teacher time out wasnt null')

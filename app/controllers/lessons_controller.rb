@@ -4,6 +4,13 @@ class LessonsController < ApplicationController
   	@student = Student.new
   	@school = School.new
   	@allSchools = School.all
+
+    open_lesson = current_user.lessons_in_progress.first
+    if (open_lesson)
+      session[:lesson_id] = open_lesson.id
+      flash[:danger] = 'Please finish open lesson before starting a new one'
+      redirect_to "/lessons/checkout"
+    end
   end
 
   def create

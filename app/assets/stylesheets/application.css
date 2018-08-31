@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+
+form * { display:block; }
+label { margin-top: 10px; }
+.btn { margin: 10px; }
+.radio-nolabel { display:inline; }
+.radio-withlabel * { display:inline; }

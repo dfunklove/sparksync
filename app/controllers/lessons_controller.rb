@@ -16,26 +16,54 @@ class LessonsController < ApplicationController
 
   def create
   	@lesson = Lesson.new(lesson_params)
-  	student = Student.find_or_create_by(student_params)
-  	school = School.find_or_create_by(school_params)
-  	student.school = school
-  	@lesson.student = student
-  	@lesson.school = school
+    # create a School object based on keyboard input
+    @school = School.new(school_params)
+    # see if the school exists in the database, if not raise exception
+    # if school does exist in db, get all the column values
+    # params[:school][:name] = 'Murchison'
+    if !@school = School.find_by(school_params)
+      raise
+    end
+
+    #create a student object given the parameters entered
+    @student = Student.new(student_params)
+    # if student exists in db get all the column values
+    # if student not in db prompt user to see if they want to create
+    harrys = Student.where('"lastName" ilike ?', @student.lastName + "%").where('"firstName" ilike ?', @student.firstName + "%").where( school_id: @school.id)
+    @stdnt_lookedup = harrys.first
+    nharrys = harrys.count
+
+    if @stdnt_lookedup
+ 	    @lesson.student = @stdnt_lookedup
+      puts "number of students " + nharrys.to_s
+      if nharrys > 1
+        @lesson.errors.add(
+          :base,
+          :firstName_or_lastName_ambiguous,
+          message: "Need to spell out entire name")
+      end
+    else
+      #TODO add 'new student' to view
+      @lesson.errors.add(
+        :base,
+        :not_found_in_database,
+        message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
+    end
+  	@lesson.school = @school
   	@lesson.teacher = current_user
   	@lesson.timeIn = Time.now
-  	if @lesson.save
+
+    # check errors count first or custom errors get cleared
+  	if @lesson.errors.count == 0 && @lesson.save
 	  	session[:lesson_id] = @lesson.id
 	  	redirect_to "/lessons/checkout"
   	else
-  		# TODO: Find a cleaner way to set these values w/o copy-paste
-	  	@lesson = Lesson.new
-	  	@student = Student.new
-	  	@school = School.new
 	  	@allSchools = School.all
   		render 'new'
   	end
   end
 
+  # leaving checkin page, going to checkout page
   def checkout
   	if !session[:lesson_id]
   		redirect_to root_url
@@ -43,6 +71,7 @@ class LessonsController < ApplicationController
   	@lesson = Lesson.find(session[:lesson_id])
   end
 
+  # leaving checkout page, returning to checkin page
   def finishCheckout
   	if !session[:lesson_id]
   		redirect_to root_url

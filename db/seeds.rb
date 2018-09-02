@@ -67,6 +67,10 @@ Student.create!( firstName: "Ramona",
   lastName: "Quimby",
   school_id: 4 )
 
+Student.create!( firstName: "Ron",
+  lastName: "Howard",
+  school_id: 1 )
+
 Student.create!( firstName: "Rubeus",
   lastName: "Hagrid",
   school_id: 1 )
@@ -77,6 +81,10 @@ Student.create!( firstName: "Fern",
 
 Student.create!( firstName: "Harold",
   lastName: "Johnson",
+  school_id: 3 )
+
+Student.create!( firstName: "Homer",
+  lastName: "Zuckerman",
   school_id: 3 )
 
 Student.create!( firstName: "Homer",

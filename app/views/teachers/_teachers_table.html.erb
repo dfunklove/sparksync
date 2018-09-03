@@ -1,0 +1,25 @@
+<table>
+	<tr>
+		<th>First Name</th><th>Last Name</th><th>Email</th><th>Welcome</th>
+	</tr>
+  <% @teachers.each do |teacher| %> 
+		<tr>
+    <%= form_for(teacher, url: teacher_path(teacher.id)) do |f| %>
+	  	<td><%= f.text_field :firstName, class: "fname", placeholder: teacher.firstName %></td>
+      <td><%= f.text_field :lastName, class: "lname", placeholder: teacher.lastName %></td>
+      <td><%= f.email_field :email, class: "email", placeholder: teacher.email %></td>
+      <td><%= f.submit "Send Email", class: "welcome"  %></td>
+      <td><%= f.submit "Delete", class: "delete" %></td>
+      <td><%= f.submit "Modify", class: "modify" %></td>
+    <% end %>
+		</tr>
+  <% end %>
+	<tr>
+  <%= form_for(@teacher, url: teachers_path) do |f| %>
+ 	  <td><%= f.text_field :firstName, class: "fname", placeholder: 'Enter new...' %></td>
+    <td><%= f.text_field :lastName, class: "lname", placeholder: "..teacher's..." %></td>
+    <td><%= f.email_field :email, class: "email", placeholder: '..information here.' %></td>
+    <td><%= f.submit "Send Email", class: "welcome" %></td>
+  <% end %>
+	</tr>
+</table>

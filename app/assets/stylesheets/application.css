@@ -19,3 +19,10 @@ label { margin-top: 10px; }
 .btn { margin: 10px; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
+/* admin table entries */
+.delete { width: 5em; margin: 0px; padding: 0px; text-align: center }
+.modify { width: 5em; margin: 0px; padding: 0px; text-align: center }
+.welcome { width: 10em; margin: 0px; padding: 0px; text-align: center }
+.email { width: 10em; margin: 0px; padding: 0px }
+.fname { width: 6em }
+.lname { width: 6em }

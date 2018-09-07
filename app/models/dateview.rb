@@ -1,0 +1,2 @@
+class Dateview < ApplicationRecord
+end

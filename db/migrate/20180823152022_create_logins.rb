@@ -7,5 +7,6 @@ class CreateLogins < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+    add_foreign_key "logins", "users", on_delete: :cascade
   end
 end

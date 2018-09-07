@@ -90,3 +90,36 @@ Student.create!( firstName: "Homer",
 Student.create!( firstName: "Homer",
   lastName: "Zuckerman",
   school_id: 3 )
+
+Login.create(
+  time_in: Time.now - 30*60, 
+  time_out: Time.now, 
+  user_id: 47)
+
+Login.create(
+  time_in: Time.now - 24*60*60 - 45*60, 
+  time_out: Time.now - 24*60*60, 
+  user_id: 47)
+
+Login.create(
+  time_in: Time.now - 2*24*60*60 - 25*60, 
+  time_out: Time.now - 2*24*60*60, 
+  user_id: 47)
+
+Login.create(
+  time_in: Time.now - 3*24*60*60 - 35*60, 
+  time_out: Time.now - 3*24*60*60, 
+  user_id: 47)
+
+Login.create(
+  time_in: Time.now - 5*60, 
+  time_out: Time.now, 
+  user_id: 35)
+
+Lesson.create!(student_id: 3, 
+  timeIn: Time.now - 4*60, 
+  timeOut: Time.now - 2*60, 
+  progress: 3, 
+  behavior: 2,
+  user_id: 35,
+  school_id: 3)

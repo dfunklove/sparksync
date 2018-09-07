@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180823152022) do
+ActiveRecord::Schema.define(version: 20180907161731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "dateviews", force: :cascade do |t|
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "lessons", force: :cascade do |t|
     t.bigint "student_id"
@@ -68,7 +75,8 @@ ActiveRecord::Schema.define(version: 20180823152022) do
   end
 
   add_foreign_key "lessons", "schools"
-  add_foreign_key "lessons", "students"
-  add_foreign_key "lessons", "users"
+  add_foreign_key "lessons", "students", on_delete: :cascade
+  add_foreign_key "lessons", "users", on_delete: :nullify
+  add_foreign_key "logins", "users", on_delete: :cascade
   add_foreign_key "students", "schools"
 end

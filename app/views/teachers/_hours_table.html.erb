@@ -1,0 +1,16 @@
+<table>
+	<tr>
+		<th>Date</th>
+    <th>Logged In</th>
+    <th>Logged Out</th>
+    <th>Minutes</th>
+	</tr>
+  <% @logins.each do |login| %>
+  <tr>
+    <td><%= login.time_in.strftime("%Y-%m-%d") %></td>
+    <td><%= login.time_in.strftime("%l:%M %p") %></td>
+    <td><%= login.time_out.strftime("%l:%M %p") %></td>
+    <td><%= number_with_precision((login.time_out - login.time_in)/60, :precision =>2) || 0 %></td>
+  </tr>
+  <% end %>
+</table>

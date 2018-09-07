@@ -1,0 +1,47 @@
+<h2>
+  <%= @teacher.firstName %> 
+  <%= @teacher.lastName %> 
+  Hours
+</h2>
+<% if @teacher.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@teacher.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @teacher.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<table>
+<tr>
+<!-- post to /teacher/id, not hardcoded teachers/35 -->
+<%= form_for @dateview, url: dateview_path(@dateview.id) do |f| %>
+  <td>
+  <%= f.label :start_date %>
+  </td>
+  <td>
+  <%= f.text_field :start_date, class: "date", placeholder: @dateview.start_date  %>
+  </td>
+  <td>
+  <%= f.label :end_date %>
+  </td>
+  <td>
+  <%= f.text_field :end_date, class: "date", placeholder: @dateview.end_date  %>
+  </td>
+  <td>
+  Total hours
+  </td>
+  <td>
+  <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
+  </td>
+  <td>
+  <td><%= f.submit "Update Table", class: "updatetab" %></td>
+  </td>
+<% end %>
+</tr>
+</table>
+
+<%= render partial: "hours_table" %>

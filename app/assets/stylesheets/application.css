@@ -16,13 +16,19 @@
 
 form * { display:block; }
 label { margin-top: 10px; }
+
+
 .btn { margin: 10px; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
 /* admin table entries */
+.sideways { writing-mode: vertical-rl; text-orientation: mixed; }
 .delete { width: 5em; margin: 0px; padding: 0px; text-align: center }
 .modify { width: 5em; margin: 0px; padding: 0px; text-align: center }
-.welcome { width: 10em; margin: 0px; padding: 0px; text-align: center }
-.email { width: 10em; margin: 0px; padding: 0px }
-.fname { width: 6em }
-.lname { width: 6em }
+.welcome { width: 7em; margin: 0px; padding: 0px; text-align: center }
+.hours { width: 5em; margin: 0px; padding: 0px; text-align: center }
+.email { width: 9em; margin: 0px; padding: 0px }
+.fname { width: 5em }
+.lname { width: 5em }
+.date { width: 5.2em }
+.updatetab { width: 8em; margin: 0px; padding: 0px; text-align: center }

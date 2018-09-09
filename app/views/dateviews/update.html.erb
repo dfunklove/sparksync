@@ -1,0 +1,43 @@
+<style>background-color: #ff0000</style>
+<h2>
+  Start or End Date Errors
+</h2>
+<% if @d.errors.any? %>
+  <div id="error_explanation">
+    <ul>
+    <% @d.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+<table>
+<tr>
+  <% if @d.bad_start %><td>You Entered: </td><% else %><td></td><% end %>
+  <td><%= @d.bad_start %></td>
+  <% if @d.bad_end %><td>You Entered: </td><% else %><td></td><% end %>
+  <td><%= @d.bad_end %></td>
+</tr>
+<tr>
+<!-- post to /dateview/id (here) where new date is stored -->
+<!-- this page won't be displayed again unless there are still errors -->
+<%= form_for @d, url: dateview_path(@d.id) do |f| %>
+  <td>
+  <%= f.label :start_date %>
+  </td>
+  <td>
+  <%= f.text_field :s_date_formatted, class: "date" %>
+  </td>
+  <td>
+  <%= f.label :end_date %>
+  </td>
+  <td>
+  <%= f.text_field :e_date_formatted, class: "date" %>
+  </td>
+  <td>
+  <td><%= f.submit "Correct Dates", class: "corrdates" %></td>
+  </td>
+<% end %>
+</tr>
+</table>
+

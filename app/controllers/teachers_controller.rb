@@ -1,32 +1,41 @@
 class TeachersController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a teacher
-  before_action :logged_in_user, only: [:new, :create, :update]
-  before_action :admin_user, only: [:new, :create, :update]
+  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:new, :create, :update, :delete, :show]
 
   def show
     store_location
     teacher_id = params[:id]
     @teacher = Teacher.find(teacher_id)
+    @tot_hours = 0
     if session[:dv_id]
+      puts "subsequent view"
       @dateview = Dateview.find(session[:dv_id])
+      puts "dateview errors after finding " + @dateview.errors.messages.to_s
+      # error is not there, you could not save it and did not save it with errors
+      # you cannot post to a "show", that was why you made a dateviews model and
+      # controller. perhaps you need a dateviews view after all just to show
+      # error so it can be corrected
     else
+      puts "first view"
+      # set default for the preceding week including today
       e_date = Time.now.midnight + 24*60*60
       s_date = e_date - 6*24*60*60
+      puts "dateview new end_date " + e_date.to_s + " start_date " + s_date.to_s
       @dateview = Dateview.new(end_date: e_date, start_date: s_date)
+      puts "dateview errors " + @dateview.errors.messages.to_s
 
-      if @dateview.save
+      if @dateview.errors.count == 0 && @dateview.save
         session[:dv_id] = @dateview.id
         puts "saving session dv_id " + session[:dv_id].to_s
       else
-        raise
+        raise Exception.new("Not able to save default dateview")
       end
     end
 
-    # teacher/id/show displaying entire datetime not just the date
     @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
 
-    @tot_hours = 0
     @logins.each do |login|
       @tot_hours += login[:time_out] - login[:time_in]
     end
@@ -109,7 +118,7 @@ class TeachersController < ApplicationController
     def teacher_params
       params.require(:teacher).permit(:firstName, :lastName, :email)
     end
-   def dateview_params
+    def dateview_params
       params.require(:dateview).permit(:start_date, :end_date)
     end
 end

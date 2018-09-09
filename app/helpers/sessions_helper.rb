@@ -27,6 +27,10 @@ module SessionsHelper
         raise Exception.new('Teacher time out wasnt null')
       end
     end
+    if dv_id = session[:dv_id]
+      Dateview.find(dv_id).delete
+      session.delete(:dv_id)
+    end
     session.delete(:user_id)
     @current_user = nil
   end

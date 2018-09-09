@@ -6,29 +6,22 @@ class DateviewsController < ApplicationController
     # case there are more than one full admins
     # using them. id is session variable
     # dateviews can be deleted at logout
-    puts "dateview params start_date " + params[:dateview][:start_date]
-    puts "dateview params end_date " + params[:dateview][:end_date]
-#    r = Dateview.new
-#    r.start_date = params[:dateview][:start_date]
-#    r.end_date = params[:dateview][:end_date]
-#    puts "r.start_date " + r.start_date.to_s
-#    puts "r.end_date " + r.end_date.to_s
-#    puts "retrieving dateview " + session[:dv_id].to_s
-#    d = Dateview.find(session[:dv_id])
-#    d.start_date = r.start_date
-#    d.end_date = r.end_date
-#    puts "d.start_date " + d.start_date.to_s
-#    puts "d.end_date " + d.end_date.to_s
-#    d.save
-    if Dateview.update(dv_id, 
-      start_date: params[:dateview][:start_date], 
-      end_date: params[:dateview][:end_date])
-
-      # go back to the page where you changed date
-      # e.g. GET teacher/35 teachers/show.html.erb
-      redirect_to session[:forwarding_url]
-    else
-      raise
+    puts "dateview params start_date " + params[:dateview][:s_date_formatted]
+    puts "dateview params end_date " + params[:dateview][:e_date_formatted]
+    @d = Dateview.find(dv_id) # find the original or last stored dateview
+    @d.s_date_formatted =  params[:dateview][:s_date_formatted] 
+    @d.e_date_formatted = params[:dateview][:e_date_formatted]
+    puts "dateview errors " + @d.errors.messages.to_s
+    if @d.errors.count == 0
+      if @d.save 
+        # go back to the page where you changed date
+        # e.g. GET teacher/35 teachers/show.html.erb
+        puts "going back to show teacher/id page"
+        redirect_to session[:forwarding_url]
+      else
+        raise Exception.new("no errors in dateview but unable to save")
+      end
     end
+    # show the update dateview/id page with form to correct date
   end
 end

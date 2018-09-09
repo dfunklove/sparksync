@@ -3,33 +3,21 @@
   <%= @teacher.lastName %> 
   Hours
 </h2>
-<% if @teacher.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@teacher.errors.count, "error") %>.
-    </div>
-    <ul>
-    <% @teacher.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
 <table>
 <tr>
-<!-- post to /teacher/id, not hardcoded teachers/35 -->
+<!-- post to /dateview/id where new date is stored, then redirect back here -->
 <%= form_for @dateview, url: dateview_path(@dateview.id) do |f| %>
   <td>
   <%= f.label :start_date %>
   </td>
   <td>
-  <%= f.text_field :start_date, class: "date", placeholder: @dateview.start_date  %>
+  <%= f.text_field :s_date_formatted, class: "date" %>
   </td>
   <td>
   <%= f.label :end_date %>
   </td>
   <td>
-  <%= f.text_field :end_date, class: "date", placeholder: @dateview.end_date  %>
+  <%= f.text_field :e_date_formatted, class: "date"  %>
   </td>
   <td>
   Total hours

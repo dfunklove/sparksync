@@ -10,25 +10,15 @@ class TeachersController < ApplicationController
     @teacher = Teacher.find(teacher_id)
     @tot_hours = 0
     if session[:dv_id]
-      puts "subsequent view"
       @dateview = Dateview.find(session[:dv_id])
-      puts "dateview errors after finding " + @dateview.errors.messages.to_s
-      # error is not there, you could not save it and did not save it with errors
-      # you cannot post to a "show", that was why you made a dateviews model and
-      # controller. perhaps you need a dateviews view after all just to show
-      # error so it can be corrected
     else
-      puts "first view"
       # set default for the preceding week including today
       e_date = Time.now.midnight + 24*60*60
       s_date = e_date - 6*24*60*60
-      puts "dateview new end_date " + e_date.to_s + " start_date " + s_date.to_s
       @dateview = Dateview.new(end_date: e_date, start_date: s_date)
-      puts "dateview errors " + @dateview.errors.messages.to_s
 
       if @dateview.errors.count == 0 && @dateview.save
         session[:dv_id] = @dateview.id
-        puts "saving session dv_id " + session[:dv_id].to_s
       else
         raise Exception.new("Not able to save default dateview")
       end
@@ -46,10 +36,38 @@ class TeachersController < ApplicationController
   # new refers to one of the actions generated
   # by resources :teachers in config/routes.rb
   def new
-    # @teachers and @teacher are variable provided
+    # @teachers and @teacher are variables provided
     # to the new.html.erb view
-    @teachers = Teacher.all
+    
+    if session[:changev]
+      @changev = session[:changev] 
+    else 
+      @changev = "Active"
+    end
+    @teachers = find_right_teachers
     @teacher = Teacher.new
+  end
+
+  def find_right_teachers
+    if @changev == "Active"
+      Teacher.where(activated: true)
+    elsif @changev == "Inactive"
+      Teacher.where(activated: false)
+    else
+      Teacher.all
+    end
+  end
+ 
+  def change_view
+    changev = params[:changev]
+    if changev == "Active"
+      session[:changev] = changev = "All"
+    elsif changev == "All"
+      session[:changev] = changev = "Inactive"
+    else 
+      session[:changev] = "Active"
+    end
+    redirect_to new_teacher_path
   end
 
   def genpassword
@@ -62,11 +80,12 @@ class TeachersController < ApplicationController
   def create
     @teacher = Teacher.new(teacher_params)
     genword = genpassword
+    @teacher.activated = true
     if @teacher.save
       #TODO send email
       redirect_to new_teacher_path
     else
-      @teachers = Teacher.all
+      @teachers = find_right_teachers
       render 'new'
     end
   end
@@ -74,16 +93,7 @@ class TeachersController < ApplicationController
   def update
     teacher_id = params[:id]
     @teacher = Teacher.find(teacher_id)
-    if params[:welcome]
-      genword = genpassword
-      if Teacher.update(teacher_id, password: genword)
-        #TODO send email
-        redirect_to new_teacher_path
-      else
-        @teachers = Teacher.all
-        render 'new'
-      end
-    elsif params[:modify]
+    if params[:modify]
       puts "modify"
       # won't work without password
       genword = genpassword
@@ -91,21 +101,35 @@ class TeachersController < ApplicationController
                         firstName: teacher_params[:firstName],
                         lastName: teacher_params[:lastName],
                         email: teacher_params[:email],
+                        activated: true,
                         password: genword)
         #TODO send email
         redirect_to new_teacher_path
       else
-        @teachers = Teacher.all
+        @teachers = find_right_teachers
         render 'new'
       end
     elsif params[:delete]
       puts "delete"
-      #TODO don't actually delete, set unactivated
-      if Teacher.delete(teacher_id)
-        redirect_to new_teacher_path
+      teacher_id = @teacher.id 
+      who = Teacher.find(teacher_id)
+      if who.activated
+        genword = genpassword
+        # don't actually delete, set unactivated
+        if who.update( activated: false,
+                       password: genword)
+          redirect_to new_teacher_path
+        else
+          @teachers = find_right_teachers
+          render 'new'
+        end
       else
-        @teachers = Teacher.all
-        render 'new'
+        if who.delete
+          redirect_to new_teacher_path
+        else
+          @teachers = find_right_teachers
+          render 'new'
+        end
       end
     elsif params[:hours]
       redirect_to teacher_path(teacher_id)

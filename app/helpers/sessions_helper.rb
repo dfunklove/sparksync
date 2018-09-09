@@ -31,6 +31,9 @@ module SessionsHelper
       Dateview.find(dv_id).delete
       session.delete(:dv_id)
     end
+    if session[:changev]
+      session.delete(:changev)
+    end
     session.delete(:user_id)
     @current_user = nil
   end

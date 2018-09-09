@@ -12,7 +12,8 @@ Admin.create!(  firstName: "Jane",
   password: "testjane",
   password_confirmation: "testjane",
   id: 9,
-  type: "Admin" )
+  type: "Admin",
+  activated: true )
 
 Admin.create!(  firstName: "William",
   lastName: "Collins",
@@ -20,7 +21,8 @@ Admin.create!(  firstName: "William",
   password: "testbill",
   password_confirmation: "testbill",
   id: 13,
-  type: "Admin" )
+  type: "Admin",
+  activated: true )
 
 Teacher.create!(  firstName: "Charlotte",
   lastName: "Lucas",
@@ -28,7 +30,8 @@ Teacher.create!(  firstName: "Charlotte",
   password: "testchar",
   password_confirmation: "testchar",
   id: 35,
-  type: "Teacher" )
+  type: "Teacher",
+  activated: true )
 
 Teacher.create!(  firstName: "Caroline",
   lastName: "Bingley",
@@ -36,7 +39,8 @@ Teacher.create!(  firstName: "Caroline",
   password: "testcaro",
   password_confirmation: "testcaro",
   id: 47,
-  type: "Teacher" )
+  type: "Teacher",
+  activated: true )
 
 School.create!( name: "Blackshear")
 School.create!( name: "Kealing")

@@ -1,4 +1,17 @@
-<h2>Teachers</h2>
+<table>
+<tr>
+<td>
+<%= form_for(@changev, url: '/teachers/change_view' ) do |f| %>
+<%    f.submit "#{@changev}", name: "changev" %>
+<%  end %>
+</td>
+<td>
+<h2>
+  Teachers
+</h2>
+</td>
+</tr>
+</table>
 <% if @teacher.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-danger">

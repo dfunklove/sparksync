@@ -2,7 +2,8 @@ class TeachersController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a teacher
   before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :correct_user, only: :show
 
   def show
     store_location
@@ -144,5 +145,11 @@ class TeachersController < ApplicationController
     end
     def dateview_params
       params.require(:dateview).permit(:start_date, :end_date)
+    end
+    # Confirms the correct user.
+    def correct_user
+      return if current_user.type == "Admin"
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user)
     end
 end

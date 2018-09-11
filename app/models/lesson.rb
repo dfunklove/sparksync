@@ -6,7 +6,7 @@ class Lesson < ApplicationRecord
   belongs_to :school
 
   def self.in_progress
-  	Lesson.where(timeOut: nil)
+  	Lesson.where(time_out: nil)
   end
 
 end

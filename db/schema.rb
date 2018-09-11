@@ -24,10 +24,10 @@ ActiveRecord::Schema.define(version: 20180909134059) do
 
   create_table "lessons", force: :cascade do |t|
     t.bigint "student_id"
-    t.datetime "timeIn"
-    t.datetime "timeOut"
-    t.boolean "broughtInstrument"
-    t.boolean "broughtBooks"
+    t.datetime "time_in"
+    t.datetime "time_out"
+    t.boolean "brought_instrument"
+    t.boolean "brought_books"
     t.integer "progress"
     t.integer "behavior"
     t.text "notes"
@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 20180909134059) do
   end
 
   create_table "students", force: :cascade do |t|
-    t.string "firstName"
-    t.string "lastName"
+    t.string "first_name"
+    t.string "last_name"
     t.bigint "school_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,8 +64,8 @@ ActiveRecord::Schema.define(version: 20180909134059) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "firstName"
-    t.string "lastName"
+    t.string "first_name"
+    t.string "last_name"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

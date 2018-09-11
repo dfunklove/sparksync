@@ -2,16 +2,16 @@
 
 # Admins
 a_one:
-  firstName: Peter
-  lastName: Pan
+  first_name: Peter
+  last_name: Pan
   email: pan@gmail.com
   password_digest: <%= BCrypt::Password.create('testpan', cost: 5) %>
   id: 11
   type: Admin
 
 a_two:
-  firstName: Bob
-  lastName: Builder
+  first_name: Bob
+  last_name: Builder
   email: builder@gmail.com
   password_digest: <%= BCrypt::Password.create('testbob', cost: 5) %>
   id: 12
@@ -19,16 +19,16 @@ a_two:
 
 # Teachers
 t_one:
-  firstName: Master
-  lastName: Roshi
+  first_name: Master
+  last_name: Roshi
   email: roshi@gmail.com
   password_digest: <%= BCrypt::Password.create('testroshi', cost: 5) %>
   id: 21
   type: Teacher
 
 t_two:
-  firstName: Master
-  lastName: Splinter
+  first_name: Master
+  last_name: Splinter
   email: splinter@gmail.com
   password_digest: <%= BCrypt::Password.create('testsplinter', cost: 5) %>
   id: 22

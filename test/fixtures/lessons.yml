@@ -3,10 +3,10 @@
 one:
   student: one
   teacher: one
-  timeIn: 2018-08-19 15:08:35
-  timeOut: 2018-08-19 15:08:35
-  broughtInstrument: false
-  broughtBooks: false
+  time_in: 2018-08-19 15:08:35
+  time_out: 2018-08-19 15:08:35
+  brought_instrument: false
+  brought_books: false
   progress: 
   behavior: 
   notes: MyText
@@ -14,10 +14,10 @@ one:
 two:
   student: two
   teacher: two
-  timeIn: 2018-08-19 15:08:35
-  timeOut: 2018-08-19 15:08:35
-  broughtInstrument: false
-  broughtBooks: false
+  time_in: 2018-08-19 15:08:35
+  time_out: 2018-08-19 15:08:35
+  brought_instrument: false
+  brought_books: false
   progress: 
   behavior: 
   notes: MyText

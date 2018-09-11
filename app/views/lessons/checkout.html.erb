@@ -16,8 +16,8 @@
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    Student: <%= @lesson.student.firstName %> <%= @lesson.student.lastName %><br>
-    Check in time: <%= @lesson.timeIn.strftime(Lesson::DATETIME_FORMAT) %><br>
+    Student: <%= @lesson.student.first_name %> <%= @lesson.student.last_name %><br>
+    Check in time: <%= @lesson.time_in.strftime(Lesson::DATETIME_FORMAT) %><br>
     Current time: <%= Time.now.strftime(Lesson::DATETIME_FORMAT) %><br>
 
     <%= form_for(@lesson, url: '/lessons/finishCheckout') do |lesson| %>

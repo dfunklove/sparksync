@@ -1,6 +1,6 @@
 <table>
 <tr><th>Check In Time</th><th>Student</th><th>Teacher</th><th>Instrument</th><th>Books</th></tr>
 <% lessons.each do |lesson| %>
-<tr><td><%= lesson.timeIn %></td><td><%= lesson.student.firstName %> <%= lesson.student.lastName %></td><td><%= lesson.teacher.firstName %> <%= lesson.teacher.lastName %></td><td><%= lesson.broughtInstrument %></td><td><%= lesson.broughtBooks %></td></tr>
+<tr><td><%= lesson.time_in %></td><td><%= lesson.student.first_name %> <%= lesson.student.last_name %></td><td><%= lesson.teacher.first_name %> <%= lesson.teacher.last_name %></td><td><%= lesson.brought_instrument %></td><td><%= lesson.brought_books %></td></tr>
 <% end %>
 </table>

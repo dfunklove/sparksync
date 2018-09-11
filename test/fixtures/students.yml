@@ -1,11 +1,11 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  firstName: Billy
-  lastName: Thompson
+  first_name: Billy
+  last_name: Thompson
   school: one
 
 two:
-  firstName: Bobby
-  lastName: McGee
+  first_name: Bobby
+  last_name: McGee
   school: two

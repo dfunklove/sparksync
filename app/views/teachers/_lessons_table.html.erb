@@ -69,14 +69,14 @@
 	</tr>
   <% @lessons.each do |lesson| %>
   <tr>
-    <td><%= lesson.student.firstName %> </td>
-    <td><%= lesson.student.lastName %> </td>
-    <td><%= lesson.timeIn.strftime("%Y-%m-%d") %></td>
+    <td><%= lesson.student.first_name %> </td>
+    <td><%= lesson.student.last_name %> </td>
+    <td><%= lesson.time_in.strftime("%Y-%m-%d") %></td>
     <td><%= lesson.progress %> </td>
     <td><%= lesson.behavior %> </td>
     <td><%= lesson.notes %> </td>
-    <td><%= lesson.broughtInstrument %> </td>
-    <td><%= lesson.broughtBooks %> </td>
+    <td><%= lesson.brought_instrument %> </td>
+    <td><%= lesson.brought_books %> </td>
     <td><%= lesson.school.name %> </td>
 
   </tr>

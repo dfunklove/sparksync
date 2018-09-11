@@ -6,8 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Admin.create!(  firstName: "Jane",
-  lastName: "Bennet",
+Admin.create!(  first_name: "Jane",
+  last_name: "Bennet",
   email: "janeB@yahoo.edu",
   password: "testjane",
   password_confirmation: "testjane",
@@ -15,8 +15,8 @@ Admin.create!(  firstName: "Jane",
   type: "Admin",
   activated: true )
 
-Admin.create!(  firstName: "William",
-  lastName: "Collins",
+Admin.create!(  first_name: "William",
+  last_name: "Collins",
   email: "billC@yahoo.edu",
   password: "testbill",
   password_confirmation: "testbill",
@@ -24,8 +24,8 @@ Admin.create!(  firstName: "William",
   type: "Admin",
   activated: true )
 
-Teacher.create!(  firstName: "Charlotte",
-  lastName: "Lucas",
+Teacher.create!(  first_name: "Charlotte",
+  last_name: "Lucas",
   email: "charL@yahoo.edu",
   password: "testchar",
   password_confirmation: "testchar",
@@ -33,8 +33,8 @@ Teacher.create!(  firstName: "Charlotte",
   type: "Teacher",
   activated: true )
 
-Teacher.create!(  firstName: "Caroline",
-  lastName: "Bingley",
+Teacher.create!(  first_name: "Caroline",
+  last_name: "Bingley",
   email: "caroB@yahoo.edu",
   password: "testcaro",
   password_confirmation: "testcaro",
@@ -47,52 +47,52 @@ School.create!( name: "Kealing")
 School.create!( name: "Oak Springs")
 School.create!( name: "Zavala")
 
-Student.create!( firstName: "Byron",
-  lastName: "Watson",
+Student.create!( first_name: "Byron",
+  last_name: "Watson",
   school_id: 1 )
 
-Student.create!( firstName: "Lucy",
-  lastName: "Pevensie",
+Student.create!( first_name: "Lucy",
+  last_name: "Pevensie",
   school_id: 4 )
 
-Student.create!( firstName: "Veruca",
-  lastName: "Salt",
+Student.create!( first_name: "Veruca",
+  last_name: "Salt",
   school_id: 3 )
 
-Student.create!( firstName: "Dallas",
-  lastName: "Winston",
+Student.create!( first_name: "Dallas",
+  last_name: "Winston",
   school_id: 2 )
 
-Student.create!( firstName: "Frank",
-  lastName: "Anderson",
+Student.create!( first_name: "Frank",
+  last_name: "Anderson",
   school_id: 2 )
 
-Student.create!( firstName: "Ramona",
-  lastName: "Quimby",
+Student.create!( first_name: "Ramona",
+  last_name: "Quimby",
   school_id: 4 )
 
-Student.create!( firstName: "Ron",
-  lastName: "Howard",
+Student.create!( first_name: "Ron",
+  last_name: "Howard",
   school_id: 1 )
 
-Student.create!( firstName: "Rubeus",
-  lastName: "Hagrid",
+Student.create!( first_name: "Rubeus",
+  last_name: "Hagrid",
   school_id: 1 )
 
-Student.create!( firstName: "Fern",
-  lastName: "Arable",
+Student.create!( first_name: "Fern",
+  last_name: "Arable",
   school_id: 3 )
 
-Student.create!( firstName: "Harold",
-  lastName: "Johnson",
+Student.create!( first_name: "Harold",
+  last_name: "Johnson",
   school_id: 3 )
 
-Student.create!( firstName: "Homer",
-  lastName: "Zuckerman",
+Student.create!( first_name: "Homer",
+  last_name: "Zuckerman",
   school_id: 3 )
 
-Student.create!( firstName: "Homer",
-  lastName: "Zuckerman",
+Student.create!( first_name: "Homer",
+  last_name: "Zuckerman",
   school_id: 3 )
 
 Login.create(
@@ -121,10 +121,10 @@ Login.create(
   user_id: 35)
 
 Lesson.create!(student_id: 7, 
-  timeIn: Time.now - 2*24*60*60 - 2*60*60, 
-  timeOut: Time.now - 2*24*60*60- 60*60, 
-  broughtInstrument: true,
-  broughtBooks: true,
+  time_in: Time.now - 2*24*60*60 - 2*60*60, 
+  time_out: Time.now - 2*24*60*60- 60*60, 
+  brought_instrument: true,
+  brought_books: true,
   progress: 5, 
   behavior: 5,
   notes: "great!",
@@ -132,10 +132,10 @@ Lesson.create!(student_id: 7,
   school_id: 1)
 
 Lesson.create!(student_id: 2, 
-  timeIn: Time.now - 2*24*60*60 - 7*60*60, 
-  timeOut: Time.now - 2*24*60*60- 6*60*60, 
-  broughtInstrument: true,
-  broughtBooks: true,
+  time_in: Time.now - 2*24*60*60 - 7*60*60, 
+  time_out: Time.now - 2*24*60*60- 6*60*60, 
+  brought_instrument: true,
+  brought_books: true,
   progress: 3, 
   behavior: 4,
   notes: "broke a string",
@@ -143,10 +143,10 @@ Lesson.create!(student_id: 2,
   school_id: 4)
 
 Lesson.create!(student_id: 4, 
-  timeIn: Time.now - 2*24*60*60 -3*60*60, 
-  timeOut: Time.now - 2*24*60*60- 2*60*60, 
-  broughtInstrument: true,
-  broughtBooks: true,
+  time_in: Time.now - 2*24*60*60 -3*60*60, 
+  time_out: Time.now - 2*24*60*60- 2*60*60, 
+  brought_instrument: true,
+  brought_books: true,
   progress: 3, 
   behavior: 4,
   notes: "doing better",
@@ -154,10 +154,10 @@ Lesson.create!(student_id: 4,
   school_id: 2)
 
 Lesson.create!(student_id: 5, 
-  timeIn: Time.now - 2*24*60*60 -4*60*60, 
-  timeOut: Time.now - 2*24*60*60- 2*60, 
-  broughtInstrument: true,
-  broughtBooks: false,
+  time_in: Time.now - 2*24*60*60 -4*60*60, 
+  time_out: Time.now - 2*24*60*60- 2*60, 
+  brought_instrument: true,
+  brought_books: false,
   progress: 3, 
   behavior: 2,
   notes: "distracted",
@@ -165,10 +165,10 @@ Lesson.create!(student_id: 5,
   school_id: 2)
 
 Lesson.create!(student_id: 3, 
-  timeIn: Time.now - 4*60, 
-  timeOut: Time.now - 2*60, 
-  broughtInstrument: true,
-  broughtBooks: false,
+  time_in: Time.now - 4*60, 
+  time_out: Time.now - 2*60, 
+  brought_instrument: true,
+  brought_books: false,
   progress: 3, 
   behavior: 2,
   notes: "same as usual",

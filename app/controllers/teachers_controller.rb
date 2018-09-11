@@ -48,38 +48,38 @@ class TeachersController < ApplicationController
 #        if sortcol == "Student"
 #          @lessons = Student.joins(:lessons)
 #          @lessons = @lessons.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {timeOut: nil})
-#          @lessons = @lessons.order(:lastName)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(:last_name)
 #        els
 				if sortcol == "Date"
           @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {timeOut: nil})
-          @lessons = @lessons.order(timeIn: :desc)
+          @lessons = @lessons.where.not(lessons: {time_out: nil})
+          @lessons = @lessons.order(time_in: :desc)
         elsif sortcol == "School"
-@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {timeOut: nil})
+@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
 #          @lessons = School.joins(:lessons)
 #          @lessons = @lessons.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
 #          @lessons = @lessons.order(:name)
         elsif sortcol == "Progress"
           @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.where.not(lessons: {time_out: nil})
           @lessons = @lessons.order(:progress)
         elsif sortcol == "Behavior"
           @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.where.not(lessons: {time_out: nil})
           @lessons = @lessons.order(:behavior)
         elsif sortcol == "Books"
           @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {timeOut: nil})
-          @lessons = @lessons.order(:broughtBooks)
+          @lessons = @lessons.where.not(lessons: {time_out: nil})
+          @lessons = @lessons.order(:brought_books)
         else # sortcol == "Instrument"
           @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {timeOut: nil})
-          @lessons = @lessons.order(:broughtInstrument)
+          @lessons = @lessons.where.not(lessons: {time_out: nil})
+          @lessons = @lessons.order(:brought_instrument)
         end
       else
-        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {timeOut: nil})
+        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {time_out: nil})
       end
       @what_table = "lessons_table"
     end
@@ -166,8 +166,8 @@ class TeachersController < ApplicationController
       # won't work without password
       genword = genpassword
       if Teacher.update(@teacher.id,
-                        firstName: teacher_params[:firstName],
-                        lastName: teacher_params[:lastName],
+                        first_name: teacher_params[:first_name],
+                        last_name: teacher_params[:last_name],
                         email: teacher_params[:email],
                         activated: true,
                         password: genword)
@@ -208,7 +208,7 @@ class TeachersController < ApplicationController
 
   private
     def teacher_params
-      params.require(:teacher).permit(:firstName, :lastName, :email)
+      params.require(:teacher).permit(:first_name, :last_name, :email)
     end
     def dateview_params
       params.require(:dateview).permit(:start_date, :end_date)

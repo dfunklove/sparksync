@@ -29,7 +29,7 @@ class LessonsController < ApplicationController
     @student = Student.new(student_params)
     # if student exists in db get all the column values
     # if student not in db prompt user to see if they want to create
-    harrys = Student.where('"lastName" ilike ?', @student.lastName + "%").where('"firstName" ilike ?', @student.firstName + "%").where( school_id: @school.id)
+    harrys = Student.where('"last_name" ilike ?', @student.last_name + "%").where('"first_name" ilike ?', @student.first_name + "%").where( school_id: @school.id)
     @stdnt_lookedup = harrys.first
     nharrys = harrys.count
 
@@ -39,7 +39,7 @@ class LessonsController < ApplicationController
       if nharrys > 1
         @lesson.errors.add(
           :base,
-          :firstName_or_lastName_ambiguous,
+          :first_name_or_last_name_ambiguous,
           message: "Need to spell out entire name")
       end
     else
@@ -51,7 +51,7 @@ class LessonsController < ApplicationController
     end
   	@lesson.school = @school
   	@lesson.teacher = current_user
-  	@lesson.timeIn = Time.now
+  	@lesson.time_in = Time.now
 
     # check errors count first or custom errors get cleared
   	if @lesson.errors.count == 0 && @lesson.save
@@ -78,7 +78,7 @@ class LessonsController < ApplicationController
   	end
   	@lesson = Lesson.find(session[:lesson_id])
   	temp_params = lesson_params
-  	temp_params[:timeOut] = Time.now
+  	temp_params[:time_out] = Time.now
   	if @lesson.update_attributes(temp_params)
   		session.delete(:lesson_id)
       redirect_to root_url
@@ -89,12 +89,12 @@ class LessonsController < ApplicationController
 
   private 
   def lesson_params
-  	params.require(:lesson).permit(:timeIn, :timeOut, :broughtInstrument, :broughtBooks,
+  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
   		:progress, :behavior, :notes)
   end
 
   def student_params
-  	params.require(:student).permit(:firstName, :lastName)
+  	params.require(:student).permit(:first_name, :last_name)
   end
 
   def school_params

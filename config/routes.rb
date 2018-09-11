@@ -38,6 +38,8 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   post 'teachers/change_view'
+  post 'teachers/change_table'
+  post 'teachers/sort'
   resources :teachers, only: [:new, :create, :update, :show, :destroy]
   resources :dateviews, only: [:update]
 

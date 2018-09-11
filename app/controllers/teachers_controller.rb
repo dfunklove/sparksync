@@ -25,13 +25,80 @@ class TeachersController < ApplicationController
       end
     end
 
-    @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
-
-    @logins.each do |login|
-      @tot_hours += login[:time_out] - login[:time_in]
+    if session[:changet]
+      @title = session[:changet] 
+    else 
+      @title = "Hours" # default
     end
-    # convert seconds to hours
-    @tot_hours = @tot_hours/3600
+
+    if @title == "Hours"
+      @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
+  
+      @logins.each do |login|
+        @tot_hours += login[:time_out] - login[:time_in]
+      end
+      # convert seconds to hours
+      @tot_hours = @tot_hours/3600
+      @what_table = "hours_table"
+    else
+      if session[:sortcol]
+        sortcol = session[:sortcol]
+        # case by case as sorting by student' slast name or school name is not
+        # straightforward
+#        if sortcol == "Student"
+#          @lessons = Student.joins(:lessons)
+#          @lessons = @lessons.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+#          @lessons = @lessons.order(:lastName)
+#        els
+				if sortcol == "Date"
+          @lessons = Lesson.where(user_id: teacher_id)
+          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.order(timeIn: :desc)
+        elsif sortcol == "School"
+@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {timeOut: nil})
+#          @lessons = School.joins(:lessons)
+#          @lessons = @lessons.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+#          @lessons = @lessons.order(:name)
+        elsif sortcol == "Progress"
+          @lessons = Lesson.where(user_id: teacher_id)
+          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.order(:progress)
+        elsif sortcol == "Behavior"
+          @lessons = Lesson.where(user_id: teacher_id)
+          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.order(:behavior)
+        elsif sortcol == "Books"
+          @lessons = Lesson.where(user_id: teacher_id)
+          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.order(:broughtBooks)
+        else # sortcol == "Instrument"
+          @lessons = Lesson.where(user_id: teacher_id)
+          @lessons = @lessons.where.not(lessons: {timeOut: nil})
+          @lessons = @lessons.order(:broughtInstrument)
+        end
+      else
+        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {timeOut: nil})
+      end
+      @what_table = "lessons_table"
+    end
+  end
+
+  def sort
+    # TODO how do you toggle between asc and desc?
+    session[:sortcol] = params[:sortcol]
+    redirect_to session[:forwarding_url]
+  end
+
+  def change_table
+    changet = params[:changet]
+    if changet == "Hours"
+      session[:changet] = changet = "Lessons"
+    else 
+      session[:changet] = "Hours"
+    end
+    redirect_to session[:forwarding_url]
   end
 
   # new refers to one of the actions generated
@@ -62,9 +129,9 @@ class TeachersController < ApplicationController
   def change_view
     changev = params[:changev]
     if changev == "Active"
-      session[:changev] = changev = "All"
+      session[:changev] = "All"
     elsif changev == "All"
-      session[:changev] = changev = "Inactive"
+      session[:changev] = "Inactive"
     else 
       session[:changev] = "Active"
     end

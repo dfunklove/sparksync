@@ -1,35 +1,17 @@
-<h2>
-  <%= @teacher.firstName %> 
-  <%= @teacher.lastName %> 
-  Hours
-</h2>
 <table>
 <tr>
-<!-- post to /dateview/id where new date is stored, then redirect back here -->
-<%= form_for @dateview, url: dateview_path(@dateview.id) do |f| %>
-  <td>
-  <%= f.label :start_date %>
-  </td>
-  <td>
-  <%= f.text_field :s_date_formatted, class: "date" %>
-  </td>
-  <td>
-  <%= f.label :end_date %>
-  </td>
-  <td>
-  <%= f.text_field :e_date_formatted, class: "date"  %>
-  </td>
-  <td>
-  Total hours
-  </td>
-  <td>
-  <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
-  </td>
-  <td>
-  <td><%= f.submit "Update Table", class: "updatetab" %></td>
-  </td>
-<% end %>
-</tr>
-</table>
+<td>
+  <h2> <%= @teacher.firstName %> </h2>
+</td>
+<td>
+  <h2> <%= @teacher.lastName %> </h2>
+</td>
+<td>
+<%= form_for(@title, url: '/teachers/change_table' ) do |f| %>
+<%    f.submit "#{@title}", name: "changet" %>
+<%  end %>
+</td>
+<tr>
+<table>
 
-<%= render partial: "hours_table" %>
+<%= render partial: "#{@what_table}" %>

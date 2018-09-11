@@ -120,10 +120,57 @@ Login.create(
   time_out: Time.now, 
   user_id: 35)
 
+Lesson.create!(student_id: 7, 
+  timeIn: Time.now - 2*24*60*60 - 2*60*60, 
+  timeOut: Time.now - 2*24*60*60- 60*60, 
+  broughtInstrument: true,
+  broughtBooks: true,
+  progress: 5, 
+  behavior: 5,
+  notes: "great!",
+  user_id: 47,
+  school_id: 1)
+
+Lesson.create!(student_id: 2, 
+  timeIn: Time.now - 2*24*60*60 - 7*60*60, 
+  timeOut: Time.now - 2*24*60*60- 6*60*60, 
+  broughtInstrument: true,
+  broughtBooks: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "broke a string",
+  user_id: 47,
+  school_id: 4)
+
+Lesson.create!(student_id: 4, 
+  timeIn: Time.now - 2*24*60*60 -3*60*60, 
+  timeOut: Time.now - 2*24*60*60- 2*60*60, 
+  broughtInstrument: true,
+  broughtBooks: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "doing better",
+  user_id: 47,
+  school_id: 2)
+
+Lesson.create!(student_id: 5, 
+  timeIn: Time.now - 2*24*60*60 -4*60*60, 
+  timeOut: Time.now - 2*24*60*60- 2*60, 
+  broughtInstrument: true,
+  broughtBooks: false,
+  progress: 3, 
+  behavior: 2,
+  notes: "distracted",
+  user_id: 47,
+  school_id: 2)
+
 Lesson.create!(student_id: 3, 
   timeIn: Time.now - 4*60, 
   timeOut: Time.now - 2*60, 
+  broughtInstrument: true,
+  broughtBooks: false,
   progress: 3, 
   behavior: 2,
+  notes: "same as usual",
   user_id: 35,
   school_id: 3)

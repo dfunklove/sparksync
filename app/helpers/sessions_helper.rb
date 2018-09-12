@@ -28,12 +28,17 @@ module SessionsHelper
       @login = Login.where("user_id = ?", session[:user_id]).first
       if @login && !@login.time_out
         @login.update_attributes( time_out: Time.zone.now )
-      else
+      elsif Rails.env.development?
         raise Exception.new('Teacher time out wasnt null')
       end
     end
     if dv_id = session[:dv_id]
-      Dateview.find(dv_id).delete
+      dv = Dateview.find_by(id: dv_id)
+      if dv
+        dv.delete
+      elsif Rails.env.development?
+        raise Exception.new('Junk Dateview ID in session on logout')
+      end
       session.delete(:dv_id)
     end
     if session[:changev]

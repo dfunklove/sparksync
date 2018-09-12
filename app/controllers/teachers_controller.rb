@@ -41,45 +41,71 @@ class TeachersController < ApplicationController
       @tot_hours = @tot_hours/3600
       @what_table = "hours_table"
     else
+      sql = "select name, time_in, time_out, progress, behavior, notes, "
+      sql += "brought_instrument, brought_books, first_name, last_name "
+      sql += "from schools inner join lessons on schools.id = lessons.school_id"
+      sql += " inner join students on lessons.student_id = students.id where "
+      sql += " time_out is not null and user_id = " + teacher_id 
+      sql += " and ? < time_in and time_in < ? "
       if session[:sortcol]
         sortcol = session[:sortcol]
         # case by case as sorting by student' slast name or school name is not
         # straightforward
-#        if sortcol == "Student"
+        if sortcol == "Student"
+          sql += "order by students.last_name"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
 #          @lessons = Student.joins(:lessons)
 #          @lessons = @lessons.where(user_id: teacher_id)
 #          @lessons = @lessons.where.not(lessons: {time_out: nil})
 #          @lessons = @lessons.order(:last_name)
-#        els
-				if sortcol == "Date"
-          @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {time_out: nil})
-          @lessons = @lessons.order(time_in: :desc)
+        elsif sortcol == "Date"
+          sql += "order by time_in desc"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#          @lessons = Lesson.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(time_in: :desc)
         elsif sortcol == "School"
-@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+          sql += "order by name"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
 #          @lessons = School.joins(:lessons)
 #          @lessons = @lessons.where(user_id: teacher_id)
 #          @lessons = @lessons.where.not(lessons: {time_out: nil})
 #          @lessons = @lessons.order(:name)
         elsif sortcol == "Progress"
-          @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {time_out: nil})
-          @lessons = @lessons.order(:progress)
+          sql += "order by progress"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+#          @lessons = Lesson.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(:progress)
         elsif sortcol == "Behavior"
-          @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {time_out: nil})
-          @lessons = @lessons.order(:behavior)
+          sql += "order by behavior"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+#          @lessons = Lesson.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(:behavior)
         elsif sortcol == "Books"
-          @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {time_out: nil})
-          @lessons = @lessons.order(:brought_books)
+          sql += "order by brought_books"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+#          @lessons = Lesson.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(:brought_books)
         else # sortcol == "Instrument"
-          @lessons = Lesson.where(user_id: teacher_id)
-          @lessons = @lessons.where.not(lessons: {time_out: nil})
-          @lessons = @lessons.order(:brought_instrument)
+          sql += "order by brought_instrument"
+          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+#          @lessons = Lesson.where(user_id: teacher_id)
+#          @lessons = @lessons.where.not(lessons: {time_out: nil})
+#          @lessons = @lessons.order(:brought_instrument)
         end
       else
-        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {time_out: nil})
+        sql += "order by time_in desc"
+        @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
+#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
+#        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {time_out: nil})
       end
       @what_table = "lessons_table"
     end

@@ -30,4 +30,5 @@ label { margin-top: 10px; }
 .fname { width: 5em }
 .lname { width: 5em }
 .date { width: 5.2em }
+.cent { text-align: center; width: 3em }
 .updatetab { width: 8em; margin: 0px; padding: 0px; text-align: center }

@@ -28,56 +28,60 @@
 </table>
 <table>
 	<tr>
-    <th colspan="2">
-      <%= form_for("Student", url: teachers_sort_path) do |f| %>
-      <% f.submit "Student", name: "sortcol" %>
-      <% end %>
-    </th>
-		<th>
-      <%= form_for("Date", url: teachers_sort_path) do |f| %>
-      <% f.submit "Date", name: "sortcol" %>
-      <% end %>
-    </th>
-    <th>
-      <%= form_for("Progress", url: teachers_sort_path) do |f| %>
-      <% f.submit "Progress", name: "sortcol" %>
-      <% end %>
-    </th>
-    <th>
-      <%= form_for("Behavior", url: teachers_sort_path) do |f| %>
-      <% f.submit "Behavior", name: "sortcol" %>
-      <% end %>
-    </th>
-    <th>
-      Notes
-    </th>
-    <th>
-      <%= form_for("Instrument", url: teachers_sort_path) do |f| %>
-      <% f.submit "Instrument", name: "sortcol" %>
-      <% end %>
-    </th>
-    <th>
-      <%= form_for("Books", url: teachers_sort_path) do |f| %>
-      <% f.submit "Books", name: "sortcol" %>
-      <% end %>
-    </th>
     <th>
       <%= form_for("School", url: teachers_sort_path) do |f| %>
       <% f.submit "School", name: "sortcol" %>
       <% end %>
     </th>
+		<th class="date">
+      <%= form_for("Date", url: teachers_sort_path) do |f| %>
+      <% f.submit "Date", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th colspan="2">
+      <%= form_for("Student", url: teachers_sort_path) do |f| %>
+      <% f.submit "Student", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      <%= form_for("Progress", url: teachers_sort_path) do |f| %>
+      <% f.submit "Progress", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      <%= form_for("Behavior", url: teachers_sort_path) do |f| %>
+      <% f.submit "Behavior", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      <%= form_for("Instrument", url: teachers_sort_path) do |f| %>
+      <% f.submit "Instrument", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      <%= form_for("Books", url: teachers_sort_path) do |f| %>
+      <% f.submit "Books", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th>
+      Notes
+    </th>
 	</tr>
   <% @lessons.each do |lesson| %>
   <tr>
-    <td><%= lesson.student.first_name %> </td>
-    <td><%= lesson.student.last_name %> </td>
-    <td><%= lesson.time_in.strftime("%Y-%m-%d") %></td>
-    <td><%= lesson.progress %> </td>
-    <td><%= lesson.behavior %> </td>
-    <td><%= lesson.notes %> </td>
-    <td><%= lesson.brought_instrument %> </td>
-    <td><%= lesson.brought_books %> </td>
-    <td><%= lesson.school.name %> </td>
+    <td><%= lesson['name'] %> </td>
+    <td><%= lesson['time_in'].strftime("%Y-%m-%d") %></td>
+    <td><%= lesson['first_name'] %> </td>
+    <td><%= lesson['last_name'] %> </td>
+    <td class="cent"><%= lesson['progress'] %> </td>
+    <td class="cent"><%= lesson['behavior'] %> </td>
+    <td class="cent">
+      <%= if lesson['brought_instrument'] then "Y" else "N" end %>
+    </td>
+    <td class="cent">
+      <%= if lesson['brought_books'] then "Y" else "N" end %> 
+    </td>
+    <td><%= lesson['notes'] %> </td>
 
   </tr>
   <% end %>

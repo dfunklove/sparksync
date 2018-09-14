@@ -7,7 +7,7 @@ class Lesson < ApplicationRecord
   belongs_to :school
 
   def self.in_progress
-  	Lesson.where(time_out: nil).where("time_in > ?", Time.new.beginning_of_day)
+  	self.joins(:student).where("lessons.time_out is null AND lessons.time_in > ?", Time.new.beginning_of_day).order("students.school_id")
   end
 
 end

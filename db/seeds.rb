@@ -42,10 +42,10 @@ Teacher.create!(  first_name: "Caroline",
   type: "Teacher",
   activated: true )
 
-School.create!( name: "Blackshear")
-School.create!( name: "Kealing")
-School.create!( name: "Oak Springs")
-School.create!( name: "Zavala")
+School.create!( name: "Blackshear", id: 1)
+School.create!( name: "Kealing", id: 2)
+School.create!( name: "Oak Springs", id: 3)
+School.create!( name: "Zavala", id: 4)
 
 Student.create!( first_name: "Byron",
   last_name: "Watson",

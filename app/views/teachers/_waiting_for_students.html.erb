@@ -1,6 +1,9 @@
 <table>
 <tr><th>Check In Time</th><th>Teacher</th></tr>
 <% teachers.each do |teacher| %>
-<tr><td><%= teacher.last_login.time_in.strftime(Lesson::DATETIME_FORMAT) %></td><td><%= teacher.firstName %> <%= teacher.lastName %></td></tr>
+<tr>
+	<td class="cent"><%= teacher.last_login.time_in.strftime(Lesson::TIME_FORMAT) %></td>
+	<td class="cent"><%= teacher.first_name %> <%= teacher.last_name %></td>
+</tr>
 <% end %>
 </table>

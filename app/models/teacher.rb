@@ -18,9 +18,9 @@ class Teacher < User
 		self.joins(:lessons).where('lessons."time_out" is null').distinct
 	end
 
-	# Return all teachers who have been logged in for less than 24 hours
+	# Return all teachers who logged in today and are currently logged in 
 	def self.all_logged_in_today
-		self.joins(:logins).where('logins.time_out is null AND logins.time_in > ?', Time.now - 24*60*60).distinct
+		self.joins(:logins).where('logins.time_out is null AND logins.time_in > ?', Time.new.beginning_of_day).distinct
 	end
 
 	def self.waiting_for_students

@@ -24,7 +24,7 @@ module SessionsHelper
 
   # Logs out the current user.
   def log_out
-    if current_user.type == 'Teacher'
+    if logged_in? && current_user.type == 'Teacher'
       @login = Login.where("user_id = ?", session[:user_id]).first
       if @login && !@login.time_out
         @login.update_attributes( time_out: Time.zone.now )

@@ -3,7 +3,7 @@ class AdminConstraint
     @user_id = request.session['user_id']
     if (@user_id)
       if (!@user || !(@user.id == @user_id))
-        @user = User.find(@user_id)
+        @user = User.find_by(id: @user_id)
       end
       return @user && @user.admin?
     else

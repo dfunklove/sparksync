@@ -1,10 +1,13 @@
 <table>
-<tr><th>Check In Time</th><th>Student</th><th>Teacher</th><th>Instrument</th><th>Books</th></tr>
+<tr><th>School</th><th>Time In</th><th colspan="2">Student</th><th colspan="2">Teacher</th><th>Instrument</th><th>Books</th></tr>
 <% lessons.each do |lesson| %>
 <tr>
-	<td class="cent"><%= lesson.time_in.strftime(Lesson::TIME_FORMAT) %></td>
-	<td class="cent"><%= lesson.student.first_name %> <%= lesson.student.last_name %></td>
-	<td class="cent"><%= lesson.teacher.first_name %> <%= lesson.teacher.last_name %></td>
+	<td><%= lesson.student.school.name %></td>
+	<td><%= lesson.time_in.strftime(Lesson::TIME_FORMAT) %></td>
+	<td><%= lesson.student.first_name %></td>
+	<td><%= lesson.student.last_name %></td>
+	<td><%= lesson.teacher.first_name %></td>
+	<td><%= lesson.teacher.last_name %></td>
 	<td class="cent"><%= if lesson.brought_instrument then "Y" else "N" end %></td>
 	<td class="cent"><%= if lesson.brought_books then "Y" else "N" end %></td>
 </tr>

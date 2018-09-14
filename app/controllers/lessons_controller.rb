@@ -87,6 +87,13 @@ class LessonsController < ApplicationController
   	end
   end
 
+  def sort
+    # TODO how do you toggle between asc and desc?
+    session[:sortcol] = params[:sortcol]
+    # redirecting, you execute the entire action from start
+    redirect_to session[:forwarding_url]
+  end
+
   private 
   def lesson_params
   	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,

@@ -9,7 +9,13 @@ class TeachersController < ApplicationController
     store_location
     teacher_id = params[:id]
     @teacher = Teacher.find(teacher_id)
-    @tot_hours = 0
+
+    if session[:changet]
+      @title = session[:changet] 
+    else 
+      @title = "Hours" # default
+    end
+
     if session[:dv_id]
       @dateview = Dateview.find(session[:dv_id])
     else
@@ -25,15 +31,11 @@ class TeachersController < ApplicationController
       end
     end
 
-    if session[:changet]
-      @title = session[:changet] 
-    else 
-      @title = "Hours" # default
-    end
-
     if @title == "Hours"
+
       @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
   
+      @tot_hours = 0
       @logins.each do |login|
         @tot_hours += login[:time_out] - login[:time_in]
       end
@@ -41,80 +43,52 @@ class TeachersController < ApplicationController
       @tot_hours = @tot_hours/3600
       @what_table = "hours_table"
     else
+      # title and what column depend on user and in the case
+      # of admin, what view she wants
+      # nobody but admin and a particular teacher has any business
+      # doing a teacher/show 
+      # can you do the sorting after the db fetch? it would
+      # be preferable in order to sort on multiple columns
+
+      @showstudent = true
+      @showschool = true
+      @showteacher = false
+      @showhours = true
+
       sql = "select name, time_in, time_out, progress, behavior, notes, "
       sql += "brought_instrument, brought_books, first_name, last_name "
       sql += "from schools inner join lessons on schools.id = lessons.school_id"
       sql += " inner join students on lessons.student_id = students.id where "
       sql += " time_out is not null and user_id = " + teacher_id 
       sql += " and ? < time_in and time_in < ? "
+      @lessons = Lesson.find_by_sql([sql, 
+          @dateview.start_date.to_s,  @dateview.end_date.to_s])
       if session[:sortcol]
         sortcol = session[:sortcol]
         # case by case as sorting by student' slast name or school name is not
         # straightforward
         if sortcol == "Student"
-          sql += "order by students.last_name"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#          @lessons = Student.joins(:lessons)
-#          @lessons = @lessons.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:last_name)
+          @lessons = @lessons.sort_by(&:last_name)
         elsif sortcol == "Date"
-          sql += "order by time_in desc"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#          @lessons = Lesson.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(time_in: :desc)
+          @lessons = @lessons.sort_by(&:time_in).reverse! 
         elsif sortcol == "School"
-          sql += "order by name"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#          @lessons = School.joins(:lessons)
-#          @lessons = @lessons.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:name)
+          @lessons = @lessons.sort_by(&:name)
         elsif sortcol == "Progress"
-          sql += "order by progress"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#          @lessons = Lesson.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:progress)
+          @lessons = @lessons.sort_by(&:progress)
         elsif sortcol == "Behavior"
-          sql += "order by behavior"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#          @lessons = Lesson.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:behavior)
-        elsif sortcol == "Books"
-          sql += "order by brought_books"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#          @lessons = Lesson.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:brought_books)
-        else # sortcol == "Instrument"
-          sql += "order by brought_instrument"
-          @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#          @lessons = Lesson.where(user_id: teacher_id)
-#          @lessons = @lessons.where.not(lessons: {time_out: nil})
-#          @lessons = @lessons.order(:brought_instrument)
+          @lessons = @lessons.sort_by(&:behavior)
         end
       else
-        sql += "order by time_in desc"
-        @lessons = Lesson.find_by_sql([sql, @dateview.start_date.to_s,  @dateview.end_date.to_s])
-#@lessons = School.order(:name).joins(:lessons).where("lessons.user_id = 47").where.not(lessons: {time_out: nil})
-#        @lessons = Lesson.where(user_id: teacher_id).where.not(lessons: {time_out: nil})
+        @lessons = @lessons.sort_by(&:time_in).reverse! 
       end
-      @what_table = "lessons_table"
+      @tot_hours = 0
+      @lessons.each do |lesson|
+        @tot_hours += lesson[:time_out] - lesson[:time_in]
+      end
+      # convert seconds to hours
+      @tot_hours = @tot_hours/3600
+      @what_table = "lessons/completed_table"
     end
-  end
-
-  def sort
-    # TODO how do you toggle between asc and desc?
-    session[:sortcol] = params[:sortcol]
-    redirect_to session[:forwarding_url]
   end
 
   def change_table

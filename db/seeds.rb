@@ -91,9 +91,9 @@ Student.create!( first_name: "Homer",
   last_name: "Zuckerman",
   school_id: 3 )
 
-Student.create!( first_name: "Homer",
-  last_name: "Zuckerman",
-  school_id: 3 )
+Student.create!( first_name: "Frances",
+  last_name: "Hoban",
+  school_id: 4 )
 
 Login.create(
   time_in: Time.now - 30*60, 
@@ -120,42 +120,64 @@ Login.create(
   time_out: Time.now, 
   user_id: 35)
 
-Lesson.create!(student_id: 7, 
-  time_in: Time.now - 2*24*60*60 - 2*60*60, 
-  time_out: Time.now - 2*24*60*60- 60*60, 
+Lesson.create!(student_id: 3, 
+  time_in: DateTime.new( 2018, 9, 7, 14, 30),
+  time_out: DateTime.new( 2018, 9, 7, 15, 00),
   brought_instrument: true,
-  brought_books: true,
-  progress: 5, 
-  behavior: 5,
-  notes: "great!",
-  user_id: 47,
-  school_id: 1)
-
-Lesson.create!(student_id: 2, 
-  time_in: Time.now - 2*24*60*60 - 7*60*60, 
-  time_out: Time.now - 2*24*60*60- 6*60*60, 
-  brought_instrument: true,
-  brought_books: true,
+  brought_books: false,
   progress: 3, 
-  behavior: 4,
-  notes: "broke a string",
+  behavior: 2,
+  notes: "cranky",
   user_id: 47,
-  school_id: 4)
+  school_id: 3)
+
+Lesson.create!(student_id: 9, 
+  time_in: DateTime.new( 2018, 9, 7, 15, 00),
+  time_out: DateTime.new( 2018, 9, 7, 15, 30),
+  brought_instrument: true,
+  brought_books: false,
+  progress: 3, 
+  behavior: 2,
+  notes: "surly",
+  user_id: 47,
+  school_id: 3)
 
 Lesson.create!(student_id: 4, 
-  time_in: Time.now - 2*24*60*60 -3*60*60, 
-  time_out: Time.now - 2*24*60*60- 2*60*60, 
+  time_in: DateTime.new( 2018, 9, 7, 14, 30),
+  time_out: DateTime.new( 2018, 9, 7, 15, 00),
   brought_instrument: true,
-  brought_books: true,
+  brought_books: false,
   progress: 3, 
-  behavior: 4,
-  notes: "doing better",
-  user_id: 47,
+  behavior: 2,
+  notes: "disrespectful and inattentive",
+  user_id: 35,
   school_id: 2)
 
 Lesson.create!(student_id: 5, 
-  time_in: Time.now - 2*24*60*60 -4*60*60, 
-  time_out: Time.now - 2*24*60*60- 2*60, 
+  time_in: DateTime.new( 2018, 9, 7, 15, 00),
+  time_out: DateTime.new( 2018, 9, 7, 15, 30),
+  brought_instrument: true,
+  brought_books: false,
+  progress: 3, 
+  behavior: 2,
+  notes: "same as usual",
+  user_id: 35,
+  school_id: 2)
+
+Lesson.create!(student_id: 5, 
+  time_in: DateTime.new( 2018, 9, 10, 14, 30),
+  time_out: DateTime.new( 2018, 9, 10, 15, 00),
+  brought_instrument: true,
+  brought_books: false,
+  progress: 3, 
+  behavior: 2,
+  notes: "mopey",
+  user_id: 47,
+  school_id: 2)
+
+Lesson.create!(student_id: 4, 
+  time_in: DateTime.new( 2018, 9, 10, 15, 00),
+  time_out: DateTime.new( 2018, 9, 10, 15, 30),
   brought_instrument: true,
   brought_books: false,
   progress: 3, 
@@ -165,12 +187,104 @@ Lesson.create!(student_id: 5,
   school_id: 2)
 
 Lesson.create!(student_id: 3, 
-  time_in: Time.now - 4*60, 
-  time_out: Time.now - 2*60, 
+  time_in: DateTime.new( 2018, 9, 10, 14, 30),
+  time_out: DateTime.new( 2018, 9, 10, 15, 00),
   brought_instrument: true,
   brought_books: false,
   progress: 3, 
   behavior: 2,
-  notes: "same as usual",
+  notes: "not at her best",
   user_id: 35,
   school_id: 3)
+
+Lesson.create!(student_id: 9, 
+  time_in: DateTime.new( 2018, 9, 10, 15, 00),
+  time_out: DateTime.new( 2018, 9, 10, 15, 30),
+  brought_instrument: true,
+  brought_books: false,
+  progress: 3, 
+  behavior: 2,
+  notes: "ok",
+  user_id: 35,
+  school_id: 3)
+
+Lesson.create!(student_id: 1, 
+  time_in: DateTime.new( 2018, 9, 11, 14, 30),
+  time_out: DateTime.new( 2018, 9, 11, 15, 00),
+  brought_instrument: true,
+  brought_books: true,
+  progress: 5, 
+  behavior: 5,
+  notes: "excellent",
+  user_id: 47,
+  school_id: 1)
+
+Lesson.create!(student_id: 7, 
+  time_in: DateTime.new( 2018, 9, 11, 15, 00),
+  time_out: DateTime.new( 2018, 9, 11, 15, 30),
+  brought_instrument: true,
+  brought_books: true,
+  progress: 5, 
+  behavior: 5,
+  notes: "great!",
+  user_id: 47,
+  school_id: 1)
+
+Lesson.create!(student_id: 2, 
+  time_in: DateTime.new( 2018, 9, 11, 14, 00),
+  time_out: DateTime.new( 2018, 9, 11, 15, 00),
+  brought_instrument: true,
+  brought_books: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "sleepy",
+  user_id: 35,
+  school_id: 4)
+
+Lesson.create!(student_id: 12, 
+  time_in: DateTime.new( 2018, 9, 11, 15, 00),
+  time_out: DateTime.new( 2018, 9, 11, 15, 30),
+  brought_instrument: true,
+  brought_books: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "broke a string",
+  user_id: 35,
+  school_id: 4)
+
+Lesson.create!(student_id: 4, 
+  time_in: DateTime.new( 2018, 9, 12, 14, 30),
+  time_out: DateTime.new( 2018, 9, 12, 15, 00),
+  brought_instrument: true,
+  brought_books: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "doing better",
+  user_id: 47,
+  school_id: 2)
+
+Lesson.create!(student_id: 5, 
+  time_in: DateTime.new( 2018, 9, 12, 15, 00),
+  time_out: DateTime.new( 2018, 9, 12, 15, 30),
+  brought_instrument: true,
+  brought_books: false,
+  progress: 5, 
+  behavior: 2,
+  notes: "fine",
+  user_id: 47,
+  school_id: 2)
+
+Lesson.create!(student_id: 10, 
+  time_in: Time.now - 5*60*60,
+  brought_instrument: true,
+  brought_books: true,
+  user_id: 47,
+  school_id: 3)
+
+Lesson.create!(student_id: 12, 
+  time_in: Time.now - 5*60*60,
+  brought_instrument: true,
+  brought_books: true,
+  user_id: 35,
+  school_id: 4)
+

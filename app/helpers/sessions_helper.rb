@@ -41,6 +41,9 @@ module SessionsHelper
       end
       session.delete(:dv_id)
     end
+    if session[:sort_col]
+      session.delete(:sort_col)
+    end
     if session[:changev]
       session.delete(:changev)
     end

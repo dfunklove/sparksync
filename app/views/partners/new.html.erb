@@ -7,22 +7,22 @@
 </td>
 <td>
 <h2>
-  Teachers
+  Partners
 </h2>
 </td>
 </tr>
 </table>
-<% if @teacher.errors.any? %>
+<% if @partner.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-danger">
-      The form contains <%= pluralize(@teacher.errors.count, "error") %>.
+      The form contains <%= pluralize(@partner.errors.count, "error") %>.
     </div>
     <ul>
-    <% @teacher.errors.full_messages.each do |msg| %>
+    <% @partner.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
     <% end %>
     </ul>
   </div>
 <% end %>
 
-<%= render partial: "teachers_table" %>
+<%= render partial: "partners_table" %>

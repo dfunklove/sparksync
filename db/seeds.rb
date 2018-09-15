@@ -24,6 +24,17 @@ Admin.create!(  first_name: "William",
   type: "Admin",
   activated: true )
 
+
+Partner.create!(  first_name: "Miss",
+  last_name: "Clavel",
+  email: "missC@yahoo.edu",
+  password: "testmiss",
+  password_confirmation: "testmiss",
+  id: 17,
+  school_id: 2,
+  type: "Partner",
+  activated: true )
+
 Teacher.create!(  first_name: "Charlotte",
   last_name: "Lucas",
   email: "charL@yahoo.edu",
@@ -42,10 +53,10 @@ Teacher.create!(  first_name: "Caroline",
   type: "Teacher",
   activated: true )
 
-School.create!( name: "Blackshear")
-School.create!( name: "Kealing")
-School.create!( name: "Oak Springs")
-School.create!( name: "Zavala")
+School.create!( name: "Blackshear", activated: true)
+School.create!( name: "Kealing", activated: true)
+School.create!( name: "Oak Springs", activated: true)
+School.create!( name: "Zavala", activated: true)
 
 Student.create!( first_name: "Byron",
   last_name: "Watson",

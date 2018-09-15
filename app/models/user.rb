@@ -12,4 +12,12 @@ class User < ApplicationRecord
   def admin?
   	type == 'Admin'
   end
+
+  def teacher?
+  	type == 'Teacher'
+  end
+
+  def partner?
+  	type == 'Partner'
+  end
 end

@@ -1,4 +1,4 @@
-class TeachersController < ApplicationController
+class TeachersController < UsersController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a teacher
   before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
@@ -104,14 +104,16 @@ class TeachersController < ApplicationController
   # new refers to one of the actions generated
   # by resources :teachers in config/routes.rb
   def new
-    # @teachers and @teacher are variables provided
-    # to the new.html.erb view
+    store_location
     
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
+
+    # @teachers and @teacher are variables provided
+    # to the new.html.erb view
     @teachers = find_right_teachers
     @teacher = Teacher.new
   end
@@ -125,29 +127,10 @@ class TeachersController < ApplicationController
       Teacher.all
     end
   end
- 
-  def change_view
-    changev = params[:changev]
-    if changev == "Active"
-      session[:changev] = "All"
-    elsif changev == "All"
-      session[:changev] = "Inactive"
-    else 
-      session[:changev] = "Active"
-    end
-    redirect_to new_teacher_path
-  end
-
-  def genpassword
-    genword = (10000000 + rand(10000000)).to_s
-    puts "password " + genword
-    @teacher.password =  genword
-		@teacher.password_confirmation = genword
-  end
 
   def create
     @teacher = Teacher.new(teacher_params)
-    genword = genpassword
+    genword = genpassword(@teacher)
     @teacher.activated = true
     if @teacher.save
       #TODO send email
@@ -164,7 +147,7 @@ class TeachersController < ApplicationController
     if params[:modify]
       puts "modify"
       # won't work without password
-      genword = genpassword
+      genword = genpassword(@teacher)
       if Teacher.update(@teacher.id,
                         first_name: teacher_params[:first_name],
                         last_name: teacher_params[:last_name],
@@ -182,7 +165,7 @@ class TeachersController < ApplicationController
       teacher_id = @teacher.id 
       who = Teacher.find(teacher_id)
       if who.activated
-        genword = genpassword
+        genword = genpassword(who)
         # don't actually delete, set unactivated
         if who.update( activated: false,
                        password: genword)

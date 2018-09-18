@@ -23,7 +23,7 @@ label { margin-top: 10px; }
 .radio-withlabel * { display:inline; }
 /* admin table entries */
 .sideways { writing-mode: vertical-rl; text-orientation: mixed; }
-.delete { width: 5em; margin: 0px; padding: 0px; text-align: center }
+.delete { width: 7em; margin: 0px; padding: 0px; text-align: center }
 .welcome { width: 6em; margin: 0px; padding: 0px; text-align: center }
 .hours { width: 5em; margin: 0px; padding: 0px; text-align: center }
 .email { width: 9em; margin: 0px; padding: 0px }

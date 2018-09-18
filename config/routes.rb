@@ -69,10 +69,11 @@ Rails.application.routes.draw do
   post '/users/change_view'
   post '/teachers/change_table'
   post '/lessons/sort'
-  get '/schools/:id', to: 'schools#show'
   resources :teachers, only: [:new, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
   resources :schools, only: [:new, :create, :update, :show, :destroy]
+  resources :students, only: [:new, :create, :update, :show, :destroy]
   resources :dateviews, only: [:update]
+  get '/schools/:id', to: 'schools#show' # for partners to view
 
 end

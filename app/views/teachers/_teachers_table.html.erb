@@ -14,7 +14,11 @@
       <td><%= f.email_field :email, class: "email", placeholder: teacher.email %></td>
       <td><%= f.submit "View", class: "hours", name: "hours"  %></td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
-      <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% if teacher.activated %>
+        <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
+      <% else %>
+        <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% end %>
     <% end %>
 		</tr>
   <% end %>

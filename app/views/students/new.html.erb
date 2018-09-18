@@ -1,0 +1,16 @@
+<table>
+<tr>
+<td>
+<%= form_for(@changev, url: '/users/change_view' ) do |f| %>
+<%    f.submit "#{@changev}", name: "changev" %>
+<%  end %>
+</td>
+<td>
+<h2>
+  Students
+</h2>
+</td>
+</tr>
+</table>
+
+<%= render partial: "students_table" %>

@@ -9,23 +9,25 @@
   <% @partners.each do |partner| %> 
 		<tr>
     <%= form_for(partner, url: partner_path(partner.id)) do |f| %>
-    <!-- need to restrict this to activated schools only, default is "choose school -->
 	  	<td>
-        <%= f.collection_select :school_id, School.order(:name),:id,:name %>
+        <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name %>
       </td>
 	  	<td><%= f.text_field :first_name, class: "fname", placeholder: partner.first_name %></td>
       <td><%= f.text_field :last_name, class: "lname", placeholder: partner.last_name %></td>
       <td><%= f.email_field :email, class: "email", placeholder: partner.email %></td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
-      <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% if partner.activated %>
+        <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
+      <% else %>
+        <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% end %>
     <% end %>
 		</tr>
   <% end %>
 	<tr>
   <%= form_for(@partner, url: partners_path) do |f| %>
-    <!-- need to restrict this to activated schools only, default is "choose school -->
  	  <td>
-      <%= f.collection_select :school_id, School.order(:name),:id,:name %>
+        <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name, :prompt => "School..." %>
     </td>
  	  <td>
       <%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>

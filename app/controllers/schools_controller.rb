@@ -103,7 +103,6 @@ class SchoolsController < ApplicationController
     @school = School.new(school_params)
     @school.activated = true
     if @school.save
-      #TODO send email
       redirect_to new_school_path
     else
       @schools = find_right_schools
@@ -144,7 +143,7 @@ class SchoolsController < ApplicationController
           render 'new'
         end
       end
-    elsif params[:hours] # TODO should be view
+    elsif params[:hours]
       redirect_to school_path(school_id)
     else
       raise Exception.new('not welcome, modify or delete. who called school update?')

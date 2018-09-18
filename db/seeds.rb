@@ -53,58 +53,70 @@ Teacher.create!(  first_name: "Caroline",
   type: "Teacher",
   activated: true )
 
-School.create!( name: "Blackshear", id: 1, activated: true)
-School.create!( name: "Kealing", id: 2, activated: true)
-School.create!( name: "Oak Springs", id: 3, activated: true)
-School.create!( name: "Zavala", id: 4, activated: true)
+School.create!( name: "Blackshear", activated: true)
+School.create!( name: "Kealing", activated: true)
+School.create!( name: "Oak Springs", activated: true)
+School.create!( name: "Zavala", activated: true)
 
 Student.create!( first_name: "Byron",
   last_name: "Watson",
-  school_id: 1 )
+  school_id: 1,
+  activated: true )
 
 Student.create!( first_name: "Lucy",
   last_name: "Pevensie",
-  school_id: 4 )
+  school_id: 4,
+  activated: true )
 
 Student.create!( first_name: "Veruca",
   last_name: "Salt",
-  school_id: 3 )
+  school_id: 3,
+  activated: true )
 
 Student.create!( first_name: "Dallas",
   last_name: "Winston",
-  school_id: 2 )
+  school_id: 2,
+  activated: true )
 
 Student.create!( first_name: "Frank",
   last_name: "Anderson",
-  school_id: 2 )
+  school_id: 2,
+  activated: true )
 
 Student.create!( first_name: "Ramona",
   last_name: "Quimby",
-  school_id: 4 )
+  school_id: 4,
+  activated: true )
 
 Student.create!( first_name: "Ron",
   last_name: "Howard",
-  school_id: 1 )
+  school_id: 1,
+  activated: true )
 
 Student.create!( first_name: "Rubeus",
   last_name: "Hagrid",
-  school_id: 1 )
+  school_id: 1,
+  activated: true )
 
 Student.create!( first_name: "Fern",
   last_name: "Arable",
-  school_id: 3 )
+  school_id: 3,
+  activated: true )
 
 Student.create!( first_name: "Harold",
   last_name: "Johnson",
-  school_id: 3 )
+  school_id: 3,
+  activated: true )
 
 Student.create!( first_name: "Homer",
   last_name: "Zuckerman",
-  school_id: 3 )
+  school_id: 3,
+  activated: true )
 
 Student.create!( first_name: "Frances",
   last_name: "Hoban",
-  school_id: 4 )
+  school_id: 4,
+  activated: true )
 
 Login.create(
   time_in: Time.now - 30*60, 

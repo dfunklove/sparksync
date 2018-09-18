@@ -1,0 +1,42 @@
+<table>
+	<tr>
+    <th>School</th>
+		<th>F Name</th>
+    <th>L Name</th>
+	</tr>
+  <% @students.each do |student| %> 
+		<tr>
+    <%= form_for(student, url: student_path(student.id)) do |f| %>
+    <!-- need to restrict this to activated schools only, default is "choose school -->
+	  	<td>
+        <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name %>
+      </td>
+	  	<td><%= f.text_field :first_name, class: "fname", placeholder: student.first_name %></td>
+      <td><%= f.text_field :last_name, class: "lname", placeholder: student.last_name %></td>
+      <td><%= f.submit "View", class: "hours", name: "hours"  %></td>
+      <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
+      <% if student.activated %>
+        <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
+      <% else %>
+        <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% end %>
+    <% end %>
+		</tr> <% end %>
+	<tr>
+  <%= form_for(@student, url: students_path) do |f| %>
+    <!-- need to restrict this to activated schools only, default is "choose school -->
+ 	  <td>
+      <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name, :prompt => "School..." %>
+    </td>
+ 	  <td>
+      <%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
+    </td>
+    <td>
+      <%= f.text_field :last_name, class: "lname", placeholder: "..student..." %>
+    </td>
+    <td></td>
+    <td><%= f.submit "Create", class: "welcome" %></td>
+    <td></td>
+  <% end %>
+	</tr>
+</table>

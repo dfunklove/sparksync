@@ -9,7 +9,11 @@
 	  	<td><%= f.text_field :name, class: "fname", placeholder: school.name %></td>
       <td><%= f.submit "View", class: "hours", name: "hours"  %></td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
-      <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% if school.activated %>
+        <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
+      <% else %>
+        <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+      <% end %>
     <% end %>
 		</tr>
   <% end %>

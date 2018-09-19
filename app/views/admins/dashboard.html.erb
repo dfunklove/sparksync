@@ -1,4 +1,12 @@
 <h2>Lessons in Progress</h2>
-<%= render "lessons/lessons_table", lessons: @lessons %>
+<% if (@lessons.length > 0) %>
+	<%= render "lessons/lessons_table", lessons: @lessons %>
+<% else %>
+	<p>None.</p>
+<% end %>
 <h2>Teachers Waiting for Students</h2>
-<%= render "teachers/waiting_for_students", teachers: @teachers %>
+<% if (@teachers.length > 0) %>
+	<%= render "teachers/waiting_for_students", teachers: @teachers %>
+<% else %>
+	<p>None.</p>
+<% end %>

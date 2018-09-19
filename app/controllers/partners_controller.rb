@@ -26,6 +26,7 @@ class PartnersController < UsersController
     # to the new.html.erb view
     @partners = find_right_partners
     @partner = Partner.new
+    @delete_warning = "Deleting this partner is irreversible. Are you sure?"
   end
 
   def find_right_partners

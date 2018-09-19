@@ -87,6 +87,7 @@ class SchoolsController < ApplicationController
     # to the new.html.erb view
     @schools = find_right_schools
     @school = School.new
+    @delete_warning = "Deleting this school is irreversible. Are you sure?"
   end
 
   def find_right_schools

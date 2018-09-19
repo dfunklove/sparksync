@@ -117,6 +117,7 @@ class TeachersController < UsersController
     # to the new.html.erb view
     @teachers = find_right_teachers
     @teacher = Teacher.new
+    @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"
   end
 
   def find_right_teachers

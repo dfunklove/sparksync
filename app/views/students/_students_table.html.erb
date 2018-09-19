@@ -18,7 +18,7 @@
       <% if student.activated %>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
       <% else %>
-        <td><%= f.submit "Delete", class: "delete", name: "delete" %></td>
+        <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
       <% end %>
     <% end %>
 		</tr> <% end %>

@@ -45,6 +45,10 @@ class PartnerConstraint
 end
 
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   constraints(AdminConstraint.new) do
     root 'admins#dashboard'
   end
@@ -74,6 +78,8 @@ Rails.application.routes.draw do
   resources :schools, only: [:new, :create, :update, :show, :destroy]
   resources :students, only: [:new, :create, :update, :show, :destroy]
   resources :dateviews, only: [:update]
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+
   get '/schools/:id', to: 'schools#show' # for partners to view
 
 end

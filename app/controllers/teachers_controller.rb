@@ -135,10 +135,15 @@ class TeachersController < UsersController
     genword = genpassword(@teacher)
     @teacher.activated = true
     if @teacher.save
-      #TODO send email
+      @teacher.send_welcome(@teacher.id)
       redirect_to new_teacher_path
     else
       @teachers = find_right_teachers
+      if session[:changev]
+        @changev = session[:changev] 
+      else 
+        @changev = "Active"
+      end
       render 'new'
     end
   end
@@ -156,10 +161,16 @@ class TeachersController < UsersController
                         email: teacher_params[:email],
                         activated: true,
                         password: genword)
-        #TODO send email
+        @teacher.send_password_reset_email
+      
         redirect_to new_teacher_path
       else
         @teachers = find_right_teachers
+        if session[:changev]
+          @changev = session[:changev] 
+        else 
+          @changev = "Active"
+        end
         render 'new'
       end
     elsif params[:delete]
@@ -174,6 +185,11 @@ class TeachersController < UsersController
           redirect_to new_teacher_path
         else
           @teachers = find_right_teachers
+          if session[:changev]
+            @changev = session[:changev] 
+          else 
+            @changev = "Active"
+          end
           render 'new'
         end
       else
@@ -181,6 +197,11 @@ class TeachersController < UsersController
           redirect_to new_teacher_path
         else
           @teachers = find_right_teachers
+          if session[:changev]
+            @changev = session[:changev] 
+          else 
+            @changev = "Active"
+          end
           render 'new'
         end
       end

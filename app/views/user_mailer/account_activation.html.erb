@@ -1,5 +1,8 @@
-<h1>User#account_activation</h1>
+<h1>Welcome <%= @user.first_name %>!</h1>
 
-<p>
-  <%= @greeting %>, find me in app/views/user_mailer/account_activation.html.erb
+<p>Please click on the link below to set your password:</p>
+
+<%= link_to "Reset password", edit_password_reset_url(@token, email: @user.email) %>
+
+<p>This link will expire in twenty four hours.</p>
 </p>

@@ -43,7 +43,6 @@ class LessonsController < ApplicationController
           message: "Need to spell out entire name")
       end
     else
-      #TODO add 'new student' to view
       @lesson.errors.add(
         :base,
         :not_found_in_database,

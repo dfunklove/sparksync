@@ -44,10 +44,16 @@ class PartnersController < UsersController
     genword = genpassword(@partner)
     @partner.activated = true
     if @partner.save
-      #TODO send email
+      # send email
+      @partner.send_welcome(@partner.id)
       redirect_to new_partner_path
     else
       @partners = find_right_partners
+      if session[:changev]
+        @changev = session[:changev]
+      else
+        @changev = "Active"
+      end
       render 'new'
     end
   end
@@ -66,10 +72,16 @@ class PartnersController < UsersController
                         email: partner_params[:email],
                         activated: true,
                         password: genword)
-        #TODO send email
+        # send email
+      	@partner.send_password_reset_email
         redirect_to new_partner_path
       else
         @partners = find_right_partners
+        if session[:changev]
+          @changev = session[:changev]
+        else
+          @changev = "Active"
+        end
         render 'new'
       end
     elsif params[:delete]
@@ -84,6 +96,11 @@ class PartnersController < UsersController
           redirect_to new_partner_path
         else
           @partners = find_right_partners
+          if session[:changev]
+            @changev = session[:changev]
+          else
+            @changev = "Active"
+          end
           render 'new'
         end
       else
@@ -91,6 +108,11 @@ class PartnersController < UsersController
           redirect_to new_partner_path
         else
           @partners = find_right_partners
+          if session[:changev]
+            @changev = session[:changev]
+          else
+            @changev = "Active"
+          end
           render 'new'
         end
       end

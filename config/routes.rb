@@ -75,6 +75,7 @@ Rails.application.routes.draw do
   post '/lessons/sort'
   resources :teachers, only: [:new, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
+  resources :admins, only: [:new, :create, :update, :destroy]
   resources :schools, only: [:new, :create, :update, :show, :destroy]
   resources :students, only: [:new, :create, :update, :show, :destroy]
   resources :dateviews, only: [:update]

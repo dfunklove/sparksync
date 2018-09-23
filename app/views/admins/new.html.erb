@@ -1,2 +1,28 @@
-<h1>Admins#new</h1>
-<p>Find me in app/views/admins/new.html.erb</p>
+<table>
+<tr>
+<td>
+<%= form_for(@changev, url: '/users/change_view' ) do |f| %>
+<%    f.submit "#{@changev}", name: "changev" %>
+<%  end %>
+</td>
+<td>
+<h2>
+  Admins
+</h2>
+</td>
+</tr>
+</table>
+<% if @admin.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@admin.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @admin.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= render partial: "admins_table" %>

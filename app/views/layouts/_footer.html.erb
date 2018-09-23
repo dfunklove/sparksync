@@ -6,3 +6,4 @@
 <%= link_to "Teachers", '/teachers/new', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Students", '/students/new', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Schools", '/schools/new', method: :get if logged_in? && current_user.admin? %>
+<%= link_to "Admins", '/admins/new', method: :get if logged_in? && current_user.admin? %>

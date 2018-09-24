@@ -1,13 +1,13 @@
 <table>
 	<tr>
-		<th>Name</th>
     <th></th>
+		<th>Name</th>
 	</tr>
   <% @schools.each do |school| %> 
 		<tr>
+    <td> <%= button_to "View", school_path(school.id), method: :get %> </td>
     <%= form_for(school, url: school_path(school.id)) do |f| %>
 	  	<td><%= f.text_field :name, class: "fname", placeholder: school.name %></td>
-      <td><%= f.submit "View", class: "hours", name: "hours"  %></td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
       <% if school.activated %>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
@@ -19,8 +19,8 @@
   <% end %>
 	<tr>
   <%= form_for(@school, url: schools_path) do |f| %>
- 	  <td><%= f.text_field :name, class: "fname", placeholder: 'New school...' %></td>
     <td></td>
+ 	  <td><%= f.text_field :name, class: "fname", placeholder: 'New school...' %></td>
     <td><%= f.submit "Create", class: "welcome" %></td>
   <% end %>
 	</tr>

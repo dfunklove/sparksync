@@ -1,18 +1,18 @@
 <table>
 	<tr>
+    <th></th>
 		<th>F Name</th>
     <th>L Name</th>
     <th>Email</th>
-    <th></th>
     <th>Password</th>
 	</tr>
   <% @teachers.each do |teacher| %> 
 		<tr>
+    <td> <%= button_to "View", teacher_path(teacher.id), method: :get %> </td>
     <%= form_for(teacher, url: teacher_path(teacher.id)) do |f| %>
 	  	<td><%= f.text_field :first_name, class: "fname", placeholder: teacher.first_name %></td>
       <td><%= f.text_field :last_name, class: "lname", placeholder: teacher.last_name %></td>
       <td><%= f.email_field :email, class: "email", placeholder: teacher.email %></td>
-      <td><%= f.submit "View", class: "hours", name: "hours"  %></td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
       <% if teacher.activated %>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
@@ -23,11 +23,11 @@
 		</tr>
   <% end %>
 	<tr>
+  <td></td>
   <%= form_for(@teacher, url: teachers_path) do |f| %>
  	  <td><%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
     <td><%= f.text_field :last_name, class: "lname", placeholder: "..teacher's..." %></td>
     <td><%= f.email_field :email, class: "email", placeholder: '..information here.' %></td>
-    <td></td>
     <td><%= f.submit "Send", class: "welcome" %></td>
   <% end %>
 	</tr>

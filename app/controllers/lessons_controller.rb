@@ -1,4 +1,8 @@
 class LessonsController < ApplicationController
+  before_action :logged_in_user
+  before_action :teacher_user, only: [:new, :create, :checkout, :finishCheckout]
+  before_action :admin_user, only: :index
+
   def new
   	@lesson = Lesson.new
   	@student = Student.new
@@ -13,6 +17,77 @@ class LessonsController < ApplicationController
       render "checkout"
     end
   end
+
+  def index
+    store_location
+    school_id = params[:id]
+
+    if session[:dv_id]
+      @dateview = Dateview.find(session[:dv_id])
+    else
+      # set default for the preceding week including today
+      e_date = Time.now.midnight + 24*60*60
+      s_date = e_date - 6*24*60*60
+      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
+
+      if @dateview.errors.count == 0 && @dateview.save
+        session[:dv_id] = @dateview.id
+      else
+        raise Exception.new("Not able to save default dateview")
+      end
+    end
+
+    # title and what column depend on user and in the case
+    # of admin, what view she wants
+    # nobody but admin and a particular partner has any business
+    # doing a school/show
+    # can you do the sorting after the db fetch? it would
+    # be preferable in order to sort on multiple columns
+
+    @showstudent = true
+    @showschool = true
+    @showteacher = true
+    @showhours = true
+
+    sql = "select users.first_name, users.last_name as teacher_last, "
+    sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
+    sql += "brought_books, name, students.first_name, "
+    sql += "students.last_name as student_last, user_id, student_id "
+    sql += "from users inner join lessons on users.id = lessons.user_id "
+    sql += "inner join students on lessons.student_id = students.id "
+    sql += "inner join schools on students.school_id = schools.id "
+    sql += "where time_out is not null"
+    sql += " and ? < time_in and time_in < ? "
+    @lessons = Lesson.find_by_sql([sql, 
+        @dateview.start_date.to_s,  @dateview.end_date.to_s])
+    if session[:sortcol]
+      sortcol = session[:sortcol]
+      # case by case as sorting by student' slast name or school name is not
+      # straightforward
+      if sortcol == "Student"
+        @lessons = @lessons.sort_by(&:student_last)
+      elsif sortcol == "Date"
+        @lessons = @lessons.sort_by(&:time_in).reverse! 
+      elsif sortcol == "School"
+        @lessons = @lessons.sort_by(&:name)
+      elsif sortcol == "Teacher"
+        @lessons = @lessons.sort_by(&:teacher_last)
+      elsif sortcol == "Progress"
+        @lessons = @lessons.sort_by(&:progress)
+      elsif sortcol == "Behavior"
+        @lessons = @lessons.sort_by(&:behavior)
+      end
+    else
+      @lessons = @lessons.sort_by(&:time_in).reverse! 
+    end
+    @tot_hours = 0
+    @lessons.each do |lesson|
+      @tot_hours += lesson[:time_out] - lesson[:time_in]
+    end
+    # convert seconds to hours
+    @tot_hours = @tot_hours/3600
+  end
+
 
   def create
   	@lesson = Lesson.new(lesson_params)
@@ -105,5 +180,14 @@ class LessonsController < ApplicationController
 
   def school_params
   	params.require(:school).permit(:name)
+  end
+
+  def dateview_params
+    params.require(:dateview).permit(:start_date, :end_date)
+  end
+
+  def teacher_user
+    return if current_user.teacher_user?
+    redirect_to(root_url) 
   end
 end

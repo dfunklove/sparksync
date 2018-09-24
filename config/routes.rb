@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   post '/users/change_view'
   post '/teachers/change_table'
   post '/lessons/sort'
+  get 'lessons/index'
   resources :teachers, only: [:new, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
   resources :admins, only: [:new, :create, :update, :destroy]

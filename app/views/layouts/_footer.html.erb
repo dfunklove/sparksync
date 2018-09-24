@@ -9,3 +9,4 @@
 <%= link_to "Schools", '/schools/new', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Partners", '/partners/new', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Admins", '/admins/new', method: :get if logged_in? && current_user.admin? %>
+<%= link_to "All Lessons", '/lessons/index', method: :get if logged_in? && current_user.admin? %>

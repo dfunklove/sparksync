@@ -14,6 +14,7 @@
  *= require_self
  */
 
+body { font-family: sans-serif; }
 form * { display:block; }
 label { margin-top: 10px; }
 

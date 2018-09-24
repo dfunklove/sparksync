@@ -187,7 +187,7 @@ class LessonsController < ApplicationController
   end
 
   def teacher_user
-    return if current_user.teacher_user?
+    return if current_user.teacher?
     redirect_to(root_url) 
   end
 end

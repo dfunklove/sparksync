@@ -1,10 +1,11 @@
 class StudentsController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a student
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete]
-  before_action :correct_user, only: [:show]
+  before_action :logged_in_user, only: [:new, :create, :update, :show]
+  before_action :admin_user, only: [:create, :update]
+  before_action :correct_user, only: [:show ]
 
+  # one student
   def show
     store_location
     if session[:dv_id]
@@ -72,6 +73,8 @@ class StudentsController < ApplicationController
 
   # new refers to one of the actions generated
   # by resources :students in config/routes.rb
+  # displays all "right" students and makes it possible to view
+  # makes it possible for admin to modify or delete
   def new
     store_location
     
@@ -89,13 +92,21 @@ class StudentsController < ApplicationController
   end
 
   def find_right_students
+    rightstudents = Student.all
     if @changev == "Active"
-      Student.where(activated: true)
+      rightstudents = rightstudents.where(activated: true)
     elsif @changev == "Inactive"
-      Student.where(activated: false)
-    else
-      Student.all
+      rightstudents = rightstudents.where(activated: false)
     end
+    return rightstudents if current_user.admin?
+    if current_user.partner?
+      rightschool = current_user.school_id
+      rightstudents = rightstudents.where(school_id: rightschool)
+      return rightstudents
+    end
+    sql = "select student_id from lessons where user_id = ?"
+    rightids = Lesson.find_by_sql([sql, current_user.id]).map(&:student_id)
+    rightstudents = rightstudents.where({id: rightids})
   end
  
   def create
@@ -110,6 +121,7 @@ class StudentsController < ApplicationController
   end
 
   def update
+    # puts "in update params " + params.to_s
     student_id = params[:id]
     @student = Student.find(student_id)
     if params[:modify]
@@ -144,7 +156,8 @@ class StudentsController < ApplicationController
           render 'new'
         end
       end
-    elsif params[:hours]
+    elsif params[:hours] #TODO remove?
+      puts "about to redirect_to student_path " + student_id
       redirect_to student_path(student_id)
     else
       raise Exception.new('not welcome, modify or delete. who called student update?')
@@ -159,12 +172,13 @@ class StudentsController < ApplicationController
       @student_id = params[:id]
       @student = Student.find(@student_id)
       return if current_user.admin?
+      # puts "student " + @student_id.to_s + " school " + @student.school_id.to_s
+      # puts "user " + current_user.id.to_s + " school " + current_user.school_id.to_s
       return if current_user.partner? && 
           current_user.school_id == @student.school_id
       evertaught = 
         Lesson.where(user_id: current_user.id).find_by(student_id: @student_id)   
       return if current_user.teacher? && evertaught
-      redirect_to root_url
+      redirect_to new_student_path
     end
-
 end

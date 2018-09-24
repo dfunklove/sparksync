@@ -4,6 +4,8 @@
 <%= link_to "Current Lesson", '/lessons/new', method: :get if logged_in? && current_user.teacher? %>
 <%= link_to "Dashboard", '/', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Teachers", '/teachers/new', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "Students", '/students/new', method: :get if logged_in? && current_user.admin? %>
+<%= link_to "School", '/partners', method: :get if logged_in? && current_user.partner? %>
+<%= link_to "Students", '/students/new', method: :get if logged_in? %>
 <%= link_to "Schools", '/schools/new', method: :get if logged_in? && current_user.admin? %>
+<%= link_to "Partners", '/partners/new', method: :get if logged_in? && current_user.admin? %>
 <%= link_to "Admins", '/admins/new', method: :get if logged_in? && current_user.admin? %>

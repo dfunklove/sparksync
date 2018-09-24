@@ -39,6 +39,14 @@ teacher2 = Teacher.create!(  first_name: "Caroline",
   type: "Teacher",
   activated: true )
 
+teacher3 = Teacher.create!(  first_name: "Kitty",
+  last_name: "Bennet",
+  email: "kittB@yahoo.edu",
+  password: "testkitt",
+  password_confirmation: "testkitt",
+  type: "Teacher",
+  activated: true )
+
 school1 = School.create!( name: "Blackshear", activated: true)
 school2 = School.create!( name: "Kealing", activated: true)
 school3 = School.create!( name: "Oak Springs", activated: true)
@@ -114,28 +122,8 @@ student13 = Student.create!( first_name: "Frances",
   activated: true )
 
 Login.create(
-  time_in: Time.now - 30*60, 
-  time_out: Time.now, 
-  user_id: teacher2.id)
-
-Login.create(
-  time_in: Time.now - 24*60*60 - 45*60, 
-  time_out: Time.now - 24*60*60, 
-  user_id: teacher2.id)
-
-Login.create(
-  time_in: Time.now - 2*24*60*60 - 25*60, 
-  time_out: Time.now - 2*24*60*60, 
-  user_id: teacher2.id)
-
-Login.create(
-  time_in: Time.now - 3*24*60*60 - 35*60, 
-  time_out: Time.now - 3*24*60*60, 
-  user_id: teacher2.id)
-
-Login.create(
-  time_in: Time.now - 5*60, 
-  time_out: Time.now, 
+  time_in: DateTime.new( 2018, 9, 7, 14, 29),
+  time_out: DateTime.new( 2018, 9, 7, 15, 32),
   user_id: teacher2.id)
 
 Lesson.create!(student_id: student3.id, 
@@ -160,6 +148,11 @@ Lesson.create!(student_id: student9.id,
   user_id: teacher2.id,
   school_id: school3.id)
 
+Login.create(
+  time_in: DateTime.new( 2018, 9, 7, 14, 28),
+  time_out: DateTime.new( 2018, 9, 7, 15, 33),
+  user_id: teacher1.id)
+
 Lesson.create!(student_id: student4.id, 
   time_in: DateTime.new( 2018, 9, 7, 14, 30),
   time_out: DateTime.new( 2018, 9, 7, 15, 00),
@@ -182,8 +175,13 @@ Lesson.create!(student_id: student5.id,
   user_id: teacher1.id,
   school_id: school2.id)
 
-Lesson.create!(student_id: student5.id, 
+Login.create(
   time_in: DateTime.new( 2018, 9, 10, 14, 30),
+  time_out: DateTime.new( 2018, 9, 10, 15, 30),
+  user_id: teacher2.id)
+
+Lesson.create!(student_id: student5.id, 
+  time_in: DateTime.new( 2018, 9, 10, 14, 32),
   time_out: DateTime.new( 2018, 9, 10, 15, 00),
   brought_instrument: true,
   brought_books: false,
@@ -194,7 +192,7 @@ Lesson.create!(student_id: student5.id,
   school_id: school2.id)
 
 Lesson.create!(student_id: student4.id, 
-  time_in: DateTime.new( 2018, 9, 10, 15, 00),
+  time_in: DateTime.new( 2018, 9, 10, 15, 01),
   time_out: DateTime.new( 2018, 9, 10, 15, 30),
   brought_instrument: true,
   brought_books: false,
@@ -204,9 +202,14 @@ Lesson.create!(student_id: student4.id,
   user_id: teacher2.id,
   school_id: school2.id)
 
-Lesson.create!(student_id: student3.id, 
+Login.create(
   time_in: DateTime.new( 2018, 9, 10, 14, 30),
-  time_out: DateTime.new( 2018, 9, 10, 15, 00),
+  time_out: DateTime.new( 2018, 9, 10, 15, 01),
+  user_id: teacher1.id)
+
+Lesson.create!(student_id: student3.id, 
+  time_in: DateTime.new( 2018, 9, 10, 14, 31),
+  time_out: DateTime.new( 2018, 9, 10, 14, 59),
   brought_instrument: true,
   brought_books: false,
   progress: 3, 
@@ -226,8 +229,13 @@ Lesson.create!(student_id: student9.id,
   user_id: teacher1.id,
   school_id: school3.id)
 
+Login.create(
+  time_in: DateTime.new( 2018, 9, 11, 14, 27),
+  time_out: DateTime.new( 2018, 9, 11, 15, 32),
+  user_id: teacher2.id)
+
 Lesson.create!(student_id: student1.id, 
-  time_in: DateTime.new( 2018, 9, 11, 14, 30),
+  time_in: DateTime.new( 2018, 9, 11, 14, 32),
   time_out: DateTime.new( 2018, 9, 11, 15, 00),
   brought_instrument: true,
   brought_books: true,
@@ -238,7 +246,7 @@ Lesson.create!(student_id: student1.id,
   school_id: school1.id)
 
 Lesson.create!(student_id: student7.id, 
-  time_in: DateTime.new( 2018, 9, 11, 15, 00),
+  time_in: DateTime.new( 2018, 9, 11, 15, 02),
   time_out: DateTime.new( 2018, 9, 11, 15, 30),
   brought_instrument: true,
   brought_books: true,
@@ -247,6 +255,11 @@ Lesson.create!(student_id: student7.id,
   notes: "great!",
   user_id: teacher2.id,
   school_id: school1.id)
+
+Login.create(
+  time_in: DateTime.new( 2018, 9, 11, 13, 59),
+  time_out: DateTime.new( 2018, 9, 11, 15, 30),
+  user_id: teacher1.id)
 
 Lesson.create!(student_id: student2.id, 
   time_in: DateTime.new( 2018, 9, 11, 14, 00),
@@ -260,8 +273,8 @@ Lesson.create!(student_id: student2.id,
   school_id: school4.id)
 
 Lesson.create!(student_id: student12.id, 
-  time_in: DateTime.new( 2018, 9, 11, 15, 00),
-  time_out: DateTime.new( 2018, 9, 11, 15, 30),
+  time_in: DateTime.new( 2018, 9, 11, 15, 01),
+  time_out: DateTime.new( 2018, 9, 11, 15, 29),
   brought_instrument: true,
   brought_books: true,
   progress: 3, 
@@ -270,9 +283,14 @@ Lesson.create!(student_id: student12.id,
   user_id: teacher1.id,
   school_id: school4.id)
 
-Lesson.create!(student_id: student4.id, 
+Login.create(
   time_in: DateTime.new( 2018, 9, 12, 14, 30),
-  time_out: DateTime.new( 2018, 9, 12, 15, 00),
+  time_out: DateTime.new( 2018, 9, 12, 15, 30),
+  user_id: teacher2.id)
+
+Lesson.create!(student_id: student4.id, 
+  time_in: DateTime.new( 2018, 9, 12, 14, 32),
+  time_out: DateTime.new( 2018, 9, 12, 14, 59),
   brought_instrument: true,
   brought_books: true,
   progress: 3, 
@@ -283,7 +301,7 @@ Lesson.create!(student_id: student4.id,
 
 Lesson.create!(student_id: student5.id, 
   time_in: DateTime.new( 2018, 9, 12, 15, 00),
-  time_out: DateTime.new( 2018, 9, 12, 15, 30),
+  time_out: DateTime.new( 2018, 9, 12, 15, 29),
   brought_instrument: true,
   brought_books: false,
   progress: 5, 
@@ -292,17 +310,30 @@ Lesson.create!(student_id: student5.id,
   user_id: teacher2.id,
   school_id: school2.id)
 
+Login.create(
+  time_in: Time.now - 6*60, # six minutes before db:seed
+  user_id: teacher2.id)
+
 Lesson.create!(student_id: student10.id, 
-  time_in: Time.now - 5*60*60,
+  time_in: Time.now - 5*60,
   brought_instrument: true,
   brought_books: true,
   user_id: teacher2.id,
   school_id: school3.id)
 
+Login.create(
+  time_in: Time.now - 6*60,
+  user_id: teacher1.id)
+
 Lesson.create!(student_id: student12.id, 
-  time_in: Time.now - 5*60*60,
+  time_in: Time.now - 4*60,
   brought_instrument: true,
   brought_books: true,
   user_id: teacher1.id,
   school_id: school4.id)
+
+Login.create(
+  time_in: Time.now - 7*60,
+  user_id: teacher3.id)
+
 

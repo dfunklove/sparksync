@@ -117,18 +117,25 @@ class LessonsController < ApplicationController
           :first_name_or_last_name_ambiguous,
           message: "Need to spell out entire name")
       end
+    elsif params[:new_student]
+      @student.school = @school
+      @student.activated = true
+      @student.save!
+      @lesson.student = @student
+      flash[:info] = "Created new student #{@student.first_name} #{@student.last_name} at #{@student.school.name}" 
     else
       @lesson.errors.add(
         :base,
         :not_found_in_database,
         message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
+
     end
   	@lesson.school = @school
   	@lesson.teacher = current_user
   	@lesson.time_in = Time.now
 
     # check errors count first or custom errors get cleared
-  	if @lesson.errors.count == 0 && @lesson.save
+  	if @lesson.errors.count == 0 && @lesson.save!
 	  	session[:lesson_id] = @lesson.id
 	  	redirect_to "/lessons/checkout"
   	else

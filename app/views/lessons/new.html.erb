@@ -25,6 +25,13 @@
 	      <%= student.text_field :last_name %>
 	    <% end %>
 
+      <% if true %>
+        <div class="checkbox-withlabel">
+          <label for="new_student">New Student</label>
+          <input type="checkbox" name="new_student" value="true"></input>
+        </div>
+      <% end %>
+
       <%= fields_for @school do |school| %>
         <%= school.label :name, "School" %>
         <% @allSchools.each do |this_school| %>

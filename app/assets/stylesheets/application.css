@@ -22,6 +22,7 @@ label { margin-top: 10px; }
 .btn { margin: 10px; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
+.checkbox-withlabel * { display:inline; }
 /* admin table entries */
 .sideways { writing-mode: vertical-rl; text-orientation: mixed; }
 .delete { width: 7em; margin: 0px; padding: 0px; text-align: center }

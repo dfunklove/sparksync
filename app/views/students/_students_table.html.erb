@@ -1,9 +1,13 @@
-<table>
+<table class="stdnt">
 	<tr>
     <th></th>
 		<th>F Name</th>
     <th>L Name</th>
     <th>School</th>
+    <% if @showbtns %>
+    <th></th>
+    <th></th>
+    <% end %>
 	</tr>
   <% @students.each do |student| %> 
 		<tr>
@@ -29,8 +33,6 @@
       <td>
         <%= student.school.name %>
       </td>
-      <td></td>
-      <td></td>
     <% end %>
 		</tr> 
     <% end %>

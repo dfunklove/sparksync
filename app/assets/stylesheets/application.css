@@ -34,3 +34,9 @@ label { margin-top: 10px; }
 .date { width: 5.2em }
 .cent { text-align: center; width: 3em }
 .updatetab { width: 8em; margin: 0px; padding: 0px; text-align: center }
+table.stdnt {
+  border-collapse: collapse;
+}
+table.stdnt td, th {
+  border: 1px solid black
+}

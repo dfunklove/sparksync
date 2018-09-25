@@ -88,6 +88,7 @@ class StudentsController < ApplicationController
     # to the new.html.erb view
     @students = find_right_students
     @student = Student.new
+    @showbtns = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
   end
 

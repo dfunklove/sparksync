@@ -1,9 +1,10 @@
-<table>
+<table class="stdnt">
 	<tr>
 		<th>F Name</th>
     <th>L Name</th>
     <th>Email</th>
     <th>Password</th>
+    <th></th>
 	</tr>
   <% @admins.each do |admin| %> 
 		<tr>
@@ -32,7 +33,6 @@
       <%= f.email_field :email, class: "email", placeholder: '..information here.' %>
     </td>
     <td><%= f.submit "Send", class: "welcome" %></td>
-    <td></td>
   <% end %>
 	</tr>
 </table>

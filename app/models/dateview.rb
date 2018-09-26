@@ -2,35 +2,18 @@ class Dateview < ApplicationRecord
   attr_accessor :s_date_formatted, :e_date_formatted
   attr_reader :bad_start, :bad_end
 
-  DATE_FORMAT = "%Y-%m-%d".freeze
+  DATE_FORMAT = "%m-%d-%Y".freeze
   #PATTERN = /\d\d\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/
-  PATTERN = /(\d\d\d\d)-(\d\d)-(\d\d)/
+  PATTERN = /(\d\d)-(\d\d)-(\d\d\d\d)/
   CENTURY = /(^20)/
   MONTH = /(0[1-9]|1[012])/
   # these are doing nothing
-  validates :s_date_formatted, presence: true, format: { with: /(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/ }
-  validates :e_date_formatted, presence: true, format: { with: /(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])/ }
-
-#  validate do
-#    self.errors[:s_date_formatted] << "Please format date 'YYYY-MM-DD" unless (DateTime.parse(self.s_date_formatted) rescue false)
-#    self.errors[:e_date_formatted] << "Please format date 'YYYY-MM-DD" unless (DateTime.parse(self.e_date_formatted) rescue false)
-#  end
-#
-  # this only runs for setting the variables stored in database how do i change that?
-  # could check in s_date_formatted or e_date_formatted, but which get set first?
-  # also should probably check for correct days of month depending on year and month
-  # been done before that is the beauty of reuse
-  # why is everything i found pure shit?
-#  validate :start_b4_end
-
-#  def start_b4_end
-#    puts "validating start_date or end_date "
-#    errors.add(:base, "Start Date must be before End Date") if start_date > end_date
-#  end
+  validates :s_date_formatted, presence: true, format: { with: /(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])-(19|20)\d\d/ }
+  validates :e_date_formatted, presence: true, format: { with: /(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])-(19|20)\d\d/ }
 
   def date_errs(value, errs)
     bad = nil
-    if !((date, year, month, day = PATTERN.match(value).to_a.flatten).empty?)
+    if !((date, month, day, year = PATTERN.match(value).to_a.flatten).empty?)
       puts "date " + date + " year " + year + " month " + month + " day " + day
       if !(CENTURY.match?(year))
         errs << "'YYYY' must be year in 21st century"
@@ -72,7 +55,7 @@ class Dateview < ApplicationRecord
     errs = []
     if @bad_start = date_errs(value, errs)
       puts "bad_start " + @bad_start
-      errors.add(:base, "Please format date 'YYYY-MM-DD'")
+      errors.add(:base, "Please format date 'MM-DD-YYYY'")
       errs.each do |e|
         errors.add(:start_date, e)
       end
@@ -93,7 +76,7 @@ class Dateview < ApplicationRecord
     if @bad_end = date_errs(value, errs)
       puts "bad_end " + @bad_end
       if !@bad_start
-        errors.add(:base, "Please format date 'YYYY-MM-DD'")
+        errors.add(:base, "Please format date 'MM-DD-YYYY'")
       end
       errs.each do |e|
         errors.add(:end_date, e)

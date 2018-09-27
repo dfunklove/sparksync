@@ -13,12 +13,7 @@
 <% end %>
 <table>
 <tr>
-  <% if @d.bad_start %><td>You Entered: </td><% else %><td></td><% end %>
-  <td><%= @d.bad_start %></td>
-  <% if @d.bad_end %><td>You Entered: </td><% else %><td></td><% end %>
-  <td><%= @d.bad_end %></td>
-</tr>
-<tr>
+  <td>Default values: </td>
 <!-- post to /dateview/id (here) where new date is stored -->
 <!-- this page won't be displayed again unless there are still errors -->
 <%= form_for @d, url: dateview_path(@d.id) do |f| %>
@@ -38,6 +33,13 @@
   <td><%= f.submit "Correct Dates", class: "corrdates" %></td>
   </td>
 <% end %>
+</tr>
+<tr>
+  <td></td>
+  <% if @d.bad_start %><td>You Entered: </td><% else %><td></td><% end %>
+  <td><%= @d.bad_start %></td>
+  <% if @d.bad_end %><td>You Entered: </td><% else %><td></td><% end %>
+  <td><%= @d.bad_end %></td>
 </tr>
 </table>
 

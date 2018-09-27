@@ -138,9 +138,90 @@ student13 = Student.create!( first_name: "Frances",
   activated: true )
 
 Login.create(
+  time_in: Time.now.midnight - 8*24*3600 + 13*3600 - 60,  
+  time_out: Time.now.midnight - 8*24*3600 + 14*3600 + 60,  
+  user_id: teacher5.id)
+
+Lesson.create!(student_id: student1.id, 
+  time_in: Time.now.midnight - 8*24*3600 + 13*3600,  
+  time_out: Time.now.midnight - 8*24*3600 + 13.5*3600 + 60,  
+  brought_instrument: true,
+  brought_books: true,
+  progress: 5, 
+  behavior: 6,
+  notes: "really good lesson!",
+  user_id: teacher5.id,
+  school_id: school1.id)
+
+Lesson.create!(student_id: student7.id, 
+  time_in: Time.now.midnight - 8*24*3600 + 13.5*3600 + 60,  
+  time_out: Time.now.midnight - 8*24*3600 + 14*3600,  
+  brought_instrument: true,
+  brought_books: true,
+  progress: 6, 
+  behavior: 5,
+  notes: "good job",
+  user_id: teacher5.id,
+  school_id: school1.id)
+
+Login.create(
+  time_in: Time.now.midnight - 8*24*3600 + 13*3600,  
+  time_out: Time.now.midnight - 8*24*3600 + 14*3600 + 2*60,  
+  user_id: teacher1.id)
+
+Lesson.create!(student_id: student2.id, 
+  time_in: Time.now.midnight - 8*24*3600 + 13*3600,  
+  time_out: Time.now.midnight - 8*24*3600 + 13.5*3600 + 60,  
+  brought_instrument: true,
+  brought_books: true,
+  progress: 3, 
+  behavior: 4,
+  notes: "ok",
+  user_id: teacher1.id,
+  school_id: school4.id)
+
+Lesson.create!(student_id: student12.id, 
+  time_in: Time.now.midnight - 8*24*3600 + 13.5*3600 + 60,  
+  time_out: Time.now.midnight - 8*24*3600 + 14*3600 + 60,  
+  brought_instrument: true,
+  brought_books: true,
+  progress: 4, 
+  behavior: 4,
+  notes: "good",
+  user_id: teacher1.id,
+  school_id: school4.id)
+
+Login.create(
+  time_in: Time.now.midnight - 7*24*3600 + 13*3600 - 60,  
+  time_out: Time.now.midnight - 7*24*3600 + 14*3600,  
+  user_id: teacher5.id)
+
+Lesson.create!(student_id: student4.id, 
+  time_in: Time.now.midnight - 7*24*3600 + 13*3600,  
+  time_out: Time.now.midnight - 7*24*3600 + 13.5*3600 - 60,  
+  brought_instrument: true,
+  brought_books: true,
+  progress: 4, 
+  behavior: 4,
+  notes: "fine",
+  user_id: teacher5.id,
+  school_id: school2.id)
+
+Lesson.create!(student_id: student5.id, 
+  time_in: Time.now.midnight - 7*24*3600 + 13.5*3600,  
+  time_out: Time.now.midnight - 7*24*3600 + 14*3600,  
+  brought_instrument: true,
+  brought_books: false,
+  progress: 5, 
+  behavior: 6,
+  notes: "doing well",
+  user_id: teacher5.id,
+  school_id: school2.id)
+
+Login.create(
   time_in: Time.now.midnight - 6*24*3600 + 13*3600 - 2*60,  
   time_out: Time.now.midnight - 6*24*3600 + 14*3600 + 60,  
-  user_id: teacher2.id)
+  user_id: teacher5.id)
 
 Lesson.create!(student_id: student3.id, 
   time_in: Time.now.midnight - 6*24*3600 + 13*3600,  
@@ -150,7 +231,7 @@ Lesson.create!(student_id: student3.id,
   progress: 3, 
   behavior: 2,
   notes: "cranky",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school3.id)
 
 Lesson.create!(student_id: student9.id, 
@@ -161,7 +242,7 @@ Lesson.create!(student_id: student9.id,
   progress: 3, 
   behavior: 2,
   notes: "surly",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school3.id)
 
 Login.create(
@@ -194,7 +275,7 @@ Lesson.create!(student_id: student5.id,
 Login.create(
   time_in: Time.now.midnight - 3*24*3600 + 13*3600,  
   time_out: Time.now.midnight - 3*24*3600 + 14*3600 + 60,  
-  user_id: teacher2.id)
+  user_id: teacher5.id)
 
 Lesson.create!(student_id: student5.id, 
   time_in: Time.now.midnight - 3*24*3600 + 13*3600 + 2*60,  
@@ -204,7 +285,7 @@ Lesson.create!(student_id: student5.id,
   progress: 3, 
   behavior: 2,
   notes: "mopey",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school2.id)
 
 Lesson.create!(student_id: student4.id, 
@@ -215,7 +296,7 @@ Lesson.create!(student_id: student4.id,
   progress: 3, 
   behavior: 2,
   notes: "distracted",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school2.id)
 
 Login.create(
@@ -248,7 +329,7 @@ Lesson.create!(student_id: student9.id,
 Login.create(
   time_in: Time.now.midnight - 2*24*3600 + 13*3600 + 60,  
   time_out: Time.now.midnight - 2*24*3600 + 14*3600 + 2*60,  
-  user_id: teacher2.id)
+  user_id: teacher5.id)
 
 Lesson.create!(student_id: student1.id, 
   time_in: Time.now.midnight - 2*24*3600 + 13*3600 + 60,  
@@ -258,7 +339,7 @@ Lesson.create!(student_id: student1.id,
   progress: 5, 
   behavior: 5,
   notes: "starting new book",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school1.id)
 
 Lesson.create!(student_id: student7.id, 
@@ -269,7 +350,7 @@ Lesson.create!(student_id: student7.id,
   progress: 5, 
   behavior: 5,
   notes: "great!",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school1.id)
 
 Login.create(
@@ -302,7 +383,7 @@ Lesson.create!(student_id: student12.id,
 Login.create(
   time_in: Time.now.midnight - 24*3600 + 13*3600,  
   time_out: Time.now.midnight - 24*3600 + 14*3600 + 60,  
-  user_id: teacher2.id)
+  user_id: teacher5.id)
 
 Lesson.create!(student_id: student4.id, 
   time_in: Time.now.midnight - 24*3600 + 13*3600 + 60,  
@@ -312,7 +393,7 @@ Lesson.create!(student_id: student4.id,
   progress: 3, 
   behavior: 4,
   notes: "doing better",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school2.id)
 
 Lesson.create!(student_id: student5.id, 
@@ -323,18 +404,18 @@ Lesson.create!(student_id: student5.id,
   progress: 5, 
   behavior: 2,
   notes: "fine",
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school2.id)
 
 Login.create(
   time_in: Time.now - 6*60, # six minutes before db:seed
-  user_id: teacher2.id)
+  user_id: teacher5.id)
 
 Lesson.create!(student_id: student10.id, 
   time_in: Time.now - 5*60,
   brought_instrument: true,
   brought_books: true,
-  user_id: teacher2.id,
+  user_id: teacher5.id,
   school_id: school3.id)
 
 Login.create(

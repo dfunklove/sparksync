@@ -33,12 +33,16 @@
     <th>Logged Out</th>
     <th>Minutes</th>
 	</tr>
-  <% @logins.each do |login| %>
-  <tr>
-    <td><%= login.time_in.strftime("%m-%d-%Y") %></td>
-    <td><%= login.time_in.strftime("%l:%M %p") %></td>
-    <td><%= login.time_out.strftime("%l:%M %p") %></td>
-    <td><%= number_with_precision((login.time_out - login.time_in)/60, :precision =>2) || 0 %></td>
-  </tr>
+  <% if @logins.length > 0 %>
+    <% @logins.each do |login| %>
+    <tr>
+      <td><%= login.time_in.strftime("%m-%d-%Y") %></td>
+      <td><%= login.time_in.strftime("%l:%M %p") %></td>
+      <td><%= login.time_out.strftime("%l:%M %p") %></td>
+      <td><%= number_with_precision((login.time_out - login.time_in)/60, :precision =>2) || 0 %></td>
+    </tr>
+    <% end %>
+  <% else %>
+    <tr><th colspan="4">None.</th></tr>
   <% end %>
 </table>

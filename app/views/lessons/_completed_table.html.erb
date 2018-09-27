@@ -85,38 +85,41 @@
       Notes
     </th>
 	</tr>
-  <% @lessons.each do |lesson| %>
-  <tr>
-    <% if @showschool %>
-      <td><%= lesson['name'] %> </td>
-    <% end %>
-    <% if @showteacher %>
-      <td><%= lesson.teacher['first_name'] %> </td>
-      <td><%= lesson.teacher['last_name'] %> </td>
-    <% end %>
-    <% if @showstudent %>
-      <td><%= lesson.student['first_name'] %> </td>
-      <td><%= lesson.student['last_name'] %> </td>
-    <% end %>
-    <td><%= lesson['time_in'].strftime("%m-%d-%Y") %></td>
-    <% if @showhours %>
-      <td><%= lesson.time_in.strftime("%l:%M %p") %></td>
-      <td><%= lesson.time_out.strftime("%l:%M %p") %></td>
-      <td>
-        <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
+  <% if @lessons.length > 0 %>
+    <% @lessons.each do |lesson| %>
+    <tr>
+      <% if @showschool %>
+        <td><%= lesson['name'] %> </td>
+      <% end %>
+      <% if @showteacher %>
+        <td><%= lesson.teacher['first_name'] %> </td>
+        <td><%= lesson.teacher['last_name'] %> </td>
+      <% end %>
+      <% if @showstudent %>
+        <td><%= lesson.student['first_name'] %> </td>
+        <td><%= lesson.student['last_name'] %> </td>
+      <% end %>
+      <td><%= lesson['time_in'].strftime("%m-%d-%Y") %></td>
+      <% if @showhours %>
+        <td><%= lesson.time_in.strftime("%l:%M %p") %></td>
+        <td><%= lesson.time_out.strftime("%l:%M %p") %></td>
+        <td>
+          <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
+        </td>
+  
+      <% end %>
+      <td class="cent"><%= lesson['progress'] %> </td>
+      <td class="cent"><%= lesson['behavior'] %> </td>
+      <td class="cent">
+        <%= if lesson['brought_instrument'] then "Y" else "N" end %>
       </td>
-
+      <td class="cent">
+        <%= if lesson['brought_books'] then "Y" else "N" end %> 
+      </td>
+      <td><%= lesson['notes'] %> </td>
+    </tr>
     <% end %>
-    <td class="cent"><%= lesson['progress'] %> </td>
-    <td class="cent"><%= lesson['behavior'] %> </td>
-    <td class="cent">
-      <%= if lesson['brought_instrument'] then "Y" else "N" end %>
-    </td>
-    <td class="cent">
-      <%= if lesson['brought_books'] then "Y" else "N" end %> 
-    </td>
-    <td><%= lesson['notes'] %> </td>
-
-  </tr>
+  <% else %>
+    <tr><th colspan="12">None.</th></tr>
   <% end %>
 </table>

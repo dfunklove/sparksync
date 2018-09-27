@@ -13,7 +13,7 @@ class TeachersController < UsersController
     if session[:changet]
       @title = session[:changet] 
     else 
-      @title = "Hours" # default
+      @title = "Lessons" # default
     end
 
     if session[:dv_id]

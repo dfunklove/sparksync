@@ -21,19 +21,19 @@
     <%= form_for(@lesson, url: '/lessons/finishCheckout') do |lesson| %>
   		<%= lesson.label :progress, "Progress" %>
       <br>
-      <label style="display:inline">Worse</label>
+      <label class="radio-label-inline">Worse</label>
 	    <% for i in 1..6 do %>
 	      <%= lesson.radio_button :progress, i, class: "radio-nolabel" %>
 	    <% end %>
-      <label style="display:inline">Better</label>
+      <label class="radio-label-inline">Better</label>
 
   		<%= lesson.label :behavior, "Behavior" %>
       <br>
-      <label style="display:inline">Worse</label>
+      <label class="radio-label-inline">Worse</label>
 	    <% for i in 1..6 do %>
 	      <%= lesson.radio_button :behavior, i, class: "radio-nolabel" %>
 	    <% end %>
-      <label style="display:inline">Better</label>
+      <label class="radio-label-inline">Better</label>
 
       <%= lesson.label :notes %>
       <%= lesson.text_area :notes, class: "notes", rows: 4 %>

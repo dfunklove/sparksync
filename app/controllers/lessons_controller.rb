@@ -90,52 +90,55 @@ class LessonsController < ApplicationController
 
 
   def create
-  	@lesson = Lesson.new(lesson_params)
-    # create a School object based on keyboard input
-    @school = School.new(school_params)
-    # see if the school exists in the database, if not raise exception
-    # if school does exist in db, get all the column values
-    # params[:school][:name] = 'Murchison'
-    if !@school = School.find_by(school_params)
-      raise
+    begin
+    	@lesson = Lesson.new(lesson_params)
+      @student = Student.new(student_params)
+      @lesson.student = @student
+      @school = School.find_by(school_params)
+      @lesson.school = @school
+    rescue
+      @lesson ||= Lesson.new
+      @student ||= Student.new
+      @school ||= School.new
     end
 
-    #create a student object given the parameters entered
-    @student = Student.new(student_params)
-    # if student exists in db get all the column values
-    # if student not in db prompt user to see if they want to create
-    harrys = Student.where('"last_name" ilike ?', @student.last_name + "%").where('"first_name" ilike ?', @student.first_name + "%").where( school_id: @school.id)
-    @stdnt_lookedup = harrys.first
-    nharrys = harrys.count
+    if @school.valid? && @student.valid?
+      # if student exists in db get all the column values
+      # if student not in db prompt user to see if they want to create
+      harrys = Student.where('"last_name" ilike ?', @student.last_name + "%").where('"first_name" ilike ?', @student.first_name + "%").where( school_id: @school.id)
+      @stdnt_lookedup = harrys.first
+      nharrys = harrys.count
 
-    if @stdnt_lookedup
- 	    @lesson.student = @stdnt_lookedup
-      puts "number of students " + nharrys.to_s
-      if nharrys > 1
+      if @stdnt_lookedup
+   	    @lesson.student = @stdnt_lookedup
+        puts "number of students " + nharrys.to_s
+        if nharrys > 1
+          @lesson.errors.add(
+            :base,
+            :first_name_or_last_name_ambiguous,
+            message: "Need to spell out entire name")
+        end
+      elsif params[:new_student]
+        @student.school = @school
+        @student.activated = true
+        @student.save
+        @lesson.student = @student
+        flash[:info] = "Created new student #{@student.first_name} #{@student.last_name} at #{@student.school.name}" 
+      else
         @lesson.errors.add(
           :base,
-          :first_name_or_last_name_ambiguous,
-          message: "Need to spell out entire name")
-      end
-    elsif params[:new_student]
-      @student.school = @school
-      @student.activated = true
-      @student.save!
-      @lesson.student = @student
-      flash[:info] = "Created new student #{@student.first_name} #{@student.last_name} at #{@student.school.name}" 
-    else
-      @lesson.errors.add(
-        :base,
-        :not_found_in_database,
-        message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
+          :not_found_in_database,
+          message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
 
+      end
     end
-  	@lesson.school = @school
-  	@lesson.teacher = current_user
-  	@lesson.time_in = Time.now
+
+    @lesson.school = @school
+    @lesson.teacher = current_user
+    @lesson.time_in = Time.now
 
     # check errors count first or custom errors get cleared
-  	if @lesson.errors.count == 0 && @lesson.save!
+  	if @lesson.errors.count == 0 && @lesson.save
 	  	session[:lesson_id] = @lesson.id
 	  	redirect_to "/lessons/checkout"
   	else

@@ -1,5 +1,5 @@
 class Lesson < ApplicationRecord
-  DATETIME_FORMAT = "%Y-%m-%d %l:%M %p".freeze 
+  DATETIME_FORMAT = "%m-%d-%Y %l:%M %p".freeze 
   TIME_FORMAT = "%l:%M %p".freeze
 
   belongs_to :student

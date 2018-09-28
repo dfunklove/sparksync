@@ -102,7 +102,7 @@ class LessonsController < ApplicationController
       @school ||= School.new
     end
 
-    if @school.valid? && @student.valid?
+    if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
       harrys = Student.where('"last_name" ilike ?', @student.last_name + "%").where('"first_name" ilike ?', @student.first_name + "%").where( school_id: @school.id)

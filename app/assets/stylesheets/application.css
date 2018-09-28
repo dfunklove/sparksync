@@ -23,6 +23,7 @@ label { margin-top: 10px; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
 .checkbox-withlabel * { display:inline; }
+.inline * { display:inline; }
 /* admin table entries */
 .sideways { writing-mode: vertical-rl; text-orientation: mixed; }
 .delete { width: 7em; margin: 0px; padding: 0px; text-align: center }
@@ -39,4 +40,8 @@ table.stdnt {
 }
 table.stdnt td, th {
   border: 1px solid black
+}
+textarea.notes {
+	width: 100%;
+	box-sizing: border-box;
 }

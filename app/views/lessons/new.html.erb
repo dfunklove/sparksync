@@ -43,10 +43,28 @@
       <% end %>
 
       <%= lesson.label :brought_instrument, "Student brought instrument" %>
-      <%= lesson.check_box :brought_instrument %>
+      <div class="inline">
+        <div class="radio-withlabel">
+          <%= lesson.radio_button :brought_instrument, true, checked: true %>
+          <label>Yes</label>
+        </div>
+        <div class="radio-withlabel">
+          <%= lesson.radio_button :brought_instrument, false %>
+          <label>No</label>
+        </div>
+      </div>
 
       <%= lesson.label :brought_books, "Student brought books" %>
-      <%= lesson.check_box :brought_books %>
+      <div class="inline">
+        <div class="radio-withlabel">
+          <%= lesson.radio_button :brought_books, true, checked: true %>
+          <label>Yes</label>
+        </div>
+        <div class="radio-withlabel">
+          <%= lesson.radio_button :brought_books, false %>
+          <label>No</label>
+        </div>
+      </div>
 
       <%= lesson.submit "Submit", class: "btn btn-primary" %>
     <% end %>

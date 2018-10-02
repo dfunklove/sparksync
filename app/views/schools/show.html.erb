@@ -1,3 +1,8 @@
 <h2> <%= @school.name %> </h2>
 
 <%= render partial: "lessons/completed_table" %>
+<p>
+  Download:
+  <%= link_to "Excel", school_path(@school.id, format: "xls") %>
+</p>
+

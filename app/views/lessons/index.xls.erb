@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">School</Data></Cell>
+        <Cell><Data ss:Type="String">Teacher First Name</Data></Cell>
+        <Cell><Data ss:Type="String">Teacher Last Name</Data></Cell>
+        <Cell><Data ss:Type="String">Student First Name</Data></Cell>
+        <Cell><Data ss:Type="String">Student Last Name</Data></Cell>
+        <Cell><Data ss:Type="String">Time In</Data></Cell>
+        <Cell><Data ss:Type="String">Time Out</Data></Cell>
+        <Cell><Data ss:Type="String">Brought Instrument</Data></Cell>
+        <Cell><Data ss:Type="String">Brought Books</Data></Cell>
+        <Cell><Data ss:Type="String">Progress</Data></Cell>
+        <Cell><Data ss:Type="String">Behavior</Data></Cell>
+        <Cell><Data ss:Type="String">Notes</Data></Cell>
+      </Row>
+    <% @lessons.each do |lesson| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= lesson.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.teacher.first_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.teacher.last_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.student.first_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.student.last_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.time_in %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.time_out %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.brought_instrument %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.brought_books %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.progress %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.behavior %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.notes %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

@@ -1,3 +1,6 @@
 <h2> All Lessons </h2>
 <%= render partial: "lessons/completed_table" %>
-
+<p>
+  Download:
+  <%= link_to "Excel", lessons_path(format: "xls") %>
+</p>

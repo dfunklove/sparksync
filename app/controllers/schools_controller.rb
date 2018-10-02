@@ -69,6 +69,11 @@ class SchoolsController < ApplicationController
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
+    respond_to do |format|
+      format.html
+      format.xls
+    end
+
   end
 
   # new refers to one of the actions generated

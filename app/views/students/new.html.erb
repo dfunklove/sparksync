@@ -12,5 +12,16 @@
 </td>
 </tr>
 </table>
-
+<% if @student.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@student.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @student.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= render partial: "students_table" %>

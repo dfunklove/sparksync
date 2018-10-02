@@ -117,6 +117,12 @@ class StudentsController < ApplicationController
       redirect_to new_student_path
     else
       @students = find_right_students
+      @showbtns = current_user.admin?
+      if session[:changev]
+        @changev = session[:changev] 
+      else 
+        @changev = "Active"
+      end
       render 'new'
     end
   end

@@ -164,10 +164,23 @@ class LessonsController < ApplicationController
   	if !session[:lesson_id]
   		redirect_to root_url
   	end
-  	@lesson = Lesson.find(session[:lesson_id])
+    @lesson = Lesson.find(session[:lesson_id])
   	temp_params = lesson_params
-  	temp_params[:time_out] = Time.now
-  	if @lesson.update_attributes(temp_params)
+    if (temp_params[:behavior] == nil)
+      @lesson.errors.add(
+        :base,
+        :behavior_missing,
+        message: "Behavior can't be blank")
+    end
+    if (temp_params[:progress] == nil)
+      @lesson.errors.add(
+        :base,
+        :progress_missing,
+        message: "Progress can't be blank")
+    end
+
+    temp_params[:time_out] = Time.now
+  	if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
   		session.delete(:lesson_id)
       redirect_to root_url
   	else

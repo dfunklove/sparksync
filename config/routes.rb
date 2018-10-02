@@ -64,6 +64,7 @@ Rails.application.routes.draw do
   get '/lessons/checkout'
   post '/lessons/finishCheckout'
   patch '/lessons/finishCheckout'
+  get '/lessons/finishCheckout', to: 'lessons#checkout'
   post '/lessons',   to: 'lessons#create'
   get '/admins/new'
   get '/admins/dashboard'

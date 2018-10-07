@@ -17,7 +17,7 @@ class TeacherConstraint
     @user_id = request.session['user_id']
     if (@user_id)
       if (!@user || !(@user.id == @user_id))
-        @user = User.find(@user_id)
+        @user = User.find_by(id: @user_id)
       end
       return @user && @user.teacher?
     else
@@ -31,7 +31,7 @@ class PartnerConstraint
     @user_id = request.session['user_id']
     if (@user_id)
       if (!@user || !(@user.id == @user_id))
-        @user = User.find(@user_id)
+        @user = User.find_by(id: @user_id)
       end
       if @user && @user.partner?
         return whatschool = @user.school_id

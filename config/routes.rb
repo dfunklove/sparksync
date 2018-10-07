@@ -60,11 +60,9 @@ Rails.application.routes.draw do
   end
   root 'sessions#new'
 
-  get '/lessons/new'
   get '/lessons/checkout'
   post  '/lessons/checkout', to: 'lessons#finishCheckout'
   patch '/lessons/checkout', to: 'lessons#finishCheckout'
-  post '/lessons',   to: 'lessons#create'
   get '/admins/new'
   get '/admins/dashboard'
   get    '/login',   to: 'sessions#new'
@@ -75,6 +73,7 @@ Rails.application.routes.draw do
   post '/lessons/sort'
   get 'lessons/index'
   get '/lessons',    to: 'lessons#index'
+  resources :lessons, only: [:new, :create, :update, :destroy]
   resources :teachers, only: [:new, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
   resources :admins, only: [:new, :create, :update, :destroy]

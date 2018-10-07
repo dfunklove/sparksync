@@ -1,0 +1,114 @@
+<table>
+<tr>
+<!-- post to /dateview/id where new date is stored, then redirect back here -->
+<%= form_for @dateview, url: dateview_path(@dateview.id) do |f| %>
+  <td>
+  <%= f.label :start_date %>
+  </td>
+  <td>
+  <%= f.text_field :s_date_formatted, class: "date" %>
+  </td>
+  <td>
+  <%= f.label :end_date %>
+  </td>
+  <td>
+  <%= f.text_field :e_date_formatted, class: "date"  %>
+  </td>
+  <td>
+  Total hours
+  </td>
+  <td>
+  <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
+  </td>
+  <td>
+  <td><%= f.submit "Update Table", class: "updatetab" %></td>
+  </td>
+<% end %>
+</tr>
+</table>
+<table class="stdnt">
+	<tr>
+    <th>
+      <%= form_for("School", url: lessons_sort_path) do |f| %>
+      <% f.submit "School", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th>
+      <%= form_for("Teacher", url: lessons_sort_path) do |f| %>
+      <% f.submit "Teacher", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th>
+      <%= form_for("Student", url: lessons_sort_path) do |f| %>
+      <% f.submit "Student", name: "sortcol" %>
+      <% end %>
+    </th>
+		<th class="timein">
+    <%= form_for("Date", url: lessons_sort_path) do |f| %>
+      <% f.submit "Time In", name: "sortcol" %>
+    <% end %>
+    </th>
+    <th>
+      Time Out
+    </th>
+    <th>
+      Minutes
+    </th>
+    <th class="cent">
+      <%= form_for("Progress", url: lessons_sort_path) do |f| %>
+      <% f.submit "Progress", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      <%= form_for("Behavior", url: lessons_sort_path) do |f| %>
+      <% f.submit "Behavior", name: "sortcol" %>
+      <% end %>
+    </th>
+    <th class="cent">
+      Inst
+    </th>
+    <th class="cent">
+      Book
+    </th>
+    <th>
+      Notes
+    </th>
+    <th></th>
+    <th></th>
+	</tr>
+  <% if @messons.length > 0 %>
+    <% @messons.each do |lesson| %>
+    <tr>
+      <%= form_for(lesson, url: lesson_path(lesson.id)) do |f| %>
+      <td>
+        <%= f.select :school_id, @schools %>
+      </td>
+      <td>
+        <%= f.select :user_id, @teachers %>
+      </td>
+      <td>
+        <%= f.select :student_id, @students %>
+      </td>
+      <td class="timein"><%= f.text_field :time_in, class: "date", value: lesson.time_in.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
+      <td class="timein"><%= f.text_field :time_out, class: "date", value: lesson.time_out.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
+      <td>
+          <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
+      </td>
+      <td class="cent"><%= f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
+      <td class="cent"><%= f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
+      <td class="cent">
+        <%= f.check_box :brought_instrument %>
+      </td>
+      <td class="cent">
+        <%= f.check_box :brought_books %>
+      </td>
+      <td><%= f.text_field :notes %> </td>
+      <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
+      <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  <% else %>
+    <tr><th colspan="12">None.</th></tr>
+  <% end %>
+</table>

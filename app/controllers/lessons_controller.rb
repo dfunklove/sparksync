@@ -51,47 +51,91 @@ class LessonsController < ApplicationController
 
     sql = "select users.first_name, users.last_name as teacher_last, "
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, name, students.first_name, "
+    sql += "brought_books, lessons.id, lessons.school_id, name, "
+    sql += "students.first_name, "
     sql += "students.last_name as student_last, user_id, student_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += "inner join students on lessons.student_id = students.id "
     sql += "inner join schools on students.school_id = schools.id "
     sql += "where time_out is not null"
     sql += " and ? < time_in and time_in < ? "
-    @lessons = Lesson.find_by_sql([sql, 
+    @messons = Lesson.find_by_sql([sql, 
         @dateview.start_date.to_s,  @dateview.end_date.to_s])
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not
       # straightforward
       if sortcol == "Student"
-        @lessons = @lessons.sort_by(&:student_last)
-      elsif sortcol == "Date"
-        @lessons = @lessons.sort_by(&:time_in).reverse! 
+        @messons = @messons.sort_by(&:student_last)
+      elsif sortcol == "Date" || sortcol == "Time In"
+        @messons = @messons.sort_by(&:time_in).reverse! 
       elsif sortcol == "School"
-        @lessons = @lessons.sort_by(&:name)
+        @messons = @messons.sort_by(&:name)
       elsif sortcol == "Teacher"
-        @lessons = @lessons.sort_by(&:teacher_last)
+        @messons = @messons.sort_by(&:teacher_last)
       elsif sortcol == "Progress"
-        @lessons = @lessons.sort_by(&:progress)
+        @messons = @messons.sort_by(&:progress)
       elsif sortcol == "Behavior"
-        @lessons = @lessons.sort_by(&:behavior)
+        @messons = @messons.sort_by(&:behavior)
       end
     else
-      @lessons = @lessons.sort_by(&:time_in).reverse! 
+      @messons = @messons.sort_by(&:time_in).reverse! 
     end
     @tot_hours = 0
-    @lessons.each do |lesson|
+    @messons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
+    @schools = School.where("activated=?", true).order(:name).collect{|c| [c.name, c.id]}
+    @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
+    @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
+    @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     respond_to do |format|
       format.html
       format.xls 
     end
   end
 
+  def muckwithdate(whatdate)
+    turn2date = DateTime.strptime(whatdate, '%l:%M %p %m-%d-%Y')
+    screwyrailstime = turn2date.strftime('%l:%M %p %Y-%m-%d')
+    intimezoneDST = screwyrailstime.in_time_zone('Central Time (US & Canada)')
+  end
+
+  def update
+    puts "in update"
+    lesson_id = params[:id]
+    @lesson = Lesson.find(lesson_id)
+    if params[:modify]
+      if Lesson.update(lesson_id,
+          student_id: messon_params[:student_id],
+          # TODO these are assuming the time in params is GMT and converting to local fixit 
+          time_in: muckwithdate(messon_params[:time_in]),
+          time_out: muckwithdate(messon_params[:time_out]),
+          brought_instrument: messon_params[:brought_instrument],
+          brought_books: messon_params[:brought_books],
+          progress: messon_params[:progress],
+          behavior: messon_params[:behavior],
+          notes: messon_params[:notes],
+          user_id: messon_params[:user_id],
+          school_id: messon_params[:school_id])
+        redirect_to lessons_path
+      else 
+        render 'index'
+      end
+    elsif params[:delete]
+      lesson_id = params[:id]
+      what_lesson = Lesson.find(lesson_id)
+      if what_lesson.delete
+        redirect_to lessons_path
+      else
+        render 'index'
+      end
+    else
+      raise Exception.new('not modify or delete. who called lesson update?')
+    end 
+  end
 
   def create
     begin
@@ -191,6 +235,7 @@ class LessonsController < ApplicationController
   def sort
     # TODO how do you toggle between asc and desc?
     session[:sortcol] = params[:sortcol]
+    puts "sortcol " + session[:sortcol]
     # redirecting, you execute the entire action from start
     redirect_to session[:forwarding_url]
   end
@@ -199,6 +244,11 @@ class LessonsController < ApplicationController
   def lesson_params
   	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
   		:progress, :behavior, :notes)
+  end
+
+  def messon_params
+  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
+  		:progress, :behavior, :notes, :user_id, :school_id, :student_id)
   end
 
   def student_params

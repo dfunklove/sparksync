@@ -49,6 +49,10 @@ class LessonsController < ApplicationController
     @showteacher = true
     @showhours = true
 
+    @schools = School.where("activated=?", true).order(:name).collect{|c| [c.name, c.id]}
+    @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
+    @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
+    @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     sql = "select users.first_name, users.last_name as teacher_last, "
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
     sql += "brought_books, lessons.id, lessons.school_id, name, "
@@ -56,7 +60,7 @@ class LessonsController < ApplicationController
     sql += "students.last_name as student_last, user_id, student_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += "inner join students on lessons.student_id = students.id "
-    sql += "inner join schools on students.school_id = schools.id "
+    sql += "inner join schools on lessons.school_id = schools.id "
     sql += "where time_out is not null"
     sql += " and ? < time_in and time_in < ? "
     @messons = Lesson.find_by_sql([sql, 
@@ -65,10 +69,11 @@ class LessonsController < ApplicationController
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not
       # straightforward
+      # puts "final sortcol " + sortcol
       if sortcol == "Student"
         @messons = @messons.sort_by(&:student_last)
       elsif sortcol == "Date" || sortcol == "Time In"
-        @messons = @messons.sort_by(&:time_in).reverse! 
+      @messons = @messons.sort_by(&:time_in).reverse! 
       elsif sortcol == "School"
         @messons = @messons.sort_by(&:name)
       elsif sortcol == "Teacher"
@@ -84,13 +89,10 @@ class LessonsController < ApplicationController
     @tot_hours = 0
     @messons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
+      # puts "school " + lesson.name
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
-    @schools = School.where("activated=?", true).order(:name).collect{|c| [c.name, c.id]}
-    @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
-    @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
-    @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     respond_to do |format|
       format.html
       format.xls 
@@ -104,7 +106,7 @@ class LessonsController < ApplicationController
   end
 
   def update
-    puts "in update"
+    # puts "in update"
     lesson_id = params[:id]
     @lesson = Lesson.find(lesson_id)
     if params[:modify]
@@ -235,7 +237,7 @@ class LessonsController < ApplicationController
   def sort
     # TODO how do you toggle between asc and desc?
     session[:sortcol] = params[:sortcol]
-    puts "sortcol " + session[:sortcol]
+    # puts "sortcol " + session[:sortcol]
     # redirecting, you execute the entire action from start
     redirect_to session[:forwarding_url]
   end

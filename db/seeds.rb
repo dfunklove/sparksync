@@ -9,7 +9,7 @@
 admin1 = Admin.create!(  first_name: "Cynthia",
   last_name: "Smith",
   email: "cynthia@sparksforsuccess.org",
-  password: "sparkISgr8*",
+  password: "sparksISgr8*",
   password_confirmation: "sparksISgr8*",
   type: "Admin",
   activated: true )

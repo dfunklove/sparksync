@@ -110,6 +110,12 @@ class SchoolsController < ApplicationController
     if @school.save
       redirect_to new_school_path
     else
+      if session[:changev]
+        @changev = session[:changev] 
+      else 
+        @changev = "Active"
+      end
+
       @schools = find_right_schools
       render 'new'
     end

@@ -1,12 +1,14 @@
 <hr>
-<%= link_to "Logout", logout_path, method: :delete if logged_in? && (!current_user.teacher? || current_user.lessons_in_progress.count == 0) %>
-<%= link_to "Show Records", teacher_path(current_user), method: :get if logged_in? && current_user.teacher? %>
-<%= link_to "Current Lesson", '/lessons/new', method: :get if logged_in? && current_user.teacher? %>
-<%= link_to "Dashboard", '/', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "Teachers", '/teachers/new', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "School", '/partners', method: :get if logged_in? && current_user.partner? %>
-<%= link_to "Students", '/students/new', method: :get if logged_in? %>
-<%= link_to "Schools", '/schools/new', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "Partners", '/partners/new', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "Admins", '/admins/new', method: :get if logged_in? && current_user.admin? %>
-<%= link_to "All Lessons", '/lessons/index', method: :get if logged_in? && current_user.admin? %>
+<% if logged_in? %>
+<%= link_to "Logout", logout_path, method: :delete if !current_user.teacher? || current_user.lessons_in_progress.count == 0 %>
+<%= link_to "Show Records", teacher_path(current_user), method: :get if current_user.teacher? %>
+<%= link_to "Current Lesson", '/lessons/new', method: :get if current_user.teacher? %>
+<%= link_to "Dashboard", '/', method: :get if current_user.admin? %>
+<%= link_to "Teachers", '/teachers/new', method: :get if current_user.admin? %>
+<%= link_to "School", '/partners', method: :get if current_user.partner? %>
+<%= link_to "Students", '/students/new', method: :get %>
+<%= link_to "Schools", '/schools/new', method: :get if current_user.admin? %>
+<%= link_to "Partners", '/partners/new', method: :get if current_user.admin? %>
+<%= link_to "Admins", '/admins/new', method: :get if current_user.admin? %>
+<%= link_to "All Lessons", '/lessons/index', method: :get if current_user.admin? %>
+<% end %>

@@ -106,7 +106,7 @@ class Dateview < ApplicationRecord
     if !@bad_end  
       value = valarray[0]
       puts "no errors found updating end_date " + value
-      poss_date = DateTime.strptime(value, DATE_FORMAT).to_date
+      poss_date = DateTime.strptime(value, DATE_FORMAT).to_date.end_of_day
       if poss_date  > self.start_date
         puts "no errors found updating end_date"
         self.end_date = poss_date

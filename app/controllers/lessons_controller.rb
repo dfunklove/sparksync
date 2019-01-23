@@ -53,18 +53,7 @@ class LessonsController < ApplicationController
     @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
     @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
-    sql = "select users.first_name, users.last_name as teacher_last, "
-    sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, lessons.id, lessons.school_id, name, "
-    sql += "students.first_name, "
-    sql += "students.last_name as student_last, user_id, student_id "
-    sql += "from users inner join lessons on users.id = lessons.user_id "
-    sql += "inner join students on lessons.student_id = students.id "
-    sql += "inner join schools on lessons.school_id = schools.id "
-    sql += "where time_out is not null"
-    sql += " and ? < time_in and time_in < ? "
-    @messons = Lesson.find_by_sql([sql, 
-        @dateview.start_date.to_s,  @dateview.end_date.to_s])
+    @messons = Lesson.find_by_date(@dateview.start_date, @dateview.end_date)
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not

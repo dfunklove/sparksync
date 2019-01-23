@@ -55,15 +55,7 @@ class TeachersController < UsersController
       @showteacher = false
       @showhours = true
 
-      sql = "select name, time_in, time_out, progress, behavior, notes, "
-      sql += "brought_instrument, brought_books, students.first_name, "
-      sql += "students.last_name, student_id "
-      sql += "from schools inner join lessons on schools.id = lessons.school_id"
-      sql += " inner join students on lessons.student_id = students.id where "
-      sql += " time_out is not null and user_id = " + teacher_id 
-      sql += " and ? < time_in and time_in < ? "
-      @lessons = Lesson.find_by_sql([sql, 
-          @dateview.start_date.to_s,  @dateview.end_date.to_s])
+      @lessons = Lesson.find_by_teacher(teacher_id, @dateview.start_date, @dateview.end_date)
       if session[:sortcol]
         sortcol = session[:sortcol]
         # case by case as sorting by student' slast name or school name is not

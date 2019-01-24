@@ -14,6 +14,16 @@ class Dateview < ApplicationRecord
   validates :s_date_formatted, presence: true, format: {with: SPATTERN }
   validates :e_date_formatted, presence: true, format: { with: SPATTERN }
 
+  def initialize
+    super
+    self.start_date = (DateTime.now - 7.days).beginning_of_day
+    self.end_date = DateTime.now.end_of_day
+  end
+
+  def initialize(args)
+    super(args)
+  end
+
   def date_errs(valarray, errs)
     bad = nil
     puts "valarray[0] " + valarray[0] + " errs[0] " + errs[0].to_s + "$"

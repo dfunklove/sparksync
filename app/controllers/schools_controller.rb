@@ -8,20 +8,7 @@ class SchoolsController < ApplicationController
     school_id = params[:id]
 
     @school = School.find(school_id)
-    if session[:dv_id]
-      @dateview = Dateview.find(session[:dv_id])
-    else
-      # set default for the preceding week including today
-      e_date = Time.now.midnight + 24*60*60
-      s_date = e_date - 6*24*60*60
-      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
-
-      if @dateview.errors.count == 0 && @dateview.save
-        session[:dv_id] = @dateview.id
-      else
-        raise Exception.new("Not able to save default dateview")
-      end
-    end
+    @dateview = current_dateview
 
     # title and what column depend on user and in the case
     # of admin, what view she wants

@@ -62,4 +62,23 @@ module SessionsHelper
     session[:forwarding_url] = request.original_url if request.get?
   end
 
+  def current_dateview
+    if session[:dv_id]
+      if @dateview && @dateview.id == session[:dv_id]
+        @dateview
+      else
+        @dateview = Dateview.find(session[:dv_id])
+      end
+    else
+      @dateview = Dateview.new
+      @dateview.save
+      session[:dv_id] = @dateview.id
+    end
+    @dateview
+  end
+
+  def current_dateview=(value)
+    @dateview = value
+    session[:dv_id] = value.id
+  end
 end

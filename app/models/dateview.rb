@@ -20,10 +20,6 @@ class Dateview < ApplicationRecord
     self.end_date = DateTime.now.end_of_day
   end
 
-  def initialize(args)
-    super(args)
-  end
-
   def date_errs(valarray, errs)
     bad = nil
     puts "valarray[0] " + valarray[0] + " errs[0] " + errs[0].to_s + "$"

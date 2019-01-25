@@ -1,8 +1,8 @@
 class TeachersController < UsersController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a teacher
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:index, :create, :update, :delete]
   before_action :correct_user, only: :show
 
   def show
@@ -82,7 +82,7 @@ class TeachersController < UsersController
 
   # new refers to one of the actions generated
   # by resources :teachers in config/routes.rb
-  def new
+  def index
     store_location
     
     if session[:changev]
@@ -114,7 +114,7 @@ class TeachersController < UsersController
     @teacher.activated = true
     if @teacher.save
       @teacher.send_welcome(@teacher.id)
-      redirect_to new_teacher_path
+      redirect_to teachers_url
     else
       @teachers = find_right_teachers
       if session[:changev]
@@ -122,7 +122,7 @@ class TeachersController < UsersController
       else 
         @changev = "Active"
       end
-      render 'new'
+      render 'index'
     end
   end
 
@@ -141,7 +141,7 @@ class TeachersController < UsersController
                         password: genword)
         @teacher.send_password_reset_email
       
-        redirect_to new_teacher_path
+        redirect_to teachers_url
       else
         @teachers = find_right_teachers
         if session[:changev]
@@ -149,7 +149,7 @@ class TeachersController < UsersController
         else 
           @changev = "Active"
         end
-        render 'new'
+        render 'index'
       end
     elsif params[:delete]
       puts "delete"
@@ -160,7 +160,7 @@ class TeachersController < UsersController
         # don't actually delete, set unactivated
         if who.update( activated: false,
                        password: genword)
-          redirect_to new_teacher_path
+          redirect_to teachers_url
         else
           @teachers = find_right_teachers
           if session[:changev]
@@ -168,11 +168,11 @@ class TeachersController < UsersController
           else 
             @changev = "Active"
           end
-          render 'new'
+          render 'index'
         end
       else
         if who.delete
-          redirect_to new_teacher_path
+          redirect_to teachers_url
         else
           @teachers = find_right_teachers
           if session[:changev]
@@ -180,7 +180,7 @@ class TeachersController < UsersController
           else 
             @changev = "Active"
           end
-          render 'new'
+          render 'index'
         end
       end
     elsif params[:hours]

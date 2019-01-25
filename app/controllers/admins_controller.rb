@@ -2,7 +2,7 @@ class AdminsController < UsersController
   before_action :logged_in_user
   before_action :admin_user
 
-  def new
+  def index
     store_location
     
     if session[:changev]
@@ -33,7 +33,7 @@ class AdminsController < UsersController
     if @admin.save
       # send email
       @admin.send_welcome(@admin.id)
-      redirect_to new_admin_path
+      redirect_to admins_url
     else
       @admins = find_right_admins
       if session[:changev]
@@ -41,7 +41,7 @@ class AdminsController < UsersController
       else
         @changev = "Active"
       end
-      render 'new'
+      render 'index'
     end
   end
 
@@ -61,7 +61,7 @@ class AdminsController < UsersController
                         password: genword)
         # send email
       	@admin.send_password_reset_email
-        redirect_to new_admin_path
+        redirect_to admins_url
       else
         @admins = find_right_admins
         if session[:changev]
@@ -69,7 +69,7 @@ class AdminsController < UsersController
         else
           @changev = "Active"
         end
-        render 'new'
+        render 'index'
       end
     elsif params[:delete]
       puts "delete"
@@ -80,7 +80,7 @@ class AdminsController < UsersController
         # don't actually delete, set unactivated
         if who.update( activated: false,
                        password: genword)
-          redirect_to new_admin_path
+          redirect_to admins_url
         else
           @admins = find_right_admins
           if session[:changev]
@@ -88,11 +88,11 @@ class AdminsController < UsersController
           else
             @changev = "Active"
           end
-          render 'new'
+          render 'index'
         end
       else
         if who.delete
-          redirect_to new_admin_path
+          redirect_to admins_url
         else
           @admins = find_right_admins
           if session[:changev]
@@ -100,7 +100,7 @@ class AdminsController < UsersController
           else
             @changev = "Active"
           end
-          render 'new'
+          render 'index'
         end
       end
     elsif params[:hours]

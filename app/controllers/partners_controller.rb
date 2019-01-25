@@ -1,19 +1,19 @@
 class PartnersController < UsersController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a partner
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show,
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show,
                                         :index]
-  before_action :partner_user, only: :index
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :partner_user, only: :school
+  before_action :admin_user, only: [:index, :create, :update, :delete]
 
-  def index
+  def school
     whatschool = '/schools/' + current_user.school_id.to_s
     redirect_to whatschool
   end
 
   # new refers to one of the actions generated
   # by resources :partners in config/routes.rb
-  def new
+  def index
     store_location
     
     if session[:changev]
@@ -46,7 +46,7 @@ class PartnersController < UsersController
     if @partner.save
       # send email
       @partner.send_welcome(@partner.id)
-      redirect_to new_partner_path
+      redirect_to partners_url
     else
       @partners = find_right_partners
       if session[:changev]

@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a student
-  before_action :logged_in_user, only: [:new, :create, :update, :show]
+  before_action :logged_in_user, only: [:index, :create, :update, :show]
   before_action :admin_user, only: [:create, :update]
   before_action :correct_user, only: [:show ]
 
@@ -53,7 +53,7 @@ class StudentsController < ApplicationController
   # by resources :students in config/routes.rb
   # displays all "right" students and makes it possible to view
   # makes it possible for admin to modify or delete
-  def new
+  def index
     store_location
     
     if session[:changev]
@@ -92,7 +92,7 @@ class StudentsController < ApplicationController
     @student = Student.new(student_params)
     @student.activated = true
     if @student.save
-      redirect_to new_student_path
+      redirect_to students_url
     else
       @students = find_right_students
       @showbtns = current_user.admin?
@@ -101,7 +101,7 @@ class StudentsController < ApplicationController
       else 
         @changev = "Active"
       end
-      render 'new'
+      render 'index'
     end
   end
 
@@ -116,10 +116,10 @@ class StudentsController < ApplicationController
                         first_name: student_params[:first_name],
                         last_name: student_params[:last_name],
                         activated: true)
-        redirect_to new_student_path
+        redirect_to students_url
       else
         @students = find_right_students
-        render 'new'
+        render 'index'
       end
     elsif params[:delete]
       puts "delete"
@@ -128,17 +128,17 @@ class StudentsController < ApplicationController
       if who.activated
         # don't actually delete, set unactivated
         if who.update( activated: false)
-          redirect_to new_student_path
+          redirect_to students_url
         else
           @students = find_right_students
-          render 'new'
+          render 'index'
         end
       else
         if who.delete
-          redirect_to new_student_path
+          redirect_to students_url
         else
           @students = find_right_students
-          render 'new'
+          render 'index'
         end
       end
     elsif params[:hours] #TODO remove?
@@ -164,6 +164,6 @@ class StudentsController < ApplicationController
       evertaught = 
         Lesson.where(user_id: current_user.id).find_by(student_id: @student_id)   
       return if current_user.teacher? && evertaught
-      redirect_to new_student_path
+      redirect_to students_url
     end
 end

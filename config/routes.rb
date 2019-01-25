@@ -71,14 +71,13 @@ Rails.application.routes.draw do
   post '/users/change_view'
   post '/teachers/change_table'
   post '/lessons/sort'
-  get 'lessons/index'
-  get '/lessons',    to: 'lessons#index'
-  resources :lessons, only: [:new, :create, :update, :destroy]
-  resources :teachers, only: [:new, :create, :update, :show, :destroy]
+  get '/partners/school'
+  resources :lessons, only: [:index, :new, :create, :update, :destroy]
+  resources :teachers, only: [:index, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
-  resources :admins, only: [:new, :create, :update, :destroy]
-  resources :schools, only: [:new, :create, :update, :show, :destroy]
-  resources :students, only: [:new, :create, :update, :show, :destroy]
+  resources :admins, only: [:index, :create, :update, :destroy]
+  resources :schools, only: [:index, :create, :update, :show, :destroy]
+  resources :students, only: [:index, :create, :update, :show, :destroy]
   resources :dateviews, only: [:update]
   resources :password_resets, only: [:new, :create, :edit, :update]
 

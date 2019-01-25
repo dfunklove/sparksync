@@ -1,6 +1,6 @@
 class SchoolsController < ApplicationController
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:index, :create, :update, :delete]
   before_action :correct_user, only: :show
 
   def show
@@ -56,7 +56,7 @@ class SchoolsController < ApplicationController
 
   # new refers to one of the actions generated
   # by resources :schools in config/routes.rb
-  def new
+  def index
     store_location
     
     if session[:changev]
@@ -86,7 +86,7 @@ class SchoolsController < ApplicationController
     @school = School.new(school_params)
     @school.activated = true
     if @school.save
-      redirect_to new_school_path
+      redirect_to schools_url
     else
       if session[:changev]
         @changev = session[:changev] 
@@ -95,7 +95,7 @@ class SchoolsController < ApplicationController
       end
 
       @schools = find_right_schools
-      render 'new'
+      render 'index'
     end
   end
 
@@ -107,10 +107,10 @@ class SchoolsController < ApplicationController
       if School.update(@school.id,
                         name: school_params[:name],
                         activated: true)
-        redirect_to new_school_path
+        redirect_to schools_url
       else
         @schools = find_right_schools
-        render 'new'
+        render 'index'
       end
     elsif params[:delete]
       puts "delete"
@@ -119,17 +119,17 @@ class SchoolsController < ApplicationController
       if who.activated
         # don't actually delete, set unactivated
         if who.update(activated: false)
-          redirect_to new_school_path
+          redirect_to schools_url
         else
           @schools = find_right_schools
-          render 'new'
+          render 'index'
         end
       else
         if who.delete
-          redirect_to new_school_path
+          redirect_to schools_url
         else
           @schools = find_right_schools
-          render 'new'
+          render 'index'
         end
       end
     elsif params[:hours]

@@ -34,15 +34,6 @@ module SessionsHelper
         raise Exception.new('Teacher time out wasnt null')
       end
     end
-    if dv_id = session[:dv_id]
-      dv = Dateview.find_by(id: dv_id)
-      if dv
-        dv.delete
-      elsif Rails.env.development?
-        raise Exception.new('Junk Dateview ID in session on logout')
-      end
-      session.delete(:dv_id)
-    end
     if session[:sort_col]
       session.delete(:sort_col)
     end

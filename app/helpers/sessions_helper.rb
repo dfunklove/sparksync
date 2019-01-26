@@ -1,4 +1,6 @@
 module SessionsHelper
+  attr_accessor :current_dateview
+
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
@@ -63,22 +65,14 @@ module SessionsHelper
   end
 
   def current_dateview
-    if session[:dv_id]
-      if @dateview && @dateview.id == session[:dv_id]
-        @dateview
-      else
-        @dateview = Dateview.find(session[:dv_id])
-      end
-    else
-      @dateview = Dateview.new
-      @dateview.save
-      session[:dv_id] = @dateview.id
-    end
-    @dateview
+    d = Dateview.new
+    d.start_date = DateTime.parse(session[:dateview_start]) if session[:dateview_start]
+    d.end_date = DateTime.parse(session[:dateview_end]) if session[:dateview_end]
+    return d
   end
 
-  def current_dateview=(value)
-    @dateview = value
-    session[:dv_id] = value.id
+  def set_current_dateview(value)
+    session[:dateview_start] = value.start_date
+    session[:dateview_end] = value.end_date
   end
 end

@@ -1,7 +1,7 @@
 <table>
 <tr>
-<!-- post to /dateview/id where new date is stored, then redirect back here -->
-<%= form_for @dateview, url: dateview_path(@dateview.id) do |f| %>
+<!-- post to /dateviews where new date is stored, then redirect back here -->
+<%= form_for @dateview, url: dateviews_path do |f| %>
   <td>
   <%= f.label :start_date %>
   </td>

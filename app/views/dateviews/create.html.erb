@@ -14,9 +14,9 @@
 <table>
 <tr>
   <td>Default values: </td>
-<!-- post to /dateview/id (here) where new date is stored -->
+<!-- post to /dateviews (here) where new date is stored -->
 <!-- this page won't be displayed again unless there are still errors -->
-<%= form_for @d, url: dateview_path(@d.id) do |f| %>
+<%= form_for @d, url: dateviews_path do |f| %>
   <td>
   <%= f.label :start_date %>
   </td>

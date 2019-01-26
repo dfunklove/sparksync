@@ -78,7 +78,7 @@ Rails.application.routes.draw do
   resources :admins, only: [:index, :create, :update, :destroy]
   resources :schools, only: [:index, :create, :update, :show, :destroy]
   resources :students, only: [:index, :create, :update, :show, :destroy]
-  resources :dateviews, only: [:update]
+  resources :dateviews, only: [:create]
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   get '/schools/:id', to: 'schools#show' # for partners to view

@@ -55,37 +55,40 @@ class StudentsController < ApplicationController
   # makes it possible for admin to modify or delete
   def index
     store_location
-    
+    @student = Student.new
+
+    prepare_index    
+  end
+
+  def prepare_index
+    @students = find_right_students
+    @showbtns = current_user.admin?
+    @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
+  end
+
+  def find_right_students
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
 
-    # @students and @student are variables provided
-    # to the new.html.erb view
-    @students = find_right_students
-    @student = Student.new
-    @showbtns = current_user.admin?
-    @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
-  end
-
-  def find_right_students
-    rightstudents = Student.all
-    if @changev == "Active"
-      rightstudents = rightstudents.where(activated: true)
-    elsif @changev == "Inactive"
-      rightstudents = rightstudents.where(activated: false)
-    end
-    return rightstudents if current_user.admin?
-    if current_user.partner?
+    if current_user.admin?
+      if @changev == "Active"
+        rightstudents = Student.where(activated: true)
+      elsif @changev == "Inactive"
+        rightstudents = Student.where(activated: false)
+      else
+        rightstudents = Student.all      
+      end
+    elsif current_user.partner?
       rightschool = current_user.school_id
-      rightstudents = rightstudents.where(school_id: rightschool)
-      return rightstudents
+      rightstudents = Student.where(school_id: rightschool)
+    else # current_user is a teacher
+      sql = "select student_id from lessons where user_id = ?"
+      rightids = Lesson.find_by_sql([sql, current_user.id]).map(&:student_id)
+      rightstudents = Student.where({id: rightids})
     end
-    sql = "select student_id from lessons where user_id = ?"
-    rightids = Lesson.find_by_sql([sql, current_user.id]).map(&:student_id)
-    rightstudents = rightstudents.where({id: rightids})
   end
  
   def create
@@ -94,13 +97,7 @@ class StudentsController < ApplicationController
     if @student.save
       redirect_to students_url
     else
-      @students = find_right_students
-      @showbtns = current_user.admin?
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
+      prepare_index
       render 'index'
     end
   end
@@ -118,7 +115,7 @@ class StudentsController < ApplicationController
                         activated: true)
         redirect_to students_url
       else
-        @students = find_right_students
+        prepare_index
         render 'index'
       end
     elsif params[:delete]
@@ -130,14 +127,14 @@ class StudentsController < ApplicationController
         if who.update( activated: false)
           redirect_to students_url
         else
-          @students = find_right_students
+          prepare_index
           render 'index'
         end
       else
         if who.delete
           redirect_to students_url
         else
-          @students = find_right_students
+          prepare_index
           render 'index'
         end
       end

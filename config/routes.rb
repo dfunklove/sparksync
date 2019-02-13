@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     root 'lessons#new'
   end
   constraints(PartnerConstraint.new) do
-    root 'partners#school'
+    root 'partners#index'
   end
   root 'sessions#new'
 

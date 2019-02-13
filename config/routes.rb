@@ -33,11 +33,7 @@ class PartnerConstraint
       if (!@user || !(@user.id == @user_id))
         @user = User.find_by(id: @user_id)
       end
-      if @user && @user.partner?
-        return whatschool = @user.school_id
-      else
-        return false
-      end  
+      return @user && @user.partner?
     else
       return false
     end

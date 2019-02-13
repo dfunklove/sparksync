@@ -80,25 +80,27 @@ class TeachersController < UsersController
     redirect_to session[:forwarding_url]
   end
 
-  # new refers to one of the actions generated
-  # by resources :teachers in config/routes.rb
   def index
     store_location
-    
+
+    @teacher = Teacher.new
+    prepare_index
+  end
+
+  # prepare everything needed before calling "render 'index'"
+  def prepare_index    
+    @teachers = find_right_teachers
+    @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"    
+  end
+
+  def find_right_teachers
+    # value of changev determines whether to show Active, Inactive or All teachers
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
 
-    # @teachers and @teacher are variables provided
-    # to the new.html.erb view
-    @teachers = find_right_teachers
-    @teacher = Teacher.new
-    @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"
-  end
-
-  def find_right_teachers
     if @changev == "Active"
       Teacher.where(activated: true)
     elsif @changev == "Inactive"
@@ -116,12 +118,7 @@ class TeachersController < UsersController
       @teacher.send_welcome(@teacher.id)
       redirect_to teachers_url
     else
-      @teachers = find_right_teachers
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
+      prepare_index
       render 'index'
     end
   end
@@ -143,12 +140,7 @@ class TeachersController < UsersController
       
         redirect_to teachers_url
       else
-        @teachers = find_right_teachers
-        if session[:changev]
-          @changev = session[:changev] 
-        else 
-          @changev = "Active"
-        end
+        prepare_index
         render 'index'
       end
     elsif params[:delete]
@@ -162,24 +154,14 @@ class TeachersController < UsersController
                        password: genword)
           redirect_to teachers_url
         else
-          @teachers = find_right_teachers
-          if session[:changev]
-            @changev = session[:changev] 
-          else 
-            @changev = "Active"
-          end
+          prepare_index
           render 'index'
         end
       else
         if who.delete
           redirect_to teachers_url
         else
-          @teachers = find_right_teachers
-          if session[:changev]
-            @changev = session[:changev] 
-          else 
-            @changev = "Active"
-          end
+          prepare_index
           render 'index'
         end
       end

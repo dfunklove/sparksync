@@ -4,19 +4,28 @@ class AdminsController < UsersController
 
   def index
     store_location
-    
+    @admin = Admin.new
+
+    prepare_index    
+  end
+
+  def prepare_index
+    @admins = find_right_admins
+    @delete_warning = "Deleting this admin is irreversible. Are you sure?"
+  end
+
+  def handle_error
+    prepare_index
+    render 'index'
+  end
+
+  def find_right_admins
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
 
-    @admins = find_right_admins
-    @admin = Admin.new
-    @delete_warning = "Deleting this admin is irreversible. Are you sure?"
-  end
-
-  def find_right_admins
     if @changev == "Active"
       Admin.where(activated: true)
     elsif @changev == "Inactive"
@@ -35,13 +44,7 @@ class AdminsController < UsersController
       @admin.send_welcome(@admin.id)
       redirect_to admins_url
     else
-      @admins = find_right_admins
-      if session[:changev]
-        @changev = session[:changev]
-      else
-        @changev = "Active"
-      end
-      render 'index'
+      handle_error
     end
   end
 
@@ -63,13 +66,7 @@ class AdminsController < UsersController
       	@admin.send_password_reset_email
         redirect_to admins_url
       else
-        @admins = find_right_admins
-        if session[:changev]
-          @changev = session[:changev]
-        else
-          @changev = "Active"
-        end
-        render 'index'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
@@ -82,25 +79,13 @@ class AdminsController < UsersController
                        password: genword)
           redirect_to admins_url
         else
-          @admins = find_right_admins
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'index'
+          handle_error
         end
       else
         if who.delete
           redirect_to admins_url
         else
-          @admins = find_right_admins
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'index'
+          handle_error
         end
       end
     elsif params[:hours]

@@ -11,25 +11,30 @@ class PartnersController < UsersController
     redirect_to whatschool
   end
 
-  # new refers to one of the actions generated
-  # by resources :partners in config/routes.rb
   def index
     store_location
+    @partner = Partner.new
     
+    prepare_index
+  end
+
+  def prepare_index
+    @partners = find_right_partners
+    @delete_warning = "Deleting this partner is irreversible. Are you sure?"
+  end
+
+  def handle_error
+    prepare_index
+    render 'index'
+  end
+
+  def find_right_partners
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
 
-    # @partners and @partner are variables provided
-    # to the new.html.erb view
-    @partners = find_right_partners
-    @partner = Partner.new
-    @delete_warning = "Deleting this partner is irreversible. Are you sure?"
-  end
-
-  def find_right_partners
     if @changev == "Active"
       Partner.where(activated: true)
     elsif @changev == "Inactive"
@@ -48,13 +53,7 @@ class PartnersController < UsersController
       @partner.send_welcome(@partner.id)
       redirect_to partners_url
     else
-      @partners = find_right_partners
-      if session[:changev]
-        @changev = session[:changev]
-      else
-        @changev = "Active"
-      end
-      render 'new'
+      handle_error
     end
   end
 
@@ -76,13 +75,7 @@ class PartnersController < UsersController
       	@partner.send_password_reset_email
         redirect_to new_partner_path
       else
-        @partners = find_right_partners
-        if session[:changev]
-          @changev = session[:changev]
-        else
-          @changev = "Active"
-        end
-        render 'new'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
@@ -95,25 +88,13 @@ class PartnersController < UsersController
                        password: genword)
           redirect_to new_partner_path
         else
-          @partners = find_right_partners
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       else
         if who.delete
           redirect_to new_partner_path
         else
-          @partners = find_right_partners
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       end
     elsif params[:hours]

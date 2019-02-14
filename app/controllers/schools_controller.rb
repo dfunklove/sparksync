@@ -54,25 +54,30 @@ class SchoolsController < ApplicationController
 
   end
 
-  # new refers to one of the actions generated
-  # by resources :schools in config/routes.rb
   def index
     store_location
-    
+    @school = School.new
+
+    prepare_index    
+  end
+
+  def prepare_index
+    @schools = find_right_schools
+    @delete_warning = "Deleting this school is irreversible. Are you sure?"
+  end
+
+  def handle_error
+    prepare_index
+    render 'index'
+  end
+
+  def find_right_schools
     if session[:changev]
       @changev = session[:changev] 
     else 
       @changev = "Active"
     end
 
-    # @schools and @school are variables provided
-    # to the new.html.erb view
-    @schools = find_right_schools
-    @school = School.new
-    @delete_warning = "Deleting this school is irreversible. Are you sure?"
-  end
-
-  def find_right_schools
     if @changev == "Active"
       School.where(activated: true)
     elsif @changev == "Inactive"
@@ -88,14 +93,7 @@ class SchoolsController < ApplicationController
     if @school.save
       redirect_to schools_url
     else
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
-
-      @schools = find_right_schools
-      render 'index'
+      handle_error
     end
   end
 
@@ -109,8 +107,7 @@ class SchoolsController < ApplicationController
                         activated: true)
         redirect_to schools_url
       else
-        @schools = find_right_schools
-        render 'index'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
@@ -121,15 +118,13 @@ class SchoolsController < ApplicationController
         if who.update(activated: false)
           redirect_to schools_url
         else
-          @schools = find_right_schools
-          render 'index'
+          handle_error
         end
       else
         if who.delete
           redirect_to schools_url
         else
-          @schools = find_right_schools
-          render 'index'
+          handle_error
         end
       end
     elsif params[:hours]

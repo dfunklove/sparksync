@@ -49,8 +49,7 @@ class PartnersController < UsersController
       puts "modify"
       # won't work without password
       genword = genpassword(@partner)
-      if Partner.update(@partner.id,
-                        school_id: partner_params[:school_id],
+      if @partner.update(school_id: partner_params[:school_id],
                         first_name: partner_params[:first_name],
                         last_name: partner_params[:last_name],
                         email: partner_params[:email],
@@ -58,26 +57,24 @@ class PartnersController < UsersController
                         password: genword)
         # send email
       	@partner.send_password_reset_email
-        redirect_to new_partner_path
+        redirect_to partners_url
       else
         handle_error
       end
     elsif params[:delete]
       puts "delete"
-      partner_id = @partner.id 
-      who = Partner.find(partner_id)
-      if who.activated
-        genword = genpassword(who)
+      if @partner.activated
+        genword = genpassword(@partner)
         # don't actually delete, set unactivated
-        if who.update( activated: false,
+        if @partner.update( activated: false,
                        password: genword)
-          redirect_to new_partner_path
+          redirect_to partners_url
         else
           handle_error
         end
       else
-        if who.delete
-          redirect_to new_partner_path
+        if @partner.delete
+          redirect_to partners_url
         else
           handle_error
         end

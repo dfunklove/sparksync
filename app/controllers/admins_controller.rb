@@ -40,8 +40,7 @@ class AdminsController < UsersController
       puts "modify"
       # won't work without password
       genword = genpassword(@admin)
-      if Admin.update(@admin.id,
-                        school_id: admin_params[:school_id],
+      if @admin.update(school_id: admin_params[:school_id],
                         first_name: admin_params[:first_name],
                         last_name: admin_params[:last_name],
                         email: admin_params[:email],
@@ -55,19 +54,17 @@ class AdminsController < UsersController
       end
     elsif params[:delete]
       puts "delete"
-      admin_id = @admin.id 
-      who = Admin.find(admin_id)
-      if who.activated
-        genword = genpassword(who)
+      if @admin.activated
+        genword = genpassword(@admin)
         # don't actually delete, set unactivated
-        if who.update( activated: false,
+        if @admin.update( activated: false,
                        password: genword)
           redirect_to admins_url
         else
           handle_error
         end
       else
-        if who.delete
+        if @admin.delete
           redirect_to admins_url
         else
           handle_error

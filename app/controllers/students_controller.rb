@@ -99,8 +99,7 @@ class StudentsController < ApplicationController
     @student = Student.find(student_id)
     if params[:modify]
       puts "modify"
-      if Student.update(@student.id,
-                        school_id: student_params[:school_id],
+      if @student.update(school_id: student_params[:school_id],
                         first_name: student_params[:first_name],
                         last_name: student_params[:last_name],
                         activated: true)
@@ -110,25 +109,20 @@ class StudentsController < ApplicationController
       end
     elsif params[:delete]
       puts "delete"
-      student_id = @student.id 
-      who = Student.find(student_id)
-      if who.activated
+      if @student.activated
         # don't actually delete, set unactivated
-        if who.update( activated: false)
+        if @student.update( activated: false)
           redirect_to students_url
         else
           handle_error
         end
       else
-        if who.delete
+        if @student.delete
           redirect_to students_url
         else
           handle_error
         end
       end
-    elsif params[:hours] #TODO remove?
-      puts "about to redirect_to student_path " + student_id
-      redirect_to student_path(student_id)
     else
       raise Exception.new('not welcome, modify or delete. who called student update?')
     end

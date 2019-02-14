@@ -87,8 +87,7 @@ class SchoolsController < ApplicationController
     @school = School.find(school_id)
     if params[:modify]
       puts "modify"
-      if School.update(@school.id,
-                        name: school_params[:name],
+      if @school.update(name: school_params[:name],
                         activated: true)
         redirect_to schools_url
       else
@@ -96,17 +95,15 @@ class SchoolsController < ApplicationController
       end
     elsif params[:delete]
       puts "delete"
-      school_id = @school.id 
-      who = School.find(school_id)
-      if who.activated
+      if @school.activated
         # don't actually delete, set unactivated
-        if who.update(activated: false)
+        if @school.update(activated: false)
           redirect_to schools_url
         else
           handle_error
         end
       else
-        if who.delete
+        if @school.delete
           redirect_to schools_url
         else
           handle_error

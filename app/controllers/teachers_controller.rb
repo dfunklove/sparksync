@@ -93,6 +93,11 @@ class TeachersController < UsersController
     @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"    
   end
 
+  def handle_error
+    prepare_index
+    render 'index'
+  end
+
   def find_right_teachers
     # value of changev determines whether to show Active, Inactive or All teachers
     if session[:changev]
@@ -118,8 +123,7 @@ class TeachersController < UsersController
       @teacher.send_welcome(@teacher.id)
       redirect_to teachers_url
     else
-      prepare_index
-      render 'index'
+      handle_error
     end
   end
 
@@ -140,8 +144,7 @@ class TeachersController < UsersController
       
         redirect_to teachers_url
       else
-        prepare_index
-        render 'index'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
@@ -154,15 +157,13 @@ class TeachersController < UsersController
                        password: genword)
           redirect_to teachers_url
         else
-          prepare_index
-          render 'index'
+          handle_error
         end
       else
         if who.delete
           redirect_to teachers_url
         else
-          prepare_index
-          render 'index'
+          handle_error
         end
       end
     elsif params[:hours]

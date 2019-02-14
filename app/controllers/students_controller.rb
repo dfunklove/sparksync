@@ -49,8 +49,6 @@ class StudentsController < ApplicationController
     @tot_hours = @tot_hours/3600
   end
 
-  # new refers to one of the actions generated
-  # by resources :students in config/routes.rb
   # displays all "right" students and makes it possible to view
   # makes it possible for admin to modify or delete
   def index
@@ -64,6 +62,11 @@ class StudentsController < ApplicationController
     @students = find_right_students
     @showbtns = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
+  end
+
+  def handle_error
+    prepare_index
+    render 'index'
   end
 
   def find_right_students
@@ -97,8 +100,7 @@ class StudentsController < ApplicationController
     if @student.save
       redirect_to students_url
     else
-      prepare_index
-      render 'index'
+      handle_error
     end
   end
 
@@ -115,8 +117,7 @@ class StudentsController < ApplicationController
                         activated: true)
         redirect_to students_url
       else
-        prepare_index
-        render 'index'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
@@ -127,15 +128,13 @@ class StudentsController < ApplicationController
         if who.update( activated: false)
           redirect_to students_url
         else
-          prepare_index
-          render 'index'
+          handle_error
         end
       else
         if who.delete
           redirect_to students_url
         else
-          prepare_index
-          render 'index'
+          handle_error
         end
       end
     elsif params[:hours] #TODO remove?

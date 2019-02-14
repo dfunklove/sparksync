@@ -67,10 +67,19 @@ class AdminsController < UsersController
           handle_error
         end
       end
+    elsif params[:reset]
+      puts "reset"
+      genword = genpassword(@admin)
+      if @admin.update(password: genword)
+        @admin.send_password_reset_email
+        redirect_to admins_url
+      else
+        handle_error
+      end      
     elsif params[:hours]
       redirect_to admin_path(admin_id)
     else
-      raise Exception.new('not welcome, modify or delete. who called admin update?')
+      raise Exception.new('not modify, delete, or reset. who called admin update?')
     end
   end
 

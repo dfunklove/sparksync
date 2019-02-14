@@ -141,6 +141,15 @@ class TeachersController < UsersController
           handle_error
         end
       end
+    elsif params[:reset]
+      puts "reset"
+      genword = genpassword(@teacher)
+      if @teacher.update(password: genword)
+        @teacher.send_password_reset_email
+        redirect_to teachers_url
+      else
+        handle_error
+      end      
     elsif params[:hours]
       redirect_to teacher_path(teacher_id)
     else

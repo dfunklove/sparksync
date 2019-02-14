@@ -59,6 +59,7 @@ class StudentsController < ApplicationController
   end
 
   def prepare_index
+    @changev = current_visibility
     @students = find_right_students
     @showbtns = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
@@ -70,20 +71,8 @@ class StudentsController < ApplicationController
   end
 
   def find_right_students
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
     if current_user.admin?
-      if @changev == "Active"
-        rightstudents = Student.where(activated: true)
-      elsif @changev == "Inactive"
-        rightstudents = Student.where(activated: false)
-      else
-        rightstudents = Student.all      
-      end
+      rightstudents = visible_records(Student)
     elsif current_user.partner?
       rightschool = current_user.school_id
       rightstudents = Student.where(school_id: rightschool)

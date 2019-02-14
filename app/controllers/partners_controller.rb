@@ -19,29 +19,14 @@ class PartnersController < UsersController
   end
 
   def prepare_index
-    @partners = find_right_partners
+    @changev = current_visibility
+    @partners = visible_records(Partner)
     @delete_warning = "Deleting this partner is irreversible. Are you sure?"
   end
 
   def handle_error
     prepare_index
     render 'index'
-  end
-
-  def find_right_partners
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    if @changev == "Active"
-      Partner.where(activated: true)
-    elsif @changev == "Inactive"
-      Partner.where(activated: false)
-    else
-      Partner.all
-    end
   end
  
   def create

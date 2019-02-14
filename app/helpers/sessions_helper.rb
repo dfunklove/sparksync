@@ -66,4 +66,19 @@ module SessionsHelper
     session[:dateview_start] = value.start_date
     session[:dateview_end] = value.end_date
   end
+
+  def current_visibility
+    return session[:changev] || "Active"
+  end
+
+  def visible_records(model)
+    vis = current_visibility
+    if vis == "Active"
+      model.where(activated: true)
+    elsif vis == "Inactive"
+      model.where(activated: false)
+    else
+      model.all
+    end
+  end
 end

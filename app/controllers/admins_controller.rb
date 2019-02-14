@@ -10,7 +10,8 @@ class AdminsController < UsersController
   end
 
   def prepare_index
-    @admins = find_right_admins
+    @changev = current_visibility
+    @admins = visible_records(Admin)
     @delete_warning = "Deleting this admin is irreversible. Are you sure?"
   end
 
@@ -19,22 +20,6 @@ class AdminsController < UsersController
     render 'index'
   end
 
-  def find_right_admins
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    if @changev == "Active"
-      Admin.where(activated: true)
-    elsif @changev == "Inactive"
-      Admin.where(activated: false)
-    else
-      Admin.all
-    end
-  end
- 
   def create
     @admin = Admin.new(admin_params)
     genword = genpassword(@admin)

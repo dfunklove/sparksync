@@ -62,29 +62,14 @@ class SchoolsController < ApplicationController
   end
 
   def prepare_index
-    @schools = find_right_schools
+    @changev = current_visibility
+    @schools = visible_records(School)
     @delete_warning = "Deleting this school is irreversible. Are you sure?"
   end
 
   def handle_error
     prepare_index
     render 'index'
-  end
-
-  def find_right_schools
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    if @changev == "Active"
-      School.where(activated: true)
-    elsif @changev == "Inactive"
-      School.where(activated: false)
-    else
-      School.all
-    end
   end
 
   def create

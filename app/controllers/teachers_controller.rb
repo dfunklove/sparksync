@@ -88,31 +88,15 @@ class TeachersController < UsersController
   end
 
   # prepare everything needed before calling "render 'index'"
-  def prepare_index    
-    @teachers = find_right_teachers
+  def prepare_index
+    @changev = current_visibility
+    @teachers = visible_records(Teacher)
     @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"    
   end
 
   def handle_error
     prepare_index
     render 'index'
-  end
-
-  def find_right_teachers
-    # value of changev determines whether to show Active, Inactive or All teachers
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    if @changev == "Active"
-      Teacher.where(activated: true)
-    elsif @changev == "Inactive"
-      Teacher.where(activated: false)
-    else
-      Teacher.all
-    end
   end
 
   def create

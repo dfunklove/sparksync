@@ -117,15 +117,10 @@ class TeachersController < UsersController
     success = true
     if params[:modify]
       puts "modify"
-      # won't work without password
-      genword = genpassword(@teacher)
       if @teacher.update(first_name: teacher_params[:first_name],
                         last_name: teacher_params[:last_name],
                         email: teacher_params[:email],
-                        activated: true,
-                        password: genword)
-        @teacher.send_password_reset_email
-      
+                        activated: true)      
         redirect_to teachers_url
       else
         handle_error
@@ -133,10 +128,8 @@ class TeachersController < UsersController
     elsif params[:delete]
       puts "delete"
       if @teacher.activated
-        genword = genpassword(@teacher)
         # don't actually delete, set unactivated
-        if @teacher.update( activated: false,
-                       password: genword)
+        if @teacher.update(activated: false)
           redirect_to teachers_url
         else
           handle_error

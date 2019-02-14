@@ -72,6 +72,13 @@ class PartnersController < UsersController
           handle_error
         end
       end
+    elsif params[:activate]
+      puts "activate"
+      if @partner.update(activated: true)
+        redirect_to partners_url
+      else
+        handle_error
+      end
     elsif params[:reset]
       puts "reset"
       genword = genpassword(@partner)
@@ -84,7 +91,7 @@ class PartnersController < UsersController
     elsif params[:hours]
       redirect_to partner_path(partner_id)
     else
-      raise Exception.new('not modify, delete, or reset. who called partner update?')
+      raise Exception.new('not modify, delete, activate or reset. who called partner update?')
     end
   end
 

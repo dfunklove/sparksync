@@ -21,7 +21,7 @@
         <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
       <% else %>
-        <td><%= f.submit "Activate", class: "delete", name: "modify" %></td>
+        <td><%= f.submit "Activate", class: "delete", name: "activate" %></td>
         <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
       <% end %>
     <% end %>

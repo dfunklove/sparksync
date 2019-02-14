@@ -141,6 +141,13 @@ class TeachersController < UsersController
           handle_error
         end
       end
+    elsif params[:activate]
+      puts "activate"
+      if @teacher.update(activated: true)
+        redirect_to teachers_url
+      else
+        handle_error
+      end
     elsif params[:reset]
       puts "reset"
       genword = genpassword(@teacher)
@@ -153,7 +160,7 @@ class TeachersController < UsersController
     elsif params[:hours]
       redirect_to teacher_path(teacher_id)
     else
-      raise Exception.new('not welcome, modify or delete. who called teacher update?')
+      raise Exception.new('not modify, delete, activate, or reset. who called teacher update?')
     end
   end
 

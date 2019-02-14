@@ -42,8 +42,7 @@ class AdminsController < UsersController
       if @admin.update(school_id: admin_params[:school_id],
                         first_name: admin_params[:first_name],
                         last_name: admin_params[:last_name],
-                        email: admin_params[:email],
-                        activated: true)
+                        email: admin_params[:email])
         #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was modified."
         redirect_to admins_url
       else
@@ -67,6 +66,14 @@ class AdminsController < UsersController
           handle_error
         end
       end
+    elsif params[:activate]
+      puts "activate"
+      if @admin.update(activated: true)
+        #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was activated."
+        redirect_to admins_url
+      else
+        handle_error
+      end
     elsif params[:reset]
       puts "reset"
       genword = genpassword(@admin)
@@ -79,7 +86,7 @@ class AdminsController < UsersController
     elsif params[:hours]
       redirect_to admin_path(admin_id)
     else
-      raise Exception.new('not modify, delete, or reset. who called admin update?')
+      raise Exception.new('not modify, delete, activate, or reset. who called admin update?')
     end
   end
 

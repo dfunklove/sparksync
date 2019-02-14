@@ -64,7 +64,7 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
-  post '/users/change_view'
+  post '/sessions/change_view'
   post '/teachers/change_table'
   post '/lessons/sort'
   get '/partners/school'

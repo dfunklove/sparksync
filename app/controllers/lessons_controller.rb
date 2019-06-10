@@ -21,6 +21,11 @@ class LessonsController < ApplicationController
   def index
     store_location
     school_id = params[:id]
+
+    prepare_index
+  end
+
+  def prepare_index
     @dateview = current_dateview
 
     # title and what column depend on user and in the case
@@ -74,6 +79,11 @@ class LessonsController < ApplicationController
     end
   end
 
+  def handle_index_error
+    prepare_index
+    render 'index'
+  end
+
   def muckwithdate(whatdate)
     turn2date = DateTime.strptime(whatdate, '%l:%M %p %m-%d-%Y')
     screwyrailstime = turn2date.strftime('%l:%M %p %Y-%m-%d')
@@ -85,8 +95,7 @@ class LessonsController < ApplicationController
     lesson_id = params[:id]
     @lesson = Lesson.find(lesson_id)
     if params[:modify]
-      if Lesson.update(lesson_id,
-          student_id: messon_params[:student_id],
+      if @lesson.update(
           # TODO these are assuming the time in params is GMT and converting to local fixit 
           time_in: muckwithdate(messon_params[:time_in]),
           time_out: muckwithdate(messon_params[:time_out]),
@@ -94,12 +103,10 @@ class LessonsController < ApplicationController
           brought_books: messon_params[:brought_books],
           progress: messon_params[:progress],
           behavior: messon_params[:behavior],
-          notes: messon_params[:notes],
-          user_id: messon_params[:user_id],
-          school_id: messon_params[:school_id])
+          notes: messon_params[:notes])
         redirect_to lessons_path
       else 
-        render 'index'
+        handle_index_error
       end
     elsif params[:delete]
       lesson_id = params[:id]
@@ -107,7 +114,7 @@ class LessonsController < ApplicationController
       if what_lesson.delete
         redirect_to lessons_path
       else
-        render 'index'
+        handle_index_error
       end
     else
       raise Exception.new('not modify or delete. who called lesson update?')

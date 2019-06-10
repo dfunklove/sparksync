@@ -87,8 +87,7 @@ class SchoolsController < ApplicationController
     @school = School.find(school_id)
     if params[:modify]
       puts "modify"
-      if @school.update(name: school_params[:name],
-                        activated: true)
+      if @school.update(name: school_params[:name])
         redirect_to schools_url
       else
         handle_error
@@ -108,6 +107,13 @@ class SchoolsController < ApplicationController
         else
           handle_error
         end
+      end
+    elsif params[:activate]
+      puts "activate"
+      if @school.update(activated: true)
+        redirect_to schools_url
+      else
+        handle_error
       end
     elsif params[:hours]
       redirect_to school_path(school_id)

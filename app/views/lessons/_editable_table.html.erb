@@ -80,15 +80,9 @@
     <% @messons.each do |lesson| %>
     <tr>
       <%= form_for(lesson, url: lesson_path(lesson.id)) do |f| %>
-      <td>
-        <%= f.select :school_id, @schools %>
-      </td>
-      <td>
-        <%= f.select :user_id, @teachers %>
-      </td>
-      <td>
-        <%= f.select :student_id, @students %>
-      </td>
+      <td><%= lesson.student.school.name %></td>
+      <td><%= lesson.teacher.first_name %> <%= lesson.teacher.last_name %></td>
+      <td><%= lesson.student.first_name %> <%= lesson.student.last_name %></td>
       <td class="timein"><%= f.text_field :time_in, class: "date", value: lesson.time_in.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
       <td class="timein"><%= f.text_field :time_out, class: "date", value: lesson.time_out.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
       <td>

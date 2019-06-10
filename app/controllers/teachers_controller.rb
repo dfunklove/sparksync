@@ -119,8 +119,7 @@ class TeachersController < UsersController
       puts "modify"
       if @teacher.update(first_name: teacher_params[:first_name],
                         last_name: teacher_params[:last_name],
-                        email: teacher_params[:email],
-                        activated: true)      
+                        email: teacher_params[:email])      
         redirect_to teachers_url
       else
         handle_error

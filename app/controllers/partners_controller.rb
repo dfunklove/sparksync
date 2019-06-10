@@ -50,8 +50,7 @@ class PartnersController < UsersController
       if @partner.update(school_id: partner_params[:school_id],
                         first_name: partner_params[:first_name],
                         last_name: partner_params[:last_name],
-                        email: partner_params[:email],
-                        activated: true)
+                        email: partner_params[:email])
         redirect_to partners_url
       else
         handle_error

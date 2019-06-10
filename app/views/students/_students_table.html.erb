@@ -19,10 +19,11 @@
 	  	<td>
         <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name %>
       </td>
-      <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
       <% if student.activated %>
+        <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
       <% else %>
+        <td><%= f.submit "Activate", class: "delete", name: "activate" %></td>
         <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
       <% end %>
     <% end %>
@@ -49,7 +50,7 @@
  	  <td>
       <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name, :prompt => "School..." %>
     </td>
-    <td><%= f.submit "Create", class: "welcome" %></td>
+    <td><%= f.submit "Create", class: "delete" %></td>
   <% end %>
 	</tr>
   <% end %>

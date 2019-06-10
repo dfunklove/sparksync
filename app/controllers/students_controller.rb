@@ -101,8 +101,7 @@ class StudentsController < ApplicationController
       puts "modify"
       if @student.update(school_id: student_params[:school_id],
                         first_name: student_params[:first_name],
-                        last_name: student_params[:last_name],
-                        activated: true)
+                        last_name: student_params[:last_name])
         redirect_to students_url
       else
         handle_error
@@ -122,6 +121,13 @@ class StudentsController < ApplicationController
         else
           handle_error
         end
+      end
+    elsif params[:activate]
+      puts "activate"
+      if @student.update(activated: true)
+        redirect_to students_url
+      else
+        handle_error
       end
     else
       raise Exception.new('not welcome, modify or delete. who called student update?')

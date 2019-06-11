@@ -4,17 +4,25 @@ class LessonsController < ApplicationController
   before_action :admin_user, only: :index
 
   def new
-  	@lesson = Lesson.new
-  	@student = Student.new
-  	@school = School.new
-  	@allSchools = School.all
+    student_id=params[:s_id]
+    if student_id
+      @student = Student.find(student_id)
+      @school = @student.school
+      @allSchools = [@school]
+    else
+      @student = Student.new
+      @school = School.new
+      @allSchools = School.all
+    end
 
     open_lesson = current_user.lessons_in_progress.first
-    if (open_lesson)
+    if open_lesson
       @lesson = open_lesson
       session[:lesson_id] = open_lesson.id
       flash.now[:danger] = 'Please finish open lesson before starting a new one'
       render "checkout"
+    else
+      @lesson = Lesson.new
     end
   end
 

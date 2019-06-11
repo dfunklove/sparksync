@@ -77,9 +77,7 @@ class StudentsController < ApplicationController
       rightschool = current_user.school_id
       rightstudents = Student.where(school_id: rightschool)
     else # current_user is a teacher
-      sql = "select student_id from lessons where user_id = ?"
-      rightids = Lesson.find_by_sql([sql, current_user.id]).map(&:student_id)
-      rightstudents = Student.where({id: rightids})
+      Student.find_by_teacher(current_user.id)
     end
   end
  

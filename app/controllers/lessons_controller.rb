@@ -6,7 +6,12 @@ class LessonsController < ApplicationController
   def new
     student_id=params[:s_id]
     if student_id
-      @student = Student.find(student_id)
+      # teachers can only select from students they have taught before
+      # this prevents users from harvesting student names by putting id's in the url
+      allowed_students = Student.find_by_teacher(current_user.id)
+      @student = allowed_students.find_by(id: student_id)
+    end
+    if @student
       @school = @student.school
       @allSchools = [@school]
     else

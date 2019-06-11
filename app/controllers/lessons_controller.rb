@@ -10,6 +10,9 @@ class LessonsController < ApplicationController
       # this prevents users from harvesting student names by putting id's in the url
       allowed_students = Student.find_by_teacher(current_user.id)
       @student = allowed_students.find_by(id: student_id)
+      if !@student
+        flash.now[:danger] = 'Invalid student id.  Please enter data manually.'
+      end
     end
     if @student
       @school = @student.school

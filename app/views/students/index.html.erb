@@ -1,8 +1,10 @@
 <table>
 <tr>
-<td>
-<%= render partial: "sessions/change_view" %>
-</td>
+<% if @show_visibility_btn %>
+  <td>
+  <%= render partial: "sessions/change_view" %>
+  </td>
+<% end %>
 <td>
 <h2>
   Students

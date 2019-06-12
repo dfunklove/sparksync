@@ -72,10 +72,9 @@ class StudentsController < ApplicationController
 
   def find_right_students
     if current_user.admin?
-      rightstudents = visible_records(Student)
+      visible_records(Student)
     elsif current_user.partner?
-      rightschool = current_user.school_id
-      rightstudents = Student.where(school_id: rightschool)
+      Student.find_by_school(current_user.school_id)
     else # current_user is a teacher
       Student.find_by_teacher(current_user.id)
     end

@@ -1,10 +1,10 @@
 <table>
 <tr>
-<td>
-<%= form_for(@changev, url: '/users/change_view' ) do |f| %>
-<%    f.submit "#{@changev}", name: "changev" %>
-<%  end %>
-</td>
+<% if @show_visibility_btn %>
+  <td>
+  <%= render partial: "sessions/change_view" %>
+  </td>
+<% end %>
 <td>
 <h2>
   Students

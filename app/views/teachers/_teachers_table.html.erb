@@ -13,10 +13,12 @@
 	  	<td><%= f.text_field :first_name, class: "fname", placeholder: teacher.first_name %></td>
       <td><%= f.text_field :last_name, class: "lname", placeholder: teacher.last_name %></td>
       <td><%= f.email_field :email, class: "email", placeholder: teacher.email %></td>
-      <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
+      <td><%= f.submit "Reset", class: "welcome", name: "reset" %></td>
       <% if teacher.activated %>
+        <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
       <% else %>
+        <td><%= f.submit "Activate", class: "delete", name: "activate" %></td>
         <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
       <% end %>
     <% end %>

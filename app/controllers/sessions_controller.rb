@@ -17,4 +17,16 @@ class SessionsController < ApplicationController
     log_out
     redirect_to root_url
   end
+
+  def change_view
+    changev = params[:changev]
+    if changev == "Active"
+      session[:changev] = "All"
+    elsif changev == "All"
+      session[:changev] = "Inactive"
+    else
+      session[:changev] = "Active"
+    end
+    redirect_to session[:forwarding_url]
+  end
 end

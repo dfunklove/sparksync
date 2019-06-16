@@ -1,42 +1,32 @@
 class PartnersController < UsersController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a partner
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show,
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show,
                                         :index]
-  before_action :partner_user, only: :index
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :partner_user, only: :school
+  before_action :admin_user, only: [:index, :create, :update, :delete]
 
-  def index
+  def school
     whatschool = '/schools/' + current_user.school_id.to_s
     redirect_to whatschool
   end
 
-  # new refers to one of the actions generated
-  # by resources :partners in config/routes.rb
-  def new
+  def index
     store_location
-    
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    # @partners and @partner are variables provided
-    # to the new.html.erb view
-    @partners = find_right_partners
     @partner = Partner.new
+    
+    prepare_index
+  end
+
+  def prepare_index
+    @changev = current_visibility
+    @partners = visible_records(Partner)
     @delete_warning = "Deleting this partner is irreversible. Are you sure?"
   end
 
-  def find_right_partners
-    if @changev == "Active"
-      Partner.where(activated: true)
-    elsif @changev == "Inactive"
-      Partner.where(activated: false)
-    else
-      Partner.all
-    end
+  def handle_error
+    prepare_index
+    render 'index'
   end
  
   def create
@@ -46,15 +36,9 @@ class PartnersController < UsersController
     if @partner.save
       # send email
       @partner.send_welcome(@partner.id)
-      redirect_to new_partner_path
+      redirect_to partners_url
     else
-      @partners = find_right_partners
-      if session[:changev]
-        @changev = session[:changev]
-      else
-        @changev = "Active"
-      end
-      render 'new'
+      handle_error
     end
   end
 
@@ -63,63 +47,50 @@ class PartnersController < UsersController
     @partner = Partner.find(partner_id)
     if params[:modify]
       puts "modify"
-      # won't work without password
-      genword = genpassword(@partner)
-      if Partner.update(@partner.id,
-                        school_id: partner_params[:school_id],
+      if @partner.update(school_id: partner_params[:school_id],
                         first_name: partner_params[:first_name],
                         last_name: partner_params[:last_name],
-                        email: partner_params[:email],
-                        activated: true,
-                        password: genword)
-        # send email
-      	@partner.send_password_reset_email
-        redirect_to new_partner_path
+                        email: partner_params[:email])
+        redirect_to partners_url
       else
-        @partners = find_right_partners
-        if session[:changev]
-          @changev = session[:changev]
-        else
-          @changev = "Active"
-        end
-        render 'new'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
-      partner_id = @partner.id 
-      who = Partner.find(partner_id)
-      if who.activated
-        genword = genpassword(who)
+      if @partner.activated
         # don't actually delete, set unactivated
-        if who.update( activated: false,
-                       password: genword)
-          redirect_to new_partner_path
+        if @partner.update(activated: false)
+          redirect_to partners_url
         else
-          @partners = find_right_partners
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       else
-        if who.delete
-          redirect_to new_partner_path
+        if @partner.delete
+          redirect_to partners_url
         else
-          @partners = find_right_partners
-          if session[:changev]
-            @changev = session[:changev]
-          else
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       end
+    elsif params[:activate]
+      puts "activate"
+      if @partner.update(activated: true)
+        redirect_to partners_url
+      else
+        handle_error
+      end
+    elsif params[:reset]
+      puts "reset"
+      genword = genpassword(@partner)
+      if @partner.update(password: genword)
+        @partner.send_password_reset_email
+        redirect_to partners_url
+      else
+        handle_error
+      end      
     elsif params[:hours]
       redirect_to partner_path(partner_id)
     else
-      raise Exception.new('not welcome, modify or delete. who called partner update?')
+      raise Exception.new('not modify, delete, activate or reset. who called partner update?')
     end
   end
 

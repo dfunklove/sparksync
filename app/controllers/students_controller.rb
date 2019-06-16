@@ -1,27 +1,14 @@
 class StudentsController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a student
-  before_action :logged_in_user, only: [:new, :create, :update, :show]
+  before_action :logged_in_user, only: [:index, :create, :update, :show]
   before_action :admin_user, only: [:create, :update]
   before_action :correct_user, only: [:show ]
 
   # one student
   def show
     store_location
-    if session[:dv_id]
-      @dateview = Dateview.find(session[:dv_id])
-    else
-      # set default for the preceding week including today
-      e_date = Time.now.midnight + 24*60*60
-      s_date = e_date - 6*24*60*60
-      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
-
-      if @dateview.errors.count == 0 && @dateview.save
-        session[:dv_id] = @dateview.id
-      else
-        raise Exception.new("Not able to save default dateview")
-      end
-    end
+    @dateview = current_dateview
 
     # title and what column depend on user and in the case
     # of admin, what view she wants
@@ -62,59 +49,46 @@ class StudentsController < ApplicationController
     @tot_hours = @tot_hours/3600
   end
 
-  # new refers to one of the actions generated
-  # by resources :students in config/routes.rb
   # displays all "right" students and makes it possible to view
   # makes it possible for admin to modify or delete
-  def new
+  def index
     store_location
-    
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    # @students and @student are variables provided
-    # to the new.html.erb view
-    @students = find_right_students
     @student = Student.new
+
+    prepare_index    
+  end
+
+  def prepare_index
+    @changev = current_visibility
+    @students = find_right_students
     @showbtns = current_user.admin?
+    @show_lesson_btn = current_user.teacher?
+    @show_visibility_btn = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
   end
 
+  def handle_error
+    prepare_index
+    render 'index'
+  end
+
   def find_right_students
-    rightstudents = Student.all
-    if @changev == "Active"
-      rightstudents = rightstudents.where(activated: true)
-    elsif @changev == "Inactive"
-      rightstudents = rightstudents.where(activated: false)
+    if current_user.admin?
+      visible_records(Student)
+    elsif current_user.partner?
+      Student.find_by_school(current_user.school_id)
+    else # current_user is a teacher
+      Student.find_by_teacher(current_user.id)
     end
-    return rightstudents if current_user.admin?
-    if current_user.partner?
-      rightschool = current_user.school_id
-      rightstudents = rightstudents.where(school_id: rightschool)
-      return rightstudents
-    end
-    sql = "select student_id from lessons where user_id = ?"
-    rightids = Lesson.find_by_sql([sql, current_user.id]).map(&:student_id)
-    rightstudents = rightstudents.where({id: rightids})
   end
  
   def create
     @student = Student.new(student_params)
     @student.activated = true
     if @student.save
-      redirect_to new_student_path
+      redirect_to students_url
     else
-      @students = find_right_students
-      @showbtns = current_user.admin?
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
-      render 'new'
+      handle_error
     end
   end
 
@@ -124,39 +98,36 @@ class StudentsController < ApplicationController
     @student = Student.find(student_id)
     if params[:modify]
       puts "modify"
-      if Student.update(@student.id,
-                        school_id: student_params[:school_id],
+      if @student.update(school_id: student_params[:school_id],
                         first_name: student_params[:first_name],
-                        last_name: student_params[:last_name],
-                        activated: true)
-        redirect_to new_student_path
+                        last_name: student_params[:last_name])
+        redirect_to students_url
       else
-        @students = find_right_students
-        render 'new'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
-      student_id = @student.id 
-      who = Student.find(student_id)
-      if who.activated
+      if @student.activated
         # don't actually delete, set unactivated
-        if who.update( activated: false)
-          redirect_to new_student_path
+        if @student.update( activated: false)
+          redirect_to students_url
         else
-          @students = find_right_students
-          render 'new'
+          handle_error
         end
       else
-        if who.delete
-          redirect_to new_student_path
+        if @student.delete
+          redirect_to students_url
         else
-          @students = find_right_students
-          render 'new'
+          handle_error
         end
       end
-    elsif params[:hours] #TODO remove?
-      puts "about to redirect_to student_path " + student_id
-      redirect_to student_path(student_id)
+    elsif params[:activate]
+      puts "activate"
+      if @student.update(activated: true)
+        redirect_to students_url
+      else
+        handle_error
+      end
     else
       raise Exception.new('not welcome, modify or delete. who called student update?')
     end
@@ -177,6 +148,6 @@ class StudentsController < ApplicationController
       evertaught = 
         Lesson.where(user_id: current_user.id).find_by(student_id: @student_id)   
       return if current_user.teacher? && evertaught
-      redirect_to new_student_path
+      redirect_to students_url
     end
 end

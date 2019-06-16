@@ -1,4 +1,6 @@
 module SessionsHelper
+  attr_accessor :current_dateview
+
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
@@ -32,15 +34,6 @@ module SessionsHelper
         raise Exception.new('Teacher time out wasnt null')
       end
     end
-    if dv_id = session[:dv_id]
-      dv = Dateview.find_by(id: dv_id)
-      if dv
-        dv.delete
-      elsif Rails.env.development?
-        raise Exception.new('Junk Dateview ID in session on logout')
-      end
-      session.delete(:dv_id)
-    end
     if session[:sort_col]
       session.delete(:sort_col)
     end
@@ -62,4 +55,30 @@ module SessionsHelper
     session[:forwarding_url] = request.original_url if request.get?
   end
 
+  def current_dateview
+    d = Dateview.new
+    d.start_date = DateTime.parse(session[:dateview_start]) if session[:dateview_start]
+    d.end_date = DateTime.parse(session[:dateview_end]) if session[:dateview_end]
+    return d
+  end
+
+  def set_current_dateview(value)
+    session[:dateview_start] = value.start_date
+    session[:dateview_end] = value.end_date
+  end
+
+  def current_visibility
+    return session[:changev] || "Active"
+  end
+
+  def visible_records(model)
+    vis = current_visibility
+    if vis == "Active"
+      model.where(activated: true)
+    elsif vis == "Inactive"
+      model.where(activated: false)
+    else
+      model.all
+    end
+  end
 end

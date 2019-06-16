@@ -1,6 +1,6 @@
 class SchoolsController < ApplicationController
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:index, :create, :update, :delete]
   before_action :correct_user, only: :show
 
   def show
@@ -8,20 +8,7 @@ class SchoolsController < ApplicationController
     school_id = params[:id]
 
     @school = School.find(school_id)
-    if session[:dv_id]
-      @dateview = Dateview.find(session[:dv_id])
-    else
-      # set default for the preceding week including today
-      e_date = Time.now.midnight + 24*60*60
-      s_date = e_date - 6*24*60*60
-      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
-
-      if @dateview.errors.count == 0 && @dateview.save
-        session[:dv_id] = @dateview.id
-      else
-        raise Exception.new("Not able to save default dateview")
-      end
-    end
+    @dateview = current_dateview
 
     # title and what column depend on user and in the case
     # of admin, what view she wants
@@ -67,48 +54,31 @@ class SchoolsController < ApplicationController
 
   end
 
-  # new refers to one of the actions generated
-  # by resources :schools in config/routes.rb
-  def new
+  def index
     store_location
-    
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
-
-    # @schools and @school are variables provided
-    # to the new.html.erb view
-    @schools = find_right_schools
     @school = School.new
+
+    prepare_index    
+  end
+
+  def prepare_index
+    @changev = current_visibility
+    @schools = visible_records(School)
     @delete_warning = "Deleting this school is irreversible. Are you sure?"
   end
 
-  def find_right_schools
-    if @changev == "Active"
-      School.where(activated: true)
-    elsif @changev == "Inactive"
-      School.where(activated: false)
-    else
-      School.all
-    end
+  def handle_error
+    prepare_index
+    render 'index'
   end
 
   def create
     @school = School.new(school_params)
     @school.activated = true
     if @school.save
-      redirect_to new_school_path
+      redirect_to schools_url
     else
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
-
-      @schools = find_right_schools
-      render 'new'
+      handle_error
     end
   end
 
@@ -117,33 +87,33 @@ class SchoolsController < ApplicationController
     @school = School.find(school_id)
     if params[:modify]
       puts "modify"
-      if School.update(@school.id,
-                        name: school_params[:name],
-                        activated: true)
-        redirect_to new_school_path
+      if @school.update(name: school_params[:name])
+        redirect_to schools_url
       else
-        @schools = find_right_schools
-        render 'new'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
-      school_id = @school.id 
-      who = School.find(school_id)
-      if who.activated
+      if @school.activated
         # don't actually delete, set unactivated
-        if who.update(activated: false)
-          redirect_to new_school_path
+        if @school.update(activated: false)
+          redirect_to schools_url
         else
-          @schools = find_right_schools
-          render 'new'
+          handle_error
         end
       else
-        if who.delete
-          redirect_to new_school_path
+        if @school.delete
+          redirect_to schools_url
         else
-          @schools = find_right_schools
-          render 'new'
+          handle_error
         end
+      end
+    elsif params[:activate]
+      puts "activate"
+      if @school.update(activated: true)
+        redirect_to schools_url
+      else
+        handle_error
       end
     elsif params[:hours]
       redirect_to school_path(school_id)

@@ -1,5 +1,8 @@
-class Dateview < ApplicationRecord
-  attr_accessor :s_date_formatted, :e_date_formatted
+class Dateview
+  # responds to ActiveRecord methods, e.g. errors, without being connected to the db
+  include ActiveModel::Model
+  
+  attr_accessor :s_date_formatted, :e_date_formatted, :start_date, :end_date
   attr_reader :bad_start, :bad_end
 
   DATE_FORMAT = "%m-%d-%Y".freeze
@@ -13,6 +16,12 @@ class Dateview < ApplicationRecord
   # these are doing nothing
   validates :s_date_formatted, presence: true, format: {with: SPATTERN }
   validates :e_date_formatted, presence: true, format: { with: SPATTERN }
+
+  def initialize
+    super
+    self.start_date = (DateTime.now - 7.days).beginning_of_day
+    self.end_date = DateTime.now.end_of_day
+  end
 
   def date_errs(valarray, errs)
     bad = nil
@@ -127,5 +136,4 @@ class Dateview < ApplicationRecord
   def e_date_formatted
     self.end_date.strftime DATE_FORMAT unless self.end_date.nil?
   end
-
 end

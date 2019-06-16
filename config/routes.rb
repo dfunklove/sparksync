@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     root 'lessons#new'
   end
   constraints(PartnerConstraint.new) do
-    root 'partners#index'
+    root 'partners#school'
   end
   root 'sessions#new'
 
@@ -64,18 +64,17 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
-  post '/users/change_view'
+  post '/sessions/change_view'
   post '/teachers/change_table'
   post '/lessons/sort'
-  get 'lessons/index'
-  get '/lessons',    to: 'lessons#index'
-  resources :lessons, only: [:new, :create, :update, :destroy]
-  resources :teachers, only: [:new, :create, :update, :show, :destroy]
+  get '/partners/school'
+  resources :lessons, only: [:index, :new, :create, :update, :destroy]
+  resources :teachers, only: [:index, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
-  resources :admins, only: [:new, :create, :update, :destroy]
-  resources :schools, only: [:new, :create, :update, :show, :destroy]
-  resources :students, only: [:new, :create, :update, :show, :destroy]
-  resources :dateviews, only: [:update]
+  resources :admins, only: [:index, :create, :update, :destroy]
+  resources :schools, only: [:index, :create, :update, :show, :destroy]
+  resources :students, only: [:index, :create, :update, :show, :destroy]
+  resources :dateviews, only: [:create]
   resources :password_resets, only: [:new, :create, :edit, :update]
 
   get '/schools/:id', to: 'schools#show' # for partners to view

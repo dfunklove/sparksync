@@ -1,8 +1,8 @@
 class TeachersController < UsersController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a teacher
-  before_action :logged_in_user, only: [:new, :create, :update, :delete, :show]
-  before_action :admin_user, only: [:new, :create, :update, :delete]
+  before_action :logged_in_user, only: [:index, :create, :update, :delete, :show]
+  before_action :admin_user, only: [:index, :create, :update, :delete]
   before_action :correct_user, only: :show
 
   def show
@@ -16,21 +16,7 @@ class TeachersController < UsersController
       @title = "Lessons" # default
     end
 
-    if session[:dv_id]
-      @dateview = Dateview.find(session[:dv_id])
-    else
-      # set default for the preceding week including today
-      e_date = Time.now.midnight + 24*60*60
-      s_date = e_date - 6*24*60*60
-      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
-
-      if @dateview.errors.count == 0 && @dateview.save
-        session[:dv_id] = @dateview.id
-      else
-        raise Exception.new("Not able to save default dateview")
-      end
-    end
-
+    @dateview = current_dateview
     if @title == "Hours"
 
       @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
@@ -94,32 +80,23 @@ class TeachersController < UsersController
     redirect_to session[:forwarding_url]
   end
 
-  # new refers to one of the actions generated
-  # by resources :teachers in config/routes.rb
-  def new
+  def index
     store_location
-    
-    if session[:changev]
-      @changev = session[:changev] 
-    else 
-      @changev = "Active"
-    end
 
-    # @teachers and @teacher are variables provided
-    # to the new.html.erb view
-    @teachers = find_right_teachers
     @teacher = Teacher.new
-    @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"
+    prepare_index
   end
 
-  def find_right_teachers
-    if @changev == "Active"
-      Teacher.where(activated: true)
-    elsif @changev == "Inactive"
-      Teacher.where(activated: false)
-    else
-      Teacher.all
-    end
+  # prepare everything needed before calling "render 'index'"
+  def prepare_index
+    @changev = current_visibility
+    @teachers = visible_records(Teacher)
+    @delete_warning = "Deleting this teacher will delete all his/her hours records as well and is irreversible. Are you sure?"    
+  end
+
+  def handle_error
+    prepare_index
+    render 'index'
   end
 
   def create
@@ -128,79 +105,61 @@ class TeachersController < UsersController
     @teacher.activated = true
     if @teacher.save
       @teacher.send_welcome(@teacher.id)
-      redirect_to new_teacher_path
+      redirect_to teachers_url
     else
-      @teachers = find_right_teachers
-      if session[:changev]
-        @changev = session[:changev] 
-      else 
-        @changev = "Active"
-      end
-      render 'new'
+      handle_error
     end
   end
 
   def update
     teacher_id = params[:id]
     @teacher = Teacher.find(teacher_id)
+    success = true
     if params[:modify]
       puts "modify"
-      # won't work without password
-      genword = genpassword(@teacher)
-      if Teacher.update(@teacher.id,
-                        first_name: teacher_params[:first_name],
+      if @teacher.update(first_name: teacher_params[:first_name],
                         last_name: teacher_params[:last_name],
-                        email: teacher_params[:email],
-                        activated: true,
-                        password: genword)
-        @teacher.send_password_reset_email
-      
-        redirect_to new_teacher_path
+                        email: teacher_params[:email])      
+        redirect_to teachers_url
       else
-        @teachers = find_right_teachers
-        if session[:changev]
-          @changev = session[:changev] 
-        else 
-          @changev = "Active"
-        end
-        render 'new'
+        handle_error
       end
     elsif params[:delete]
       puts "delete"
-      teacher_id = @teacher.id 
-      who = Teacher.find(teacher_id)
-      if who.activated
-        genword = genpassword(who)
+      if @teacher.activated
         # don't actually delete, set unactivated
-        if who.update( activated: false,
-                       password: genword)
-          redirect_to new_teacher_path
+        if @teacher.update(activated: false)
+          redirect_to teachers_url
         else
-          @teachers = find_right_teachers
-          if session[:changev]
-            @changev = session[:changev] 
-          else 
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       else
-        if who.delete
-          redirect_to new_teacher_path
+        if @teacher.delete
+          redirect_to teachers_url
         else
-          @teachers = find_right_teachers
-          if session[:changev]
-            @changev = session[:changev] 
-          else 
-            @changev = "Active"
-          end
-          render 'new'
+          handle_error
         end
       end
+    elsif params[:activate]
+      puts "activate"
+      if @teacher.update(activated: true)
+        redirect_to teachers_url
+      else
+        handle_error
+      end
+    elsif params[:reset]
+      puts "reset"
+      genword = genpassword(@teacher)
+      if @teacher.update(password: genword)
+        @teacher.send_password_reset_email
+        redirect_to teachers_url
+      else
+        handle_error
+      end      
     elsif params[:hours]
       redirect_to teacher_path(teacher_id)
     else
-      raise Exception.new('not welcome, modify or delete. who called teacher update?')
+      raise Exception.new('not modify, delete, activate, or reset. who called teacher update?')
     end
   end
 

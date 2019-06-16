@@ -1,9 +1,7 @@
 <table>
 <tr>
 <td>
-<%= form_for(@changev, url: '/users/change_view' ) do |f| %>
-<%    f.submit "#{@changev}", name: "changev" %>
-<%  end %>
+<%= render partial: "sessions/change_view" %>
 </td>
 <td>
 <h2>

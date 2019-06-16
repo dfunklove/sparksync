@@ -4,17 +4,33 @@ class LessonsController < ApplicationController
   before_action :admin_user, only: :index
 
   def new
-  	@lesson = Lesson.new
-  	@student = Student.new
-  	@school = School.new
-  	@allSchools = School.all
+    student_id=params[:s_id]
+    if student_id
+      # teachers can only select from students they have taught before
+      # this prevents users from harvesting student names by putting id's in the url
+      allowed_students = Student.find_by_teacher(current_user.id)
+      @student = allowed_students.find_by(id: student_id)
+      if !@student
+        flash.now[:danger] = 'Invalid student id.  Please enter data manually.'
+      end
+    end
+    if @student
+      @school = @student.school
+      @allSchools = [@school]
+    else
+      @student = Student.new
+      @school = School.new
+      @allSchools = School.all
+    end
 
     open_lesson = current_user.lessons_in_progress.first
-    if (open_lesson)
+    if open_lesson
       @lesson = open_lesson
       session[:lesson_id] = open_lesson.id
       flash.now[:danger] = 'Please finish open lesson before starting a new one'
       render "checkout"
+    else
+      @lesson = Lesson.new
     end
   end
 
@@ -22,20 +38,11 @@ class LessonsController < ApplicationController
     store_location
     school_id = params[:id]
 
-    if session[:dv_id]
-      @dateview = Dateview.find(session[:dv_id])
-    else
-      # set default for the preceding week including today
-      e_date = Time.now.midnight + 24*60*60
-      s_date = e_date - 6*24*60*60
-      @dateview = Dateview.new(end_date: e_date, start_date: s_date)
+    prepare_index
+  end
 
-      if @dateview.errors.count == 0 && @dateview.save
-        session[:dv_id] = @dateview.id
-      else
-        raise Exception.new("Not able to save default dateview")
-      end
-    end
+  def prepare_index
+    @dateview = current_dateview
 
     # title and what column depend on user and in the case
     # of admin, what view she wants
@@ -88,6 +95,11 @@ class LessonsController < ApplicationController
     end
   end
 
+  def handle_index_error
+    prepare_index
+    render 'index'
+  end
+
   def muckwithdate(whatdate)
     turn2date = DateTime.strptime(whatdate, '%l:%M %p %m-%d-%Y')
     screwyrailstime = turn2date.strftime('%l:%M %p %Y-%m-%d')
@@ -99,8 +111,7 @@ class LessonsController < ApplicationController
     lesson_id = params[:id]
     @lesson = Lesson.find(lesson_id)
     if params[:modify]
-      if Lesson.update(lesson_id,
-          student_id: messon_params[:student_id],
+      if @lesson.update(
           # TODO these are assuming the time in params is GMT and converting to local fixit 
           time_in: muckwithdate(messon_params[:time_in]),
           time_out: muckwithdate(messon_params[:time_out]),
@@ -108,12 +119,10 @@ class LessonsController < ApplicationController
           brought_books: messon_params[:brought_books],
           progress: messon_params[:progress],
           behavior: messon_params[:behavior],
-          notes: messon_params[:notes],
-          user_id: messon_params[:user_id],
-          school_id: messon_params[:school_id])
+          notes: messon_params[:notes])
         redirect_to lessons_path
       else 
-        render 'index'
+        handle_index_error
       end
     elsif params[:delete]
       lesson_id = params[:id]
@@ -121,7 +130,7 @@ class LessonsController < ApplicationController
       if what_lesson.delete
         redirect_to lessons_path
       else
-        render 'index'
+        handle_index_error
       end
     else
       raise Exception.new('not modify or delete. who called lesson update?')

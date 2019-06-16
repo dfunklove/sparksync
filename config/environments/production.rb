@@ -45,7 +45,7 @@ Rails.application.configure do
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -62,7 +62,9 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "sparksync_#{Rails.env}"
   config.action_mailer.perform_caching = true
   config.action_mailer.delivery_method = :smtp
-  host = 'safe-sands-25204.herokuapp.com'
+  # If DNS breaks, app is still hosted at the server below
+  # host = 'safe-sands-25204.herokuapp.com'
+  host = 'sync.sparksforsuccess.org'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',

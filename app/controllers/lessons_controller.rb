@@ -166,6 +166,13 @@ class LessonsController < ApplicationController
             :first_name_or_last_name_ambiguous,
             message: "Need to spell out entire name")
         end
+
+        if !@stdnt_lookedup.activated?
+          @lesson.errors.add(
+            :base,
+            :student_deactivated,
+            message: "This student has been deactivated")
+        end
       elsif params[:new_student]
         @student.school = @school
         @student.activated = true

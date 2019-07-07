@@ -97,6 +97,7 @@ class SchoolsController < ApplicationController
       if @school.activated
         # don't actually delete, set unactivated
         if @school.update(activated: false)
+          flash[:info] = "#{@school.name} and all of its students have been deactivated"
           redirect_to schools_url
         else
           handle_error
@@ -111,6 +112,7 @@ class SchoolsController < ApplicationController
     elsif params[:activate]
       puts "activate"
       if @school.update(activated: true)
+        flash[:info] = "#{@school.name} and all of its students have been activated"
         redirect_to schools_url
       else
         handle_error

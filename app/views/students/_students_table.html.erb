@@ -16,8 +16,12 @@
     <!-- restrict to activated schools only, default is "choose school -->
 	  	<td><%= f.text_field :first_name, class: "fname", placeholder: student.first_name %></td>
       <td><%= f.text_field :last_name, class: "lname", placeholder: student.last_name %></td>
-	  	<td>
-        <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name %>
+      <td>
+        <% if student.activated? %>
+          <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name %>
+        <% else %>
+          <%= f.collection_select :school_id, School.all.order(:name),:id,:name %>
+        <% end %>
       </td>
       <% if student.activated %>
         <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>

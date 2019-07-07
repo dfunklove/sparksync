@@ -111,10 +111,19 @@ class LessonsController < ApplicationController
     lesson_id = params[:id]
     @lesson = Lesson.find(lesson_id)
     if params[:modify]
-      if @lesson.update(
+      begin
+        time_in_obj = muckwithdate(messon_params[:time_in])
+        time_out_obj = muckwithdate(messon_params[:time_out]) 
+      rescue => e
+        @lesson.errors.add(
+            :base,
+            :invalid_date,
+            message: "Invalid date")
+      end
+      if @lesson.errors.count == 0 && @lesson.update(
           # TODO these are assuming the time in params is GMT and converting to local fixit 
-          time_in: muckwithdate(messon_params[:time_in]),
-          time_out: muckwithdate(messon_params[:time_out]),
+          time_in: time_in_obj,
+          time_out: time_out_obj,
           brought_instrument: messon_params[:brought_instrument],
           brought_books: messon_params[:brought_books],
           progress: messon_params[:progress],

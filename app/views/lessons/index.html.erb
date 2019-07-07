@@ -1,4 +1,16 @@
 <h2> All Lessons </h2>
+<% if @lesson && @lesson.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @lesson.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 <%= render partial: "lessons/editable_table" %>
 <p>
   Download:

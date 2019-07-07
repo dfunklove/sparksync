@@ -20,7 +20,7 @@ class LessonsController < ApplicationController
     else
       @student = Student.new
       @school = School.new
-      @allSchools = School.all
+      @allSchools = School.where(activated: true)
     end
 
     open_lesson = current_user.lessons_in_progress.first

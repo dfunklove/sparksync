@@ -7,6 +7,21 @@ class Student < ApplicationRecord
   has_many :lessons
   default_scope -> { order(last_name: :asc) }
 
+  before_save :check_school_activated, if :activated_changed?
+
+  # Do not allow students to be activated if their school is deactivated
+  private
+    def check_school_activated
+      if !school.activated? && activated_change[1] == true
+        errors.add(
+          :base,
+          :student_deactivated,
+          message: "This student cannot be activated because their school is deactivated")
+        throw :abort
+      end
+    end
+  end
+
   def self.find_by_school(school_id)
     self.where(school_id: school_id, activated: true)
   end

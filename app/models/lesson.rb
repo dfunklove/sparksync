@@ -11,7 +11,7 @@ class Lesson < ApplicationRecord
   belongs_to :teacher, optional: true, class_name: 'Teacher',foreign_key: 'user_id'
   belongs_to :school
 
-  before_save :check_student_activated
+  before_create :check_student_activated
 
   def check_student_activated
     if !student.activated?

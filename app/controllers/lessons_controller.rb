@@ -176,12 +176,6 @@ class LessonsController < ApplicationController
             message: "Need to spell out entire name")
         end
 
-        if !@stdnt_lookedup.activated?
-          @lesson.errors.add(
-            :base,
-            :student_deactivated,
-            message: "This student has been deactivated")
-        end
       elsif params[:new_student]
         @student.school = @school
         @student.activated = true
@@ -206,7 +200,7 @@ class LessonsController < ApplicationController
 	  	session[:lesson_id] = @lesson.id
 	  	redirect_to "/lessons/checkout"
   	else
-	  	@allSchools = School.all
+	  	@allSchools = School.where(activated: true)
   		render 'new'
   	end
   end

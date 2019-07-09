@@ -49,7 +49,7 @@
       <%= f.text_field :last_name, class: "lname", placeholder: "..student..." %>
     </td>
  	  <td>
-      <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name, :prompt => "School..." %>
+      <%= f.collection_select :school_id, School.all.order(:name),:id,:name, :prompt => "School..." %>
     </td>
     <td><%= f.submit "Create", class: "delete" %></td>
   <% end %>

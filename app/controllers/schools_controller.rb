@@ -103,9 +103,15 @@ class SchoolsController < ApplicationController
           handle_error
         end
       else
-        if @school.delete
+        begin
+          # should throw exception on error
+          @school.delete!
           redirect_to schools_url
-        else
+        rescue
+          @school.errors.add(
+            :base,
+            :school_has_students,
+            message: "Unable to delete because this school has students assigned to it")
           handle_error
         end
       end

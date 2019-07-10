@@ -11,7 +11,7 @@
   <% @students.each do |student| %> 
 		<tr>
     <td> <%= button_to "View", student_path(student.id), method: :get %> </td>
-    <% if @showbtns %>
+  <% if @showbtns %>
     <%= form_for(student, url: student_path(student.id)) do |f| %>
     <!-- restrict to activated schools only, default is "choose school -->
 	  	<td><%= f.text_field :first_name, class: "fname", placeholder: student.first_name %></td>
@@ -27,17 +27,16 @@
         <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
       <% end %>
     <% end %>
-    <% else %>
+  <% else %>
       <td><%= student.first_name %></td>
       <td><%= student.last_name %></td>
       <td><%= student.school.name %></td>
       <% if @show_lesson_btn %>
         <td><%= button_to "Start Lesson", "/lessons/new", method: :get, params: { s_id: student.id } %></td>
       <% end %>
-    <% end %>
+  <% end %>
 		</tr> 
     <% end %>
-  <% if @showbtns %>
 	<tr>
   <%= form_for(@student, url: students_path) do |f| %>
     <!-- restrict to activated schools only, default is "choose school -->
@@ -54,5 +53,4 @@
     <td><%= f.submit "Create", class: "delete" %></td>
   <% end %>
 	</tr>
-  <% end %>
 </table>

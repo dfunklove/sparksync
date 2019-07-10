@@ -22,6 +22,19 @@ class LessonsController < ApplicationController
       @school = School.new
       @allSchools = School.where(activated: true)
     end
+    prepare_new
+  end
+
+  def new_single
+    prepare_new
+  end
+
+  def new_group
+    prepare_new
+  end
+
+  def prepare_new
+    @students = Student.find_by_teacher(current_user.id)
 
     open_lesson = current_user.lessons_in_progress.first
     if open_lesson
@@ -31,6 +44,9 @@ class LessonsController < ApplicationController
       render "checkout"
     else
       @lesson = Lesson.new
+    end
+    if !@lesson.student
+      @lesson.student = Student.new
     end
   end
 
@@ -211,6 +227,12 @@ class LessonsController < ApplicationController
   		redirect_to root_url
   	end
   	@lesson = Lesson.find(session[:lesson_id])
+  end
+
+  def checkout_group
+    @lesson = Lesson.new
+    @students = Student.find_by_teacher(current_user.id)
+    @lesson.student = Student.new
   end
 
   # leaving checkout page, returning to checkin page

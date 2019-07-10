@@ -56,7 +56,10 @@ Rails.application.routes.draw do
   end
   root 'sessions#new'
 
+  get '/lessons/new-single'
+  get '/lessons/new-group'
   get '/lessons/checkout'
+  get '/lessons/checkout-group'
   post  '/lessons/checkout', to: 'lessons#finishCheckout'
   patch '/lessons/checkout', to: 'lessons#finishCheckout'
   get '/admins/new'

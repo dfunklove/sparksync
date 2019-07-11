@@ -43,7 +43,7 @@ class LessonsController < ApplicationController
       flash.now[:danger] = 'Please finish open lesson before starting a new one'
       render "checkout"
     else
-      @lesson = Lesson.new
+      @lesson ||= Lesson.new
     end
     if !@lesson.student
       @lesson.student = Student.new
@@ -167,9 +167,11 @@ class LessonsController < ApplicationController
     	@lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
       @lesson.student = @student
-      @school = School.find_by(school_params)
-      @lesson.school = @school
+      @lesson.school ||= School.find_by(school_params)
+      @school = @lesson.school
+      puts "completed"
     rescue
+      puts "rescue"
       @lesson ||= Lesson.new
       @student ||= Student.new
       @school ||= School.new
@@ -216,8 +218,8 @@ class LessonsController < ApplicationController
 	  	session[:lesson_id] = @lesson.id
 	  	redirect_to "/lessons/checkout"
   	else
-	  	@allSchools = School.where(activated: true)
-  		render 'new'
+      prepare_new
+  		render 'new_single'
   	end
   end
 

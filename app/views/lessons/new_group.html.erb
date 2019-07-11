@@ -1,6 +1,18 @@
 <h2>
   Start Group Lesson
 </h2>
+<% if @lesson && @lesson.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-danger">
+      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
+    </div>
+    <ul>
+    <% @lesson.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
 <table class="stdnt">
   <tr>
     <th></th>

@@ -166,7 +166,7 @@ class LessonsController < ApplicationController
     begin
       @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
-      @school = School.new(school_params)
+      @school = School.find(@student.school_id)
     rescue
       @lesson ||= Lesson.new
       @student ||= Student.new
@@ -282,7 +282,7 @@ class LessonsController < ApplicationController
   end
 
   def student_params
-  	params.require(:student).permit(:first_name, :last_name)
+  	params.require(:student).permit(:first_name, :last_name, :school_id)
   end
 
   def school_params

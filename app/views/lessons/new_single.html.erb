@@ -59,18 +59,17 @@
   <% end %>
 	<tr>
   <%= form_for(@lesson, url: '/lessons') do |lesson| %>
-    <%= fields_for :student, @lesson.student do |lesson_student| %>
+    <%= fields_for :student, @student do |lesson_student| %>
       <td>
         <%= lesson_student.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
       </td>
       <td>
         <%= lesson_student.text_field :last_name, class: "lname", placeholder: "..student..." %>
       </td>
-      <!-- restrict to activated schools only, default is "choose school -->
+      <td>
+        <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
+      </td>
     <% end %>
-    <td>
-      <%= lesson.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
-    </td>
     <td>
       <div class="inline">
         <div class="radio-withlabel">

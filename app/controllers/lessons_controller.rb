@@ -164,14 +164,10 @@ class LessonsController < ApplicationController
 
   def create
     begin
-    	@lesson = Lesson.new(lesson_params)
+      @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
-      @lesson.student = @student
-      @lesson.school ||= School.find_by(school_params)
-      @school = @lesson.school
-      puts "completed"
+      @school = School.new(school_params)
     rescue
-      puts "rescue"
       @lesson ||= Lesson.new
       @student ||= Student.new
       @school ||= School.new
@@ -207,9 +203,9 @@ class LessonsController < ApplicationController
           message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
 
       end
+      @lesson.school = @school
     end
 
-    @lesson.school = @school
     @lesson.teacher = current_user
     @lesson.time_in = Time.now
 
@@ -277,7 +273,7 @@ class LessonsController < ApplicationController
   private 
   def lesson_params
   	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-  		:progress, :behavior, :notes)
+  		:progress, :behavior, :notes, :school_id, :student_id)
   end
 
   def messon_params

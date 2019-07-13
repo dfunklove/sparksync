@@ -1,18 +1,7 @@
 <h2>
   Start Lesson
 </h2>
-<% if @lesson && @lesson.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
-    </div>
-    <ul>
-    <% @lesson.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= render '/shared/error_messages', object: @lesson %>
   <table class="stdnt">
 	<tr>
 		<th>F Name</th>
@@ -57,44 +46,27 @@
       <% end %>
     </tr> 
   <% end %>
-	<tr>
-  <%= form_for(@lesson, url: '/lessons') do |lesson| %>
-    <%= fields_for :student, @student do |lesson_student| %>
-      <td>
-        <%= lesson_student.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
-      </td>
-      <td>
-        <%= lesson_student.text_field :last_name, class: "lname", placeholder: "..student..." %>
-      </td>
-      <td>
-        <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
-      </td>
-    <% end %>
-    <td>
-      <div class="inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, false %>
-          <label>No</label>
-        </div>
-      </div>
-    </td>
-    <td>
-      <div class="inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, false %>
-          <label>No</label>
-        </div>
-      </div>
-    </td>
-    <td><%= lesson.submit "Start Lesson", class: "delete" %></td>
-  <% end %>
-	</tr>
+  <tr>
+  <%= render "add_student_form" %>
+  </tr>
 </table>
+<script>
+//$('create_student_button').off();
+//$('create_student_button').on("click", checkStudentId());
+function checkStudentId(first_name, last_name, school_id) {
+  var id_request = $.ajax({
+    url: '/students/id-for-name',
+    type: 'get',
+    data: JSON.stringify({
+      first_name: first_name, 
+      last_name: last_name, 
+      school_id: school_id})
+  });
+  id_request.done(function(msg) {
+    alert("Success: " + msg);
+  });
+  id_request.fail(function(jqXHR, textStatus) {
+    alert("Request failed: " + textStatus);
+  });
+}
+</script>

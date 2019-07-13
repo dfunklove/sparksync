@@ -22,6 +22,10 @@ class Student < ApplicationRecord
     end
   end
 
+  def self.find_by_name(first_name, last_name, school_id)
+    self.where('"last_name" ilike ?', last_name + "%").where('"first_name" ilike ?', first_name + "%").where( school_id: school_id)
+  end
+
   def self.find_by_school(school_id)
     self.where(school_id: school_id, activated: true)
   end

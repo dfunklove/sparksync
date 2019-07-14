@@ -166,14 +166,16 @@ class LessonsController < ApplicationController
     begin
       @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
+      @lesson.school_id = @student.school_id
       @school = School.find(@student.school_id)
-    rescue
+    rescue => e
+      p e
       @lesson ||= Lesson.new
       @student ||= Student.new
       @school ||= School.new
     end
 
-    if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
+    if !@lesson.student_id && @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
       harrys = Student.find_by_name(@student.first_name, @student.last_name, @school.id)
@@ -221,7 +223,7 @@ class LessonsController < ApplicationController
       else
         prepare_new
         format.html { render action: 'new_single'}
-        format.js
+        format.js # implied: render 'create'
       end
     end
 end
@@ -280,7 +282,9 @@ end
   private 
   def lesson_params
   	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-  		:progress, :behavior, :notes, :school_id, :student_id)
+      :progress, :behavior, :notes, :school_id, :student_id
+      #student_attributes: [:id, :first_name, :last_name, :school_id]
+      )
   end
 
   def messon_params
@@ -289,7 +293,7 @@ end
   end
 
   def student_params
-  	params.require(:student).permit(:first_name, :last_name, :school_id)
+  	params.require(:lesson).require(:student).permit(:first_name, :last_name, :school_id)
   end
 
   def school_params

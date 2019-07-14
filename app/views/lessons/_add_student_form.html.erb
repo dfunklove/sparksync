@@ -1,5 +1,5 @@
 <%= form_for(@lesson, url: '/lessons', remote: true, html: {id: "add_student_form"}) do |lesson| %>
-  <%= fields_for :student, @student do |lesson_student| %>
+  <%= lesson.fields_for :student do |lesson_student| %>
     <td>
       <%= lesson_student.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
     </td>

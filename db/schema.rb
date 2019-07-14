@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190126082914) do
+ActiveRecord::Schema.define(version: 20190714191757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "group_lessons", force: :cascade do |t|
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "lessons", force: :cascade do |t|
     t.bigint "student_id"
@@ -28,6 +34,8 @@ ActiveRecord::Schema.define(version: 20190126082914) do
     t.datetime "updated_at", null: false
     t.bigint "user_id"
     t.bigint "school_id"
+    t.integer "group_lesson_id"
+    t.index ["group_lesson_id"], name: "index_lessons_on_group_lesson_id"
     t.index ["school_id"], name: "index_lessons_on_school_id"
     t.index ["student_id"], name: "index_lessons_on_student_id"
     t.index ["user_id"], name: "index_lessons_on_user_id"
@@ -71,7 +79,7 @@ ActiveRecord::Schema.define(version: 20190126082914) do
     t.integer "school_id"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email"
   end
 
   add_foreign_key "lessons", "schools"

@@ -10,6 +10,7 @@ class Lesson < ApplicationRecord
   belongs_to :student
   belongs_to :teacher, optional: true, class_name: 'Teacher',foreign_key: 'user_id'
   belongs_to :school
+  belongs_to :group_lesson
 
   before_create :check_student_activated
 

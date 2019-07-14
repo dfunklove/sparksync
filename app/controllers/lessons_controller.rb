@@ -236,12 +236,6 @@ end
   	@lesson = Lesson.find(session[:lesson_id])
   end
 
-  def checkout_group
-    @lesson = Lesson.new
-    @students = Student.find_by_teacher(current_user.id)
-    @lesson.student = Student.new
-  end
-
   # leaving checkout page, returning to checkin page
   def finishCheckout
   	if !session[:lesson_id]

@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   post '/lessons/sort'
   get '/partners/school'
   resources :lessons, only: [:index, :new, :create, :update, :destroy]
+  resources :group_lessons, only: [:index, :new, :create, :update, :destroy]
   resources :teachers, only: [:index, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
   resources :admins, only: [:index, :create, :update, :destroy]

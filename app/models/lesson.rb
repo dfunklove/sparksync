@@ -8,7 +8,7 @@ class Lesson < ApplicationRecord
   TIME_FORMAT = "%l:%M %p".freeze
 
   belongs_to :student
-  belongs_to :teacher, optional: true, class_name: 'Teacher',foreign_key: 'user_id'
+  belongs_to :teacher, class_name: 'Teacher',foreign_key: 'user_id'
   belongs_to :school
   belongs_to :group_lesson, optional: true
 

@@ -1,5 +1,6 @@
 class Teacher < User
 	has_many :lessons, dependent: :nullify, foreign_key: 'user_id'
+	has_many :group_lessons, dependent: :nullify, foreign_key: 'user_id'
 	has_many :logins, foreign_key: 'user_id'
   default_scope -> { order(last_name: :asc) }
 
@@ -11,6 +12,9 @@ class Teacher < User
 		self.lessons.where(time_out: nil)
 	end
 
+	def group_lessons_in_progress
+		self.group_lessons.where(time_out: nil)
+	end
 	
 	# Singleton methods
 

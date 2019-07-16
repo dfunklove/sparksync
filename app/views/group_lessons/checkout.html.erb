@@ -1,6 +1,7 @@
 <h2>
   Group Lesson Checkout
 </h2>
+<%= render '/shared/error_messages', object: @group_lesson %>
 <table class="stdnt">
 	<tr>
 		<th>F Name</th>
@@ -10,22 +11,30 @@
     <th>Behavior</th>
     <th>Notes</th>
 	</tr>
-  <% @students.each do |student| %> 
-    <tr>
-      <%= form_for(@lesson, url: '/lessons') do |lesson| %>
-        <td><%= student.first_name %></td>
-        <td><%= student.last_name %></td>
-        <td><%= student.school.name %></td>
-        <%= lesson.hidden_field(student.first_name, value: student.first_name)%>
-        <%= lesson.hidden_field(student.last_name, value: student.last_name)%>
-        <%= lesson.hidden_field(student.school.name, value: student.school.name)%>
-        <td class="cent"><%= lesson.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
-        <td class="cent"><%= lesson.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
-        <td><%= lesson.text_field :notes %> </td>
+  <%= form_for(@group_lesson, url: '/group_lessons/checkout') do |group_lesson_f| %>
+    <% @group_lesson.lessons.each do |lesson| %> 
+      <tr>
+        <% if lesson.student %>
+          <td><%= lesson.student.first_name %></td>
+          <td><%= lesson.student.last_name %></td>
+          <td><%= lesson.student.school.name %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+          <td></td>
         <% end %>
-    </tr> 
+        <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
+          <%= lesson_f.hidden_field(:id, value: lesson.id)%>
+          <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
+          <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
+          <td><%= lesson_f.text_field :notes %> </td>
+        <% end %>
+      </tr> 
+    <% end %>
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <button type="submit" style="width: 100%">Finish Lesson</button>
+      </td>
+    </tr>
   <% end %>
-  <tr>
-    <td colspan="6" style="text-align: center"><button style="width: 100%">Finish Lesson</button></td>
-  </tr>
 </table>

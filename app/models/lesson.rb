@@ -2,6 +2,7 @@ class Lesson < ApplicationRecord
   validates :school, presence: true
   validates :student, presence: true
   validates :teacher, presence: true
+  validates :time_in, presence: true
   validates_associated :school, :student
 
   DATETIME_FORMAT = "%m-%d-%Y %l:%M %p".freeze 

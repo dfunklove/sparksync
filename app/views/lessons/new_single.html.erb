@@ -53,23 +53,3 @@
   <%= render "add_student_form" %>
   </tr>
 </table>
-<script>
-//$('create_student_button').off();
-//$('create_student_button').on("click", checkStudentId());
-function checkStudentId(first_name, last_name, school_id) {
-  var id_request = $.ajax({
-    url: '/students/id-for-name',
-    type: 'get',
-    data: JSON.stringify({
-      first_name: first_name, 
-      last_name: last_name, 
-      school_id: school_id})
-  });
-  id_request.done(function(msg) {
-    alert("Success: " + msg);
-  });
-  id_request.fail(function(jqXHR, textStatus) {
-    alert("Request failed: " + textStatus);
-  });
-}
-</script>

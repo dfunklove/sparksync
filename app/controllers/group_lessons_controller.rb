@@ -61,7 +61,7 @@ class GroupLessonsController < ApplicationController
     puts "group_lesson.lessons.count=#{@group_lesson.lessons.count}, listing="
     p @group_lesson.lessons
 
-    if false # @group_lesson.save
+    if @group_lesson.save
       session[:group_lesson_id] = @group_lesson.id
       redirect_to "/group_lessons/checkout"
     else
@@ -83,7 +83,7 @@ class GroupLessonsController < ApplicationController
   		redirect_to root_url
   	end
     @group_lesson = GroupLesson.find(session[:group_lesson_id])
-  	if @group_lesson.update_attributes(time_out: Time.now)
+    if @group_lesson.lessons.update_all(time_out: Time.now) && @group_lesson.update_attributes(time_out: Time.now)
   		session.delete(:group_lesson_id)
       redirect_to root_url
   	else

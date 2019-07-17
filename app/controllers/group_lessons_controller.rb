@@ -1,4 +1,8 @@
 class GroupLessonsController < ApplicationController
+  before_action :logged_in_user
+  before_action :teacher_user, only: [:new, :create, :checkout, :finishCheckout]
+  before_action :admin_user, only: :index
+
   def index
   end
 
@@ -15,9 +19,21 @@ class GroupLessonsController < ApplicationController
       session[:group_lesson_id] = open_lesson.id
       flash.now[:danger] = 'Please finish open lesson before starting a new one'
       render "checkout"
-    else
-      @group_lesson ||= GroupLesson.new
-      @group_lesson.lessons << Lesson.new
+    elsif !@group_lesson
+      @group_lesson = GroupLesson.new
+
+      # populate lessons from students
+      @students.each do |student|
+        lesson = Lesson.new
+        lesson.student = student
+        @group_lesson.lessons << lesson
+      end
+
+      # add one for writing in a student
+      lesson = Lesson.new
+      lesson.student = Student.new
+      lesson.student.school = School.new
+      @group_lesson.lessons << lesson
     end
   end
 
@@ -26,17 +42,26 @@ class GroupLessonsController < ApplicationController
     @group_lesson.teacher = current_user
     @group_lesson.time_in = Time.now
 
-    @group_lesson.lessons.each do |lesson|
-      if !lesson.student_id
-        @group_lesson.lessons.delete(lesson)
+    # pick only the students/lessons which are selected
+    params[:group_lesson][:lessons_attributes].keys.each do |key|
+      lesson_data = params[:group_lesson][:lessons_attributes][key]
+      if lesson_data["selected"]
+        @group_lesson.lessons << Lesson.new(lesson_params(lesson_data))
       end
-      lesson.teacher = current_user
+      if !lesson_data[:student_id]
+        # process name and school id into student id
+      end
     end
 
-    puts "group_lesson.lessons="
+    @group_lesson.lessons.each do |lesson|
+      lesson.teacher = current_user
+      lesson.time_in = @group_lesson.time_in
+    end
+
+    puts "group_lesson.lessons.count=#{@group_lesson.lessons.count}, listing="
     p @group_lesson.lessons
 
-    if @group_lesson.save
+    if false # @group_lesson.save
       session[:group_lesson_id] = @group_lesson.id
       redirect_to "/group_lessons/checkout"
     else
@@ -49,7 +74,7 @@ class GroupLessonsController < ApplicationController
   	if !session[:group_lesson_id]
   		redirect_to root_url
   	end
-  	@group_lesson = GroupLesson.find(session[:group_lesson_id])
+  	@group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     @students = Student.find_by_teacher(current_user.id)
   end
 
@@ -74,16 +99,19 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:notes, :lessons, lessons_attributes: [:brought_books, :brought_instrument, :student, :student_id, :school_id])
+      params.require(:group_lesson).permit(:notes)
     end
 
     def lesson_params params
-      params = ActionController::Parameters.new(params)
       params.permit(:brought_books, :brought_instrument, :student, :student_id, :school_id)
     end
 
-    def student_params lesson_params
-      params = ActionController::Parameters.new(lesson_params)
+    def student_params params
       params.require(:student).permit(:first_name, :last_name, :school_id)
     end
-end
+
+    def teacher_user
+      return if current_user.teacher?
+      redirect_to(root_url) 
+    end  
+  end

@@ -10,17 +10,29 @@
     <th>School</th>
     <th>Instrument</th>
     <th>Books</th>
-	</tr>
+  </tr>
+  <% i = -1 %>
   <%= form_for(@group_lesson, url: '/group_lessons') do |group_lesson| %>
-    <% @students.each do |student| %> 
     <tr>
-        <td><input type="checkbox"></td>
-        <td><%= student.first_name %></td>
-        <td><%= student.last_name %></td>
-        <td><%= student.school.name %></td>
       <%= group_lesson.fields_for :lessons do |lesson| %>
-        <%= lesson.hidden_field(:student_id, value: student.id)%>
-        <%= lesson.hidden_field(:school_id, value: student.school.id)%>
+        <% i += 1 %>
+        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true %></td>
+        <% student = @group_lesson.lessons[i].student %>
+        <% if student && student.id && student.school && student.school.id %>
+          <%= lesson.hidden_field(:student_id, value: student.id) %>
+          <%= lesson.hidden_field(:school_id, value: student.school.id) %>
+          
+          <td><%= student.first_name %></td>
+          <td><%= student.last_name %></td>
+          <td><%= student.school.name %></td>
+        <% else %>
+          <%= lesson.fields_for :student do |student_f| %>
+            <td><%= student_f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
+            <td><%= student_f.text_field :last_name, class: "lname", placeholder: "..student..." %></td>
+            <td><%= student_f.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
+            </td>
+          <% end %>
+        <% end %>
         <td>
           <div class="inline">
             <div class="radio-withlabel">
@@ -47,52 +59,8 @@
         </td>
     </tr> 
     <% end %><!-- group_lesson.fields_for :lessons -->
-    <% end %><!-- @students.each -->
-    <tr><button type="submit">Submit</button></tr>
   <tr>
-  <td></td>
-  <%= group_lesson.fields_for :lessons do |lesson| %>
-    <%= lesson.fields_for :student do |lesson_student| %>
-      <td>
-        <%= lesson_student.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
-      </td>
-      <td>
-        <%= lesson_student.text_field :last_name, class: "lname", placeholder: "..student..." %>
-      </td>
-      <!-- restrict to activated schools only, default is "choose school -->
-    <td>
-      <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
-    </td>
-    <% end %>
-    <td>
-      <div class="inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, false %>
-          <label>No</label>
-        </div>
-      </div>
-    </td>
-    <td>
-      <div class="inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, false %>
-          <label>No</label>
-        </div>
-      </div>
-    </td>
-    <td><%= lesson.submit "Add Student", class: "delete" %></td>
-  <% end %>
-  </tr>
-  <tr>
-    <td colspan="6" style="text-align: center"><button style="width: 100%">Start Lesson</button></td>
+    <td colspan="6"><button type="submit" style="width: 100%">Start Lesson</button></td>
   </tr>
 </table>
 <% end %><!-- form_for @group_lesson -->

@@ -9,7 +9,7 @@ class Teacher < User
 	end
 
 	def lessons_in_progress
-		self.lessons.where(time_out: nil)
+		self.lessons.where(time_out: nil).where(group_lesson_id: nil)
 	end
 
 	def group_lessons_in_progress

@@ -14,17 +14,17 @@
   <%= form_for(@group_lesson, url: '/group_lessons/checkout') do |group_lesson_f| %>
     <% @group_lesson.lessons.each do |lesson| %> 
       <tr>
-        <% if lesson.student %>
-          <td><%= lesson.student.first_name %></td>
-          <td><%= lesson.student.last_name %></td>
-          <td><%= lesson.student.school.name %></td>
-        <% else %>
-          <td></td>
-          <td></td>
-          <td></td>
-        <% end %>
         <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
           <%= lesson_f.hidden_field(:id, value: lesson.id)%>
+          <% if lesson.student %>
+            <td><%= lesson.student.first_name %></td>
+            <td><%= lesson.student.last_name %></td>
+            <td><%= lesson.student.school.name %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+            <td></td>
+          <% end %>
           <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
           <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
           <td><%= lesson_f.text_field :notes %> </td>

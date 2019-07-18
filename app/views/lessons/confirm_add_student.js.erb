@@ -1,4 +1,4 @@
 if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
-  $("#add_student_form").replaceWith("<%= j render 'add_student_form', confirm_add_student: true %>");
+  $("#add_student_form").append('<input type="hidden" name="new_student" value="true" />');
   $("#add_student_form").submit();
 }

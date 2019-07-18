@@ -166,9 +166,6 @@ class LessonsController < ApplicationController
     begin
       @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
-      if !@lesson.student_id
-        @lesson.student = @student
-      end
       @lesson.school_id = @student.school_id
       @school = School.find(@student.school_id)
     rescue => e
@@ -180,6 +177,7 @@ class LessonsController < ApplicationController
 
     @confirm_add_student = false
     if !@lesson.student_id
+      @lesson.student = @student
       lookup_student_for_lesson
     end
 

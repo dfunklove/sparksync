@@ -166,6 +166,9 @@ class LessonsController < ApplicationController
     begin
       @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)
+      if !@lesson.student_id
+        @lesson.student = @student
+      end
       @lesson.school_id = @student.school_id
       @school = School.find(@student.school_id)
     rescue => e
@@ -175,7 +178,33 @@ class LessonsController < ApplicationController
       @school ||= School.new
     end
 
-    if !@lesson.student_id && @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
+    @confirm_add_student = false
+    if !@lesson.student_id
+      lookup_student_for_lesson
+    end
+
+    @lesson.teacher = current_user
+    @lesson.time_in = Time.now
+
+    # check errors count first or custom errors get cleared
+    respond_to do |format|
+      if @lesson.errors.count == 0 && @lesson.save
+        session[:lesson_id] = @lesson.id
+        format.html { redirect_to "/lessons/checkout" }
+      elsif @confirm_add_student
+        prepare_new
+        format.html { render action: 'new_single'}
+        format.js { render 'confirm_add_student' }
+      else
+        prepare_new
+        format.html { render action: 'new_single'}
+        format.js # implied: render 'create'
+      end
+    end
+end
+
+  def lookup_student_for_lesson
+    if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
       harrys = Student.find_by_name(@student.first_name, @student.last_name, @school.id)
@@ -203,30 +232,11 @@ class LessonsController < ApplicationController
           :base,
           :not_found_in_database,
           message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
-        confirm_add_student = true
+        @confirm_add_student = true
       end
       @lesson.school = @school
     end
-
-    @lesson.teacher = current_user
-    @lesson.time_in = Time.now
-
-    # check errors count first or custom errors get cleared
-    respond_to do |format|
-      if @lesson.errors.count == 0 && @lesson.save
-        session[:lesson_id] = @lesson.id
-        format.html { redirect_to "/lessons/checkout" }
-      elsif confirm_add_student
-        prepare_new
-        format.html { render action: 'new_single'}
-        format.js { render 'confirm_add_student' }
-      else
-        prepare_new
-        format.html { render action: 'new_single'}
-        format.js # implied: render 'create'
-      end
-    end
-end
+  end
 
   # leaving checkin page, going to checkout page
   def checkout

@@ -2,7 +2,6 @@
   Start Group Lesson
 </h2>
 <%= render '/shared/error_messages', object: @group_lesson %>
-<% @selected ||= [] %>
 <table class="stdnt">
   <tr>
     <th></th>
@@ -12,60 +11,66 @@
     <th>Instrument</th>
     <th>Books</th>
   </tr>
-  <% i = -1 %>
   <%= form_for(@group_lesson, url: '/group_lessons', remote: true, html: {id: "new_group_lesson"}) do |group_lesson| %>
-    <tr>
-      <%= group_lesson.fields_for :lessons do |lesson| %>
-        <% i += 1 %>
-        <% student = @group_lesson.lessons[i].student %>
-        <% student_exists = student && student.id && student.school && student.school.id %>
-        <% if student_exists %>
-          <%= lesson.hidden_field(:student_id, value: student.id) %>
-          <%= lesson.hidden_field(:school_id, value: student.school.id) %>
-          
-          <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, @selected[i] %></td>
-          <td><%= student.first_name %></td>
-          <td><%= student.last_name %></td>
-          <td><%= student.school.name %></td>
-        <% else %><!-- add student -->
-          <td><%= hidden_field_tag "group_lesson[lessons_attributes][#{i}][selected]", true %></td>
-          <%= lesson.fields_for :student do |student_f| %>
-            <td><%= student_f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
-            <td><%= student_f.text_field :last_name, class: "lname", placeholder: "..student..." %></td>
-            <td><%= student_f.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %></td>
-          <% end %>
+    <% @selected ||= [] %>
+    <% i = -1 %>
+    <%= group_lesson.fields_for :lessons do |lesson| %>
+      <tr>
+      <% i += 1 %>
+      <% student = @group_lesson.lessons[i].student %>
+      <% student_exists = student && student.id && student.school && student.school.id %>
+      <% if student_exists %>
+        <%= lesson.hidden_field(:student_id, value: student.id) %>
+        <%= lesson.hidden_field(:school_id, value: student.school.id) %>
+        
+        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, @selected[i] %></td>
+        <td><%= student.first_name %></td>
+        <td><%= student.last_name %></td>
+        <td><%= student.school.name %></td>
+      <% else %><!-- add student -->
+        <%= lesson.fields_for :student do |student_f| %>
+          <td></td>
+          <td><%= student_f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
+          <td><%= student_f.text_field :last_name, class: "lname", placeholder: "..student..." %></td>
+          <td><%= student_f.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %></td>
         <% end %>
-        <td>
-          <div class="inline">
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_instrument, true, checked: true %>
-              <label>Yes</label>
-            </div>
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_instrument, false %>
-              <label>No</label>
-            </div>
+      <% end %>
+      <td>
+        <div class="inline">
+          <div class="radio-withlabel">
+            <%= lesson.radio_button :brought_instrument, true, checked: true %>
+            <label>Yes</label>
           </div>
-        </td>
-        <td>
-          <div class="inline">
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_books, true, checked: true %>
-              <label>Yes</label>
-            </div>
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_books, false %>
-              <label>No</label>
-            </div>
+          <div class="radio-withlabel">
+            <%= lesson.radio_button :brought_instrument, false %>
+            <label>No</label>
           </div>
-        </td>
-        <% if !student_exists %>
-          <td><button name="add_student" value="true" type="submit">Add Student</button>
-        <% end %>
-    </tr> 
-    <% end %><!-- group_lesson.fields_for :lessons -->
-  <tr>
-    <td colspan="6"><button type="submit" style="width: 100%">Start Lesson</button></td>
-  </tr>
-</table>
+        </div>
+      </td>
+      <td>
+        <div class="inline">
+          <div class="radio-withlabel">
+            <%= lesson.radio_button :brought_books, true, checked: true %>
+            <label>Yes</label>
+          </div>
+          <div class="radio-withlabel">
+            <%= lesson.radio_button :brought_books, false %>
+            <label>No</label>
+          </div>
+        </div>
+      </td>
+      <% if !student_exists %>
+        <td><button onclick="addStudent()">Add Student</button></td>
+      <% end %>
+  </tr> 
+  <% end %><!-- group_lesson.fields_for :lessons -->
+<tr>
+  <td colspan="6"><button id="commit" name="commit" type="submit" style="width: 100%">Start Lesson</button></td>
+</tr>
 <% end %><!-- form_for @group_lesson -->
+</table>
+<script>
+function addStudent() {
+  $("#new_group_lesson").append("<input type='hidden' name='add_student' value='true' />")
+}
+</script>

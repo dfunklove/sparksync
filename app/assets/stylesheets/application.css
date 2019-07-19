@@ -15,10 +15,10 @@
  */
 
 body { font-family: sans-serif; }
-form * { display:block; }
 label { margin-top: 10px; }
 
 
+.all_block * { display:block; }
 .btn { margin: 10px; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }

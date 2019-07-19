@@ -50,15 +50,18 @@ class GroupLessonsController < ApplicationController
     params[:group_lesson][:lessons_attributes].keys.each do |key|
       lesson_data = params[:group_lesson][:lessons_attributes][key]
       selected = lesson_data["selected"]
-      lesson = Lesson.new(lesson_params(lesson_data))
-      lesson.teacher = current_user
-      lesson.time_in = @group_lesson.time_in
-      if !lesson.student_id && (params[:add_student] || params[:new_student])
+      @lesson = Lesson.new(lesson_params(lesson_data))
+      @lesson.teacher = current_user
+      @lesson.time_in = @group_lesson.time_in
+      if !@lesson.student_id && (params[:add_student] || params[:new_student])
         begin
-          @lesson = lesson
           @student = Student.new(student_params lesson_data[:student])
           @lesson.school_id = @student.school_id
-          @school = School.find(@student.school_id)
+          if @student.school_id
+            @school = School.find(@student.school_id)
+          else
+            @school = School.new
+          end
         rescue => e
           p e
           @lesson ||= Lesson.new
@@ -67,36 +70,50 @@ class GroupLessonsController < ApplicationController
         end
         @lesson.student = @student
         lookup_student_for_lesson
+        @student.valid? # force validation to bring up any errors
         selected = @lesson.student.id
       end
-      @group_lesson.lessons << lesson
+      @group_lesson.lessons << @lesson
       if selected
         @selected[i] = true
-        @payload.lessons << lesson
+        @payload.lessons << @lesson
       end        
       i += 1
     end
 
-    puts "group_lesson.lessons.size=#{@group_lesson.lessons.size}, listing="
-    p @group_lesson.lessons
+    puts "payload.lessons.size=#{@payload.lessons.size}, listing="
+    p @payload.lessons
+
+    if @payload.lessons.size < 2
+      @payload.errors.add(
+        :base,
+        :add_more_students,
+        message: "Please select two or more students"
+      )
+    end
 
     respond_to do |format|
       if @confirm_add_student
         format.html { render action: 'new'} # is this tested?
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
-        lesson = Lesson.new
-        lesson.student = Student.new
-        lesson.student.school = School.new
-        @group_lesson.lessons << lesson
-        format.html { render action: 'new'}
-        format.js
+        if @lesson.valid?
+          lesson = Lesson.new
+          lesson.student = Student.new
+          lesson.student.school = School.new
+          @group_lesson.lessons << lesson
+          format.html { render action: 'new'}
+          format.js
+        else
+          format.html { render action: 'new'}
+          format.js { render 'error', locals: { object: @lesson } }
+        end
       elsif @payload.errors.count == 0 && @payload.save
         session[:group_lesson_id] = @payload.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
         format.html { render action: 'new'}
-        format.js { render 'error' }
+        format.js { render 'error', locals: { object: @payload } }
       end
     end
   end
@@ -110,7 +127,7 @@ class GroupLessonsController < ApplicationController
       nharrys = harrys.count
 
       if @stdnt_lookedup
-   	    @lesson.student = @stdnt_lookedup
+   	    @lesson.student = @student = @stdnt_lookedup
         puts "number of students " + nharrys.to_s
         if nharrys > 1
           @lesson.errors.add(

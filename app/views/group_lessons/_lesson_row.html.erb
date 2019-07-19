@@ -1,0 +1,35 @@
+<% index ||= 0 %>
+<% i = index || @index %>
+<tr class="existing_student_row">
+<input value="<%= @student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
+<input value="<%= @student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
+
+<td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" /></td>
+<td><%= @student.first_name %></td>
+<td><%= @student.last_name %></td>
+<td><%= @student.school.name %></td>
+    <td>
+<div class="inline">
+  <div class="radio-withlabel">
+    <input type="radio" value="true" checked="checked" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument_true" />
+    <label>Yes</label>
+  </div>
+  <div class="radio-withlabel">
+    <input type="radio" value="false" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument_false" />
+    <label>No</label>
+  </div>
+</div>
+</td>
+<td>
+<div class="inline">
+  <div class="radio-withlabel">
+    <input type="radio" value="true" checked="checked" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books_true" />
+    <label>Yes</label>
+  </div>
+  <div class="radio-withlabel">
+    <input type="radio" value="false" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books_false" />
+    <label>No</label>
+  </div>
+</div>
+</td>
+</tr> 

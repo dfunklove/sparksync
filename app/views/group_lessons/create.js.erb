@@ -1,1 +1,2 @@
-$("body").replaceWith("<%= j render template: 'group_lessons/new' %>");
+<% @index = @group_lesson.lessons.size - 2 %>
+$(".existing_student_row").last().after("<%= j render 'lesson_row' %>");

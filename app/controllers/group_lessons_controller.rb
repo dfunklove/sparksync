@@ -70,7 +70,6 @@ class GroupLessonsController < ApplicationController
         end
         @lesson.student = @student
         lookup_student_for_lesson
-        @student.valid? # force validation to bring up any errors
         selected = @lesson.student.id
       end
       @group_lesson.lessons << @lesson
@@ -98,10 +97,6 @@ class GroupLessonsController < ApplicationController
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if @lesson.valid?
-          lesson = Lesson.new
-          lesson.student = Student.new
-          lesson.student.school = School.new
-          @group_lesson.lessons << lesson
           format.html { render action: 'new'}
           format.js
         else

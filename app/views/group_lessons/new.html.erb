@@ -12,7 +12,6 @@
     <th>Instrument</th>
     <th>Books</th>
   </tr>
-  <div>
     <% @selected ||= [] %>
     <% i = -1 %>
     <%= group_lesson.fields_for :lessons do |lesson| %>
@@ -73,6 +72,6 @@
 <% end %><!-- form_for @group_lesson -->
 <script>
 function addStudent() {
-  $("#new_group_lesson").append("<input type='hidden' name='add_student' value='true' />")
+  $("#new_group_lesson").append("<input type='hidden' id='add_student_hidden_field' name='add_student' value='true' />")
 }
 </script>

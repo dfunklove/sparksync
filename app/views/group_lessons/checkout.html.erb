@@ -10,7 +10,7 @@
       <th>School</th>
       <th>Progress</th>
       <th>Behavior</th>
-      <th>Notes</th>
+      <th>Student Notes</th>
     </tr>
     <% i = -1 %>
     <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
@@ -29,14 +29,21 @@
       <% end %>
       <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
       <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
-      <td><%= lesson_f.text_field :notes %> </td>
+      <td><%= lesson_f.text_area :notes %> </td>
       </tr> 
     <% end %>
+    <tr>
+      <td colspan="6" style="text-align: center">
+        <br>
+        <%= group_lesson_f.label :notes, "Group Notes" %>
+        <%= group_lesson_f.text_area :notes, class: "notes", rows: 4 %>
+        <%= group_lesson_f.hidden_field :id %>    
+      </td>
+    </tr>
     <tr>
       <td colspan="6" style="text-align: center">
         <button type="submit" style="width: 100%">Finish Lesson</button>
       </td>
     </tr>
   </table>
-  <%= group_lesson_f.hidden_field :id %>
 <% end %>

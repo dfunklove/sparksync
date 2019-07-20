@@ -20,29 +20,11 @@
         <%= lesson.fields_for :student do |lesson_student| %>
           <%= lesson_student.hidden_field(:school_id, value: student.school.id)%>
         <% end %>
-        <td>
-          <div class="inline">
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_instrument, true, checked: true %>
-              <label>Yes</label>
-            </div>
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_instrument, false %>
-              <label>No</label>
-            </div>
-          </div>
+        <td style="text-align: center">
+          <%= lesson.check_box :brought_instrument, checked: true %>
         </td>
-        <td>
-          <div class="inline">
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_books, true, checked: true %>
-              <label>Yes</label>
-            </div>
-            <div class="radio-withlabel">
-              <%= lesson.radio_button :brought_books, false %>
-              <label>No</label>
-            </div>
-          </div>
+        <td style="text-align: center">
+          <%= lesson.check_box :brought_books, checked: true %>
         </td>
         <td><%= lesson.submit "Start Lesson", class: "delete" %></td>
       <% end %>

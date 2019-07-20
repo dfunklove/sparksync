@@ -10,29 +10,11 @@
       <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
     </td>
   <% end %>
-  <td>
-    <div class="inline">
-      <div class="radio-withlabel">
-        <%= lesson.radio_button :brought_instrument, true, checked: true %>
-        <label>Yes</label>
-      </div>
-      <div class="radio-withlabel">
-        <%= lesson.radio_button :brought_instrument, false %>
-        <label>No</label>
-      </div>
-    </div>
+  <td style="text-align: center">
+    <%= lesson.check_box :brought_instrument, checked: true %>
   </td>
-  <td>
-    <div class="inline">
-      <div class="radio-withlabel">
-        <%= lesson.radio_button :brought_books, true, checked: true %>
-        <label>Yes</label>
-      </div>
-      <div class="radio-withlabel">
-        <%= lesson.radio_button :brought_books, false %>
-        <label>No</label>
-      </div>
-    </div>
+  <td style="text-align: center">
+    <%= lesson.check_box :brought_books, checked: true %>
   </td>
-  <td><button type="submit" class="delete">Start Lesson</button></td>
+<td><button type="submit" class="delete">Start Lesson</button></td>
 <% end %>

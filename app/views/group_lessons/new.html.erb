@@ -14,14 +14,14 @@
   </tr>
     <% @selected ||= [] %>
     <% i = -1 %>
-    <%= group_lesson.fields_for :lessons do |lesson| %>
+    <%= group_lesson.fields_for :lessons do |lesson_f| %>
       <% i += 1 %>
       <% student = @group_lesson.lessons[i].student %>
       <% student_exists = student && student.id && student.school && student.school.id %>
       <% if student_exists %>
         <tr class="existing_student_row">
-        <%= lesson.hidden_field(:student_id, value: student.id) %>
-        <%= lesson.hidden_field(:school_id, value: student.school.id) %>
+        <%= lesson_f.hidden_field(:student_id, value: student.id) %>
+        <%= lesson_f.hidden_field(:school_id, value: student.school.id) %>
         
         <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, @selected[i] %></td>
         <td><%= student.first_name %></td>
@@ -29,36 +29,18 @@
         <td><%= student.school.name %></td>
       <% else %><!-- add student -->
         <tr class="new_student_row">
-        <%= lesson.fields_for :student do |student_f| %>
+        <%= lesson_f.fields_for :student do |student_f| %>
           <td></td>
           <td><%= student_f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
           <td><%= student_f.text_field :last_name, class: "lname", placeholder: "..student..." %></td>
           <td><%= student_f.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %></td>
         <% end %>
       <% end %>
-      <td>
-        <div class="inline">
-          <div class="radio-withlabel">
-            <%= lesson.radio_button :brought_instrument, true, checked: true %>
-            <label>Yes</label>
-          </div>
-          <div class="radio-withlabel">
-            <%= lesson.radio_button :brought_instrument, false %>
-            <label>No</label>
-          </div>
-        </div>
+      <td style="text-align: center">
+        <%= lesson_f.check_box :brought_instrument, checked: true %>
       </td>
-      <td>
-        <div class="inline">
-          <div class="radio-withlabel">
-            <%= lesson.radio_button :brought_books, true, checked: true %>
-            <label>Yes</label>
-          </div>
-          <div class="radio-withlabel">
-            <%= lesson.radio_button :brought_books, false %>
-            <label>No</label>
-          </div>
-        </div>
+      <td style="text-align: center">
+        <%= lesson_f.check_box :brought_books, checked: true %>
       </td>
       <% if !student_exists %>
         <td><button onclick="addStudent()">Add Student</button></td>

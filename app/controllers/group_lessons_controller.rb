@@ -39,8 +39,8 @@ class GroupLessonsController < ApplicationController
 
   def create
     @confirm_add_student = false
-    @group_lesson = GroupLesson.new(group_lesson_params)
-    @payload      = GroupLesson.new(group_lesson_params)
+    @group_lesson = GroupLesson.new
+    @payload      = GroupLesson.new
     @group_lesson.teacher = @payload.teacher = current_user
     @group_lesson.time_in = @payload.time_in = Time.now
     @selected = []
@@ -159,12 +159,34 @@ class GroupLessonsController < ApplicationController
   def finishCheckout
   	if !session[:group_lesson_id]
   		redirect_to root_url
-  	end
-    @group_lesson = GroupLesson.find(session[:group_lesson_id])
-    if @group_lesson.lessons.update_all(time_out: Time.now) && @group_lesson.update_attributes(time_out: Time.now)
+    end
+    @group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
+    temp_params = group_lesson_params
+    temp_params[:lessons_attributes].keys.each do |key|
+      lesson_data = temp_params[:lessons_attributes][key]
+      if (lesson_data[:behavior].blank?)
+        @group_lesson.errors.add(
+          :base,
+          :behavior_missing,
+          message: "Behavior can't be blank")
+      end
+      if (lesson_data[:progress].blank?)
+        @group_lesson.errors.add(
+          :base,
+          :progress_missing,
+          message: "Progress can't be blank")
+      end
+      break if @group_lesson.errors.count > 0
+    end
+
+    temp_params[:time_out] = Time.now
+    @group_lesson.lessons.each do |lesson|
+      lesson.time_out = temp_params[:time_out]
+    end
+    if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
   		session.delete(:group_lesson_id)
       redirect_to root_url
-  	else
+    else
       render 'checkout'
   	end
   end
@@ -177,7 +199,7 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:notes)
+      params.require(:group_lesson).permit(:id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes]})
     end
 
     def lesson_params params

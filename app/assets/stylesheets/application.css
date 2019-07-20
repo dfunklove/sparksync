@@ -20,6 +20,7 @@ label { margin-top: 10px; }
 
 .all-block * { display:block; }
 .btn { margin: 10px; }
+.slider { display:inline; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
 .radio-label-inline { display:inline; font-size: 0.875em; }

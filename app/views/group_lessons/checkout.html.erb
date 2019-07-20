@@ -27,8 +27,8 @@
         <td></td>
         <td></td>
       <% end %>
-      <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
-      <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
+      <td class="cent"><%= lesson_f.range_field :progress, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
+      <td class="cent"><%= lesson_f.range_field :behavior, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
       <td><%= lesson_f.text_area :notes %> </td>
       </tr> 
     <% end %>

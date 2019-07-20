@@ -185,7 +185,7 @@ class GroupLessonsController < ApplicationController
     end
     if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
   		session.delete(:group_lesson_id)
-      redirect_to root_url
+      redirect_to '/group_lessons/new'
     else
       render 'checkout'
   	end

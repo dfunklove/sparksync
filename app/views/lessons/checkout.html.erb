@@ -21,16 +21,12 @@
     <%= form_for(@lesson, url: '/lessons/checkout', html: {class: "all-block"}) do |lesson| %>
       <%= lesson.label :behavior, "Behavior" %>
       <label class="radio-label-inline">Worse</label>
-      <% for i in 1..6 do %>
-        <%= lesson.radio_button :behavior, i, class: "radio-nolabel" %>
-      <% end %>
+      <%= lesson.range_field :behavior, min: 1, max: 6, value: 1, class: "slider" %>
       <label class="radio-label-inline">Better</label>
 
   		<%= lesson.label :progress, "Progress" %>
       <label class="radio-label-inline">Worse</label>
-	    <% for i in 1..6 do %>
-	      <%= lesson.radio_button :progress, i, class: "radio-nolabel" %>
-	    <% end %>
+      <%= lesson.range_field :progress, min: 1, max: 6, value: 1, class: "slider" %>
       <label class="radio-label-inline">Better</label>
 
       <%= lesson.label :notes %>

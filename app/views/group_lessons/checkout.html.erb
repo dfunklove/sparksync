@@ -2,33 +2,34 @@
   Group Lesson Checkout
 </h2>
 <%= render '/shared/error_messages', object: @group_lesson %>
-<table class="stdnt">
-	<tr>
-		<th>F Name</th>
-    <th>L Name</th>
-    <th>School</th>
-    <th>Progress</th>
-    <th>Behavior</th>
-    <th>Notes</th>
-	</tr>
-  <%= form_for(@group_lesson, url: '/group_lessons/checkout') do |group_lesson_f| %>
-    <% @group_lesson.lessons.each do |lesson| %> 
+<%= form_for(@group_lesson, url: '/group_lessons/checkout') do |group_lesson_f| %>
+  <table class="stdnt">
+    <tr>
+      <th>F Name</th>
+      <th>L Name</th>
+      <th>School</th>
+      <th>Progress</th>
+      <th>Behavior</th>
+      <th>Notes</th>
+    </tr>
+    <% i = -1 %>
+    <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
       <tr>
-        <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
-          <%= lesson_f.hidden_field(:id, value: lesson.id)%>
-          <% if lesson.student %>
-            <td><%= lesson.student.first_name %></td>
-            <td><%= lesson.student.last_name %></td>
-            <td><%= lesson.student.school.name %></td>
-          <% else %>
-            <td></td>
-            <td></td>
-            <td></td>
-          <% end %>
-          <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
-          <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
-          <td><%= lesson_f.text_field :notes %> </td>
-        <% end %>
+      <% i += 1 %>
+      <% lesson = @group_lesson.lessons[i] %>
+      <%= lesson_f.hidden_field(:id, value: lesson.id)%>
+      <% if lesson.student %>
+        <td><%= lesson.student.first_name %></td>
+        <td><%= lesson.student.last_name %></td>
+        <td><%= lesson.student.school.name %></td>
+      <% else %>
+        <td></td>
+        <td></td>
+        <td></td>
+      <% end %>
+      <td class="cent"><%= lesson_f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
+      <td class="cent"><%= lesson_f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
+      <td><%= lesson_f.text_field :notes %> </td>
       </tr> 
     <% end %>
     <tr>
@@ -36,5 +37,5 @@
         <button type="submit" style="width: 100%">Finish Lesson</button>
       </td>
     </tr>
-  <% end %>
-</table>
+  </table>
+<% end %>

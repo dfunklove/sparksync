@@ -20,6 +20,9 @@ label { margin-top: 10px; }
 
 .all-block * { display:block; }
 .btn { margin: 10px; }
+.center-contents { text-align:center !important; }
+.center-contents * { margin:auto; }
+.hidden { display:none; }
 .slider { display:inline; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }

@@ -1,3 +1,21 @@
+<script>
+$(function() {
+  $(".gomodal").on("click", function(e) {
+    modal_field = e.target;
+    parent_row = $(e.target).parent().parent();
+    full_name = parent_row.find(".first_name").html() + " " + parent_row.find(".last_name").html();
+    $("#modal_title").html("Notes for " + full_name);
+    $("#modal_note_text").val($(e.target).val());
+    $("#modal_note").show();
+    $("#modal_note").modal();
+    $("#modal_note_text").focus();
+  });
+  $('body').on($.modal.CLOSE, function(event, modal) {
+    $("#modal_note").hide();
+    $(modal_field).val($("#modal_note_text").val());
+  });
+});
+</script>
 <h2>
   Group Lesson Checkout
 </h2>
@@ -19,8 +37,8 @@
       <% lesson = @group_lesson.lessons[i] %>
       <%= lesson_f.hidden_field(:id, value: lesson.id)%>
       <% if lesson.student %>
-        <td><%= lesson.student.first_name %></td>
-        <td><%= lesson.student.last_name %></td>
+        <td class="first_name"><%= lesson.student.first_name %></td>
+        <td class="last_name"><%= lesson.student.last_name %></td>
         <td><%= lesson.student.school.name %></td>
       <% else %>
         <td></td>
@@ -29,7 +47,7 @@
       <% end %>
       <td class="cent"><%= lesson_f.range_field :progress, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
       <td class="cent"><%= lesson_f.range_field :behavior, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
-      <td><%= lesson_f.text_area :notes %> </td>
+      <td><%= lesson_f.text_field :notes, class: "gomodal" %> </td>
       </tr> 
     <% end %>
     <tr>
@@ -47,3 +65,8 @@
     </tr>
   </table>
 <% end %>
+<div id="modal_note" class="all-block center-contents hidden">
+  <label id="modal_title"></label>
+  <textarea id="modal_note_text" rows="4" style="width: 100%"></textarea>
+	<button onclick="$.modal.close()">Done</button>
+</div>

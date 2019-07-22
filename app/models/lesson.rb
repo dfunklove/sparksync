@@ -43,6 +43,7 @@ class Lesson < ApplicationRecord
     sql += " and students.activated = true"
     sql += " and users.activated = true"
     sql += " and schools.activated = true"
+    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 
@@ -60,6 +61,7 @@ class Lesson < ApplicationRecord
       sql += " and students.activated = true"
       sql += " and users.activated = true"
     end
+    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])    
   end
 
@@ -77,6 +79,7 @@ class Lesson < ApplicationRecord
       sql += " and users.activated = true"
       sql += " and schools.activated = true"
     end
+    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 
@@ -93,6 +96,7 @@ class Lesson < ApplicationRecord
       sql += " and students.activated = true"
       sql += " and schools.activated = true"
     end
+    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 end

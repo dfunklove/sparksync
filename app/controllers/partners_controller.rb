@@ -12,7 +12,6 @@ class PartnersController < UsersController
   end
 
   def index
-    store_location
     @partner = Partner.new
     
     prepare_index

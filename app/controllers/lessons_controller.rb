@@ -51,7 +51,6 @@ class LessonsController < ApplicationController
   end
 
   def index
-    store_location
     school_id = params[:id]
 
     prepare_index
@@ -278,7 +277,7 @@ end
     session[:sortcol] = params[:sortcol]
     # puts "sortcol " + session[:sortcol]
     # redirecting, you execute the entire action from start
-    redirect_to session[:forwarding_url]
+    redirect_to request.referrer
   end
 
   private 

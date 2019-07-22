@@ -3,7 +3,6 @@ class AdminsController < UsersController
   before_action :admin_user
 
   def index
-    store_location
     @admin = Admin.new
 
     prepare_index    

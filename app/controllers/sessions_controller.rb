@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
       log_in user
       redirect_to root_url
     else
-      flash.now[:danger] = 'Invalid email/password combination' # Not quite right!
+      flash.now[:danger] = 'Invalid email/password combination'
       render 'new'
     end
   end
@@ -27,6 +27,6 @@ class SessionsController < ApplicationController
     else
       session[:changev] = "Active"
     end
-    redirect_to session[:forwarding_url]
+    redirect_to request.referrer
   end
 end

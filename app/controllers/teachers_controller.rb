@@ -6,7 +6,6 @@ class TeachersController < UsersController
   before_action :correct_user, only: :show
 
   def show
-    store_location
     teacher_id = params[:id]
     @teacher = Teacher.find(teacher_id)
 
@@ -77,12 +76,10 @@ class TeachersController < UsersController
     else 
       session[:changet] = "Hours"
     end
-    redirect_to session[:forwarding_url]
+    redirect_to request.referrer
   end
 
   def index
-    store_location
-
     @teacher = Teacher.new
     prepare_index
   end

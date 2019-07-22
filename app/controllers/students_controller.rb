@@ -7,7 +7,6 @@ class StudentsController < ApplicationController
 
   # one student
   def show
-    store_location
     @dateview = current_dateview
 
     # title and what column depend on user and in the case
@@ -52,7 +51,6 @@ class StudentsController < ApplicationController
   # displays all "right" students and makes it possible to view
   # makes it possible for admin to modify or delete
   def index
-    store_location
     @student = Student.new
 
     prepare_index    

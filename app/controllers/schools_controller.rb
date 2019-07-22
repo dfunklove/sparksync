@@ -4,7 +4,6 @@ class SchoolsController < ApplicationController
   before_action :correct_user, only: :show
 
   def show
-    store_location
     school_id = params[:id]
 
     @school = School.find(school_id)
@@ -55,7 +54,6 @@ class SchoolsController < ApplicationController
   end
 
   def index
-    store_location
     @school = School.new
 
     prepare_index    

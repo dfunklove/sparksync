@@ -11,7 +11,7 @@ class DateviewsController < ApplicationController
       # e.g. GET teacher/35 teachers/show.html.erb
       set_current_dateview @d
       puts "going back to show teacher/id page"
-      redirect_to session[:forwarding_url]
+      redirect_to request.referrer
     end
     # show the update dateview/id page with form to correct date
   end

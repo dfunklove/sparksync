@@ -7,11 +7,14 @@
   <h2> <%= @teacher.last_name %> </h2>
 </td>
 <td>
+<% button_text = (@title == "Hours") ? "Lessons" : "Hours" %>
 <%= form_for(@title, url: '/teachers/change_table' ) do |f| %>
-<%    f.submit "#{@title}", name: "changet" %>
+<%    f.submit "#{button_text}", name: "changet" %>
 <%  end %>
 </td>
-<tr>
+</tr>
 <table>
+
+<h1><%= @title %></h1>
 
 <%= render partial: "#{@what_table}" %>

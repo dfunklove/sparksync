@@ -70,12 +70,7 @@ class TeachersController < UsersController
   end
 
   def change_table
-    changet = params[:changet]
-    if changet == "Hours"
-      session[:changet] = changet = "Lessons"
-    else 
-      session[:changet] = "Hours"
-    end
+    session[:changet] = params[:changet]
     redirect_to request.referrer
   end
 

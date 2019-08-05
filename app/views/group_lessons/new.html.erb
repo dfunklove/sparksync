@@ -22,19 +22,10 @@
         <tr class="existing_student_row">
         <%= lesson_f.hidden_field(:student_id, value: student.id) %>
         <%= lesson_f.hidden_field(:school_id, value: student.school.id) %>
-        
         <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, @selected[i] %></td>
         <td><%= student.first_name %></td>
         <td><%= student.last_name %></td>
         <td><%= student.school.name %></td>
-      <% else %><!-- add student -->
-        <tr class="new_student_row">
-        <%= lesson_f.fields_for :student do |student_f| %>
-          <td></td>
-          <td><%= student_f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %></td>
-          <td><%= student_f.text_field :last_name, class: "lname", placeholder: "..student..." %></td>
-          <td><%= student_f.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %></td>
-        <% end %>
       <% end %>
       <td style="text-align: center">
         <%= lesson_f.check_box :brought_instrument, checked: true %>
@@ -42,11 +33,9 @@
       <td style="text-align: center">
         <%= lesson_f.check_box :brought_books, checked: true %>
       </td>
-      <% if !student_exists %>
-        <td><button onclick="addStudent()">Add Student</button></td>
-      <% end %>
   </tr>
   <% end %><!-- group_lesson.fields_for :lessons -->
+  <%= render partial: "new_student_row", locals: {i:i+1} %>
 <tr>
   <td colspan="6"><button id="commit" name="commit" type="submit" style="width: 100%">Start Lesson</button></td>
 </tr>

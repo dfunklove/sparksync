@@ -1,0 +1,26 @@
+<% 
+  # parameters:
+  # i : index into the lessons array which this row will point to
+%>
+<tr class="new_student_row">        
+  <td></td>
+  <td><input class="fname" placeholder="Enter new..." type="text" name="group_lesson[lessons_attributes][<%=i%>][student][first_name]" id="group_lesson_lessons_attributes_<%=i%>_student_first_name" /></td>
+  <td><input class="lname" placeholder="..student..." type="text" name="group_lesson[lessons_attributes][<%=i%>][student][last_name]" id="group_lesson_lessons_attributes_<%=i%>_student_last_name" /></td>
+  <td>
+    <select name="group_lesson[lessons_attributes][<%=i%>][student][school_id]" id="group_lesson_lessons_attributes_<%=i%>_student_school_id">
+      <option value="">School...</option>
+      <% School.where(activated:true).order(:name).each do |school| %>
+        <option value="<%= school.id %>"><%= school.name %></option>
+      <% end %>
+    </select>
+  </td>
+  <td style="text-align: center">
+    <input name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" type="hidden" value="0" />
+    <input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument" value="1" checked="checked" />
+  </td>
+  <td style="text-align: center">
+    <input name="group_lesson[lessons_attributes][<%=i%>][brought_books]" type="hidden" value="0" />
+    <input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books" value="1" checked="checked" />
+  </td>
+  <td><button onclick="addStudent()">Add Student</button></td>
+</tr>

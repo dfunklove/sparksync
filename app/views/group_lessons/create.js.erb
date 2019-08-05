@@ -1,7 +1,6 @@
 <% @index = @group_lesson.lessons.size - 1 %>
 $(".existing_student_row").last().after("<%= j render 'lesson_row' %>");
+$(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:@index+1} %>");
 $("#add_student_hidden_field").remove();
 $("#new_student_hidden_field").remove();
 $("#error_wrapper").empty();
-$(".new_student_row").find("input").val("");
-$(".new_student_row").find("select").val("");

@@ -28,12 +28,6 @@ class GroupLessonsController < ApplicationController
         lesson.student = student
         @group_lesson.lessons << lesson
       end
-
-      # add one for writing in a student
-      lesson = Lesson.new
-      lesson.student = Student.new
-      lesson.student.school = School.new
-      @group_lesson.lessons << lesson
     end
   end
 

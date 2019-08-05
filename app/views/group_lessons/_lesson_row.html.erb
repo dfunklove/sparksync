@@ -1,12 +1,20 @@
 <% i = @index %>
+<% brought_instrument = @group_lesson.lessons[i].brought_instrument %>
+<% brought_books = @group_lesson.lessons[i].brought_books %>
 <tr class="existing_student_row">
-<input value="<%= @student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
-<input value="<%= @student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
+  <input value="<%= @student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
+  <input value="<%= @student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
 
-<td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" checked="checked" /></td>
-<td><%= @student.first_name %></td>
-<td><%= @student.last_name %></td>
-<td><%= @student.school.name %></td>
-<td style="text-align: center"><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument" value="1" <%= @group_lesson.lessons[i].brought_instrument ? "checked" : "" %> /></td>
-<td style="text-align: center"><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books" value="1" <%= @group_lesson.lessons[i].brought_books ? "checked" : "" %> /></td>
+  <td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" checked="checked" /></td>
+  <td><%= @student.first_name %></td>
+  <td><%= @student.last_name %></td>
+  <td><%= @student.school.name %></td>
+  <td style="text-align: center">
+    <input name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" type="hidden" value="0" />
+    <input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument" value="1" <%= brought_instrument ? "checked" : "" %> />
+  </td>
+  <td style="text-align: center">
+    <input name="group_lesson[lessons_attributes][<%=i%>][brought_books]" type="hidden" value="0" />
+    <input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books" value="1" <%= brought_books ? "checked" : "" %> />
+  </td>
 </tr> 

@@ -19,6 +19,7 @@ label { margin-top: 10px; }
 
 
 .all-block * { display:block; }
+.all-inline * { display:inline; }
 .btn { margin: 10px; }
 .center-contents { text-align:center !important; }
 .center-contents * { margin:auto; }
@@ -26,9 +27,11 @@ label { margin-top: 10px; }
 .slider { display:inline; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
-.radio-label-inline { display:inline; font-size: 0.875em; }
+.radio-label-inline { display:inline-block; vertical-align:top; font-size: 0.875em; }
+.radio-button-vertical { display:block; }
+.radio-label-vertical  { display:block; font-size: 0.875em; }
+.radio-withlabel-vertical { display:inline-block; }
 .checkbox-withlabel * { display:inline; }
-.inline * { display:inline; }
 /* admin table entries */
 .sideways { writing-mode: vertical-rl; text-orientation: mixed; }
 .delete { width: 7em; margin: 0px; padding: 0px; text-align: center }

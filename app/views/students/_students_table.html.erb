@@ -37,20 +37,22 @@
   <% end %>
 		</tr> 
     <% end %>
-	<tr>
-  <%= form_for(@student, url: students_path) do |f| %>
-    <!-- restrict to activated schools only, default is "choose school -->
-    <td></td>
- 	  <td>
-      <%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
-    </td>
-    <td>
-      <%= f.text_field :last_name, class: "lname", placeholder: "..student..." %>
-    </td>
- 	  <td>
-      <%= f.collection_select :school_id, School.all.order(:name),:id,:name, :prompt => "School..." %>
-    </td>
-    <td><%= f.submit "Create", class: "delete" %></td>
+  <tr>
+  <% if @show_create_btn %>
+    <%= form_for(@student, url: students_path) do |f| %>
+      <!-- restrict to activated schools only, default is "choose school -->
+      <td></td>
+      <td>
+        <%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
+      </td>
+      <td>
+        <%= f.text_field :last_name, class: "lname", placeholder: "..student..." %>
+      </td>
+      <td>
+        <%= f.collection_select :school_id, School.all.order(:name),:id,:name, :prompt => "School..." %>
+      </td>
+      <td><%= f.submit "Create", class: "delete" %></td>
+    <% end %>
   <% end %>
 	</tr>
 </table>

@@ -45,8 +45,8 @@ $(function() {
         <td></td>
         <td></td>
       <% end %>
-      <td class="cent"><%= lesson_f.range_field :progress, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
-      <td class="cent"><%= lesson_f.range_field :behavior, min: 1, max: 6, value: 1, :style => "width:5em" %> </td>
+      <td class="cent"><%= lesson_f.select :progress, [6,5,4,3,2,1], { include_blank: true } %></td>
+      <td class="cent"><%= lesson_f.select :behavior, [6,5,4,3,2,1], { include_blank: true } %></td>
       <td><%= lesson_f.text_field :notes, class: "gomodal" %> </td>
       </tr> 
     <% end %>

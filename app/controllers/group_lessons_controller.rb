@@ -13,12 +13,18 @@ class GroupLessonsController < ApplicationController
   def prepare_new
     @students = Student.find_by_teacher(current_user.id)
 
-    open_lesson = current_user.group_lessons_in_progress.first
-    if open_lesson
-      @group_lesson = open_lesson
-      session[:group_lesson_id] = open_lesson.id
-      flash.now[:danger] = 'Please finish open lesson before starting a new one'
+    error_message = 'Please finish open lesson before starting a new one'
+    open_lesson = current_user.lessons_in_progress.first
+    open_group_lesson = current_user.group_lessons_in_progress.first
+    if open_group_lesson
+      @group_lesson = open_group_lesson
+      session[:group_lesson_id] = open_group_lesson.id
+      flash.now[:danger] = error_message
       render "checkout"
+    elsif open_lesson
+      session[:lesson_id] = open_lesson.id
+      flash[:danger] = error_message
+      redirect_to "/lessons/checkout"
     elsif !@group_lesson
       @group_lesson = GroupLesson.new
 

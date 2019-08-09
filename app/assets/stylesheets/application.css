@@ -23,7 +23,9 @@ label { margin-top: 10px; }
 .btn { margin: 10px; }
 .center-contents { text-align:center !important; }
 .center-contents * { margin:auto; }
+.group-lesson-row { display: none }
 .hidden { display:none; }
+.minimize { padding: 0px; margin: 0px; }
 .slider { display:inline; }
 .radio-nolabel { display:inline; }
 .radio-withlabel * { display:inline; }
@@ -46,6 +48,11 @@ label { margin-top: 10px; }
 .updatetab { width: 8em; margin: 0px; padding: 0px; text-align: center }
 table.stdnt {
   border-collapse: collapse;
+}
+table.stdnt td.no-border-left, th.no-border-left { 
+  border-left:0px;
+  border-top:0px;
+  border-bottom:0px;
 }
 table.stdnt td, th {
   border: 1px solid black

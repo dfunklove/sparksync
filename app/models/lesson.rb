@@ -52,7 +52,7 @@ class Lesson < ApplicationRecord
     sql = "select users.first_name, users.last_name as teacher_last, "
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
     sql += "brought_books, students.first_name, "
-    sql += "students.last_name as student_last, user_id, student_id "
+    sql += "students.last_name as student_last, user_id, student_id, group_lesson_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += "where time_out is not null and lessons.school_id = " + school_id 
@@ -61,7 +61,6 @@ class Lesson < ApplicationRecord
       sql += " and students.activated = true"
       sql += " and users.activated = true"
     end
-    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])    
   end
 
@@ -69,7 +68,7 @@ class Lesson < ApplicationRecord
     student = Student.find(student_id)
     sql = "select users.first_name, users.last_name as teacher_last, "
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, schools.name, user_id, student_id "
+    sql += "brought_books, schools.name, user_id, student_id, group_lesson_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += " inner join schools on students.school_id = schools.id "
@@ -79,7 +78,6 @@ class Lesson < ApplicationRecord
       sql += " and users.activated = true"
       sql += " and schools.activated = true"
     end
-    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 

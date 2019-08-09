@@ -87,7 +87,7 @@ class Lesson < ApplicationRecord
     teacher = Teacher.find(teacher_id)
     sql = "select name, time_in, time_out, progress, behavior, notes, "
     sql += "brought_instrument, brought_books, students.first_name, "
-    sql += "students.last_name, student_id "
+    sql += "students.last_name, student_id, group_lesson_id "
     sql += "from schools inner join lessons on schools.id = lessons.school_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += "where time_out is not null and user_id = " + teacher_id 
@@ -96,7 +96,6 @@ class Lesson < ApplicationRecord
       sql += " and students.activated = true"
       sql += " and schools.activated = true"
     end
-    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 end

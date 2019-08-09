@@ -1,3 +1,15 @@
+<script>
+function showGroupLesson(group_lesson_id) {
+  console.log("show .group-lesson-"+group_lesson_id);
+  $(".group-lesson-"+group_lesson_id).show();
+  $(".expand-button-"+group_lesson_id).hide();
+}
+function hideGroupLesson(group_lesson_id) {
+  console.log("hide .group-lesson-"+group_lesson_id);
+  $(".group-lesson-"+group_lesson_id).hide();
+  $(".expand-button-"+group_lesson_id).show();
+}
+</script>
 <table>
 <tr>
 <!-- post to /dateviews where new date is stored, then redirect back here -->
@@ -27,7 +39,8 @@
 </tr>
 </table>
 <table class="stdnt">
-	<tr>
+  <tr>
+    <th class="no-border-left"></th>
     <% if @showschool %>
       <th>
         <%= form_for("School", url: lessons_sort_path) do |f| %>
@@ -86,8 +99,40 @@
     </th>
 	</tr>
   <% if @lessons.length > 0 %>
+    <% current_gid = nil %>
     <% @lessons.each do |lesson| %>
-    <tr>
+    <% # Last row of group lesson
+      if current_gid && (!lesson.group_lesson_id || current_gid != lesson.group_lesson_id)
+    %>
+    <tr class="group-lesson-row group-lesson-<%= current_gid %>">
+      <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
+    </tr>
+    <%  
+        current_gid = nil
+        end 
+    %>
+    <% # First row of group lesson
+      if lesson.group_lesson_id && (!current_gid || current_gid != lesson.group_lesson_id)
+        current_gid = lesson.group_lesson_id # start new group lesson
+    %>
+    <tr class="group-lesson-heading">
+      <td class="no-border-left"><button class="minimize expand-button-<%= current_gid %>" onclick="showGroupLesson(<%= current_gid %>);">+</button>
+      <button class="minimize hidden group-lesson-<%= current_gid %>" onclick="hideGroupLesson(<%= current_gid %>)">-</button></td>
+      <td><%= lesson.student.school.name %></td>
+      <td colspan="2">Group Lesson</td>
+      <td><%= lesson['time_in'].strftime("%m-%d-%Y") %></td>
+      <% if @showhours %>
+        <td><%= lesson.time_in.strftime("%l:%M %p") %></td>
+        <td><%= lesson.time_out.strftime("%l:%M %p") %></td>
+        <td>
+          <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
+        </td>
+      <% end %>
+      <td colspan="5">Group Lesson</td>
+    </tr>
+    <% end %>
+    <tr class="<%= lesson.group_lesson_id ? "group-lesson-row group-lesson-#{current_gid}" : "single-lesson-row" %>">
+      <td class="no-border-left"></td>
       <% if @showschool %>
         <td><%= lesson['name'] %> </td>
       <% end %>

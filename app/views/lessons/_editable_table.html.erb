@@ -1,3 +1,15 @@
+<script>
+function showGroupLesson(group_lesson_id) {
+  console.log("show .group-lesson-"+group_lesson_id);
+  $(".group-lesson-"+group_lesson_id).show();
+  $(".expand-button-"+group_lesson_id).hide();
+}
+function hideGroupLesson(group_lesson_id) {
+  console.log("hide .group-lesson-"+group_lesson_id);
+  $(".group-lesson-"+group_lesson_id).hide();
+  $(".expand-button-"+group_lesson_id).show();
+}
+</script>
 <table>
 <tr>
 <!-- post to /dateviews where new date is stored, then redirect back here -->
@@ -27,7 +39,8 @@
 </tr>
 </table>
 <table class="stdnt">
-	<tr>
+  <tr>
+    <th class="no-border-left"></th>
     <th>
       <%= form_for("School", url: lessons_sort_path) do |f| %>
       <% f.submit "School", name: "sortcol" %>
@@ -73,34 +86,39 @@
     <th>
       Notes
     </th>
-    <th></th>
-    <th></th>
 	</tr>
   <% if @messons.length > 0 %>
+    <% current_gid = nil %>
     <% @messons.each do |lesson| %>
-    <tr>
-      <%= form_for(lesson, url: lesson_path(lesson.id)) do |f| %>
-      <td><%= lesson.student.school.name %></td>
-      <td><%= lesson.teacher.first_name %> <%= lesson.teacher.last_name %></td>
-      <td><%= lesson.student.first_name %> <%= lesson.student.last_name %></td>
-      <td class="timein"><%= f.text_field :time_in, class: "date", value: lesson.time_in.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
-      <td class="timein"><%= f.text_field :time_out, class: "date", value: lesson.time_out.strftime("%l:%M %p %m-%d-%Y"), style: "width:10em" %></td>
-      <td>
-          <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
-      </td>
-      <td class="cent"><%= f.number_field :progress, min: 1, max: 6, :style => "width:5em" %> </td>
-      <td class="cent"><%= f.number_field :behavior, min: 1, max: 6, :style => "width:5em" %> </td>
-      <td class="cent">
-        <%= f.check_box :brought_instrument %>
-      </td>
-      <td class="cent">
-        <%= f.check_box :brought_books %>
-      </td>
-      <td><%= f.text_field :notes %> </td>
-      <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
-      <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
+      <% group_lesson_heading = false %>
+      <% # Last row of group lesson
+        if current_gid && (!lesson.group_lesson_id || current_gid != lesson.group_lesson_id)
+      %>
+        <tr class="group-lesson-row group-lesson-<%= current_gid %>">
+          <td class="no-border-left"></td><td colspan="11">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
+        </tr>
+      <%  
+        current_gid = nil
+        end 
+      %>
+      <% # First row of group lesson
+        if lesson.group_lesson_id && (!current_gid || current_gid != lesson.group_lesson_id)
+          current_gid = lesson.group_lesson_id # start new group lesson
+      %>
+        <%= render partial: '/lessons/editable_row', locals: { 
+          group_lesson_id: current_gid,
+          group_lesson_heading: true,
+          lesson: lesson } %>
       <% end %>
-    </tr>
+      <%= render partial: '/lessons/editable_row', locals: { 
+        group_lesson_id: current_gid,
+        group_lesson_heading: false,
+        lesson: lesson } %>
+      <% end # messons.each do |lesson| %>
+      <% if current_gid %>
+      <tr class="group-lesson-row group-lesson-<%= current_gid %>">
+        <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
+      </tr>
     <% end %>
   <% else %>
     <tr><th colspan="12">None.</th></tr>

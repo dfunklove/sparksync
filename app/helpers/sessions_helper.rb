@@ -49,8 +49,8 @@ module SessionsHelper
     d = Dateview.new
     d.start_date = DateTime.parse(session[:dateview_start]) if session[:dateview_start]
     d.end_date = DateTime.parse(session[:dateview_end]) if session[:dateview_end]
-    session[:dateview_start] = nil
-    session[:dateview_end] = nil
+    session.delete(:dateview_start)
+    session.delete(:dateview_end)
     return d
   end
 

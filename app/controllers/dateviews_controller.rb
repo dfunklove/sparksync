@@ -9,7 +9,7 @@ class DateviewsController < ApplicationController
       # go back to the page where user changed date
       if session[:previous_page]
         temp = session[:previous_page]
-        session[:previous_page] = nil
+        session.delete(:previous_page)
         redirect_to temp
       else
         redirect_to request.referrer

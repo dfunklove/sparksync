@@ -42,24 +42,16 @@ function hideGroupLesson(group_lesson_id) {
   <tr>
     <th class="no-border-left"></th>
     <th>
-      <%= form_for("School", url: lessons_sort_path) do |f| %>
-      <% f.submit "School", name: "sortcol" %>
-      <% end %>
+      School
     </th>
     <th>
-      <%= form_for("Teacher", url: lessons_sort_path) do |f| %>
-      <% f.submit "Teacher", name: "sortcol" %>
-      <% end %>
+      Teacher
     </th>
     <th>
-      <%= form_for("Student", url: lessons_sort_path) do |f| %>
-      <% f.submit "Student", name: "sortcol" %>
-      <% end %>
+      Student
     </th>
 		<th class="timein">
-    <%= form_for("Date", url: lessons_sort_path) do |f| %>
-      <% f.submit "Time In", name: "sortcol" %>
-    <% end %>
+      Date
     </th>
     <th>
       Time Out
@@ -68,14 +60,10 @@ function hideGroupLesson(group_lesson_id) {
       Minutes
     </th>
     <th class="cent">
-      <%= form_for("Progress", url: lessons_sort_path) do |f| %>
-      <% f.submit "Progress", name: "sortcol" %>
-      <% end %>
+      Progress
     </th>
     <th class="cent">
-      <%= form_for("Behavior", url: lessons_sort_path) do |f| %>
-      <% f.submit "Behavior", name: "sortcol" %>
-      <% end %>
+      Behavior
     </th>
     <th class="cent">
       Instru

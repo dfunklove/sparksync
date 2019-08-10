@@ -47,7 +47,7 @@ $(function() {
       <% end %>
       <td class="cent"><%= lesson_f.select :progress, [6,5,4,3,2,1], { include_blank: true } %></td>
       <td class="cent"><%= lesson_f.select :behavior, [6,5,4,3,2,1], { include_blank: true } %></td>
-      <td><%= lesson_f.text_field :notes, class: "gomodal" %> </td>
+      <td><%= lesson_f.text_field :notes, class: "gomodal", autocomplete: "off" %> </td>
       </tr> 
     <% end %>
     <tr>

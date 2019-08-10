@@ -34,7 +34,7 @@ class Lesson < ApplicationRecord
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
     sql += "brought_books, lessons.id, lessons.school_id, name, "
     sql += "students.first_name, "
-    sql += "students.last_name as student_last, user_id, student_id "
+    sql += "students.last_name as student_last, user_id, student_id, group_lesson_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += " inner join schools on lessons.school_id = schools.id "
@@ -43,7 +43,6 @@ class Lesson < ApplicationRecord
     sql += " and students.activated = true"
     sql += " and users.activated = true"
     sql += " and schools.activated = true"
-    sql += " and group_lesson_id is null"
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
   end
 

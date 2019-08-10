@@ -44,10 +44,13 @@ module SessionsHelper
     @current_user = nil
   end
 
+  # Destroy the dateview after reading.  This gives it the life cycle of a request parameter.
   def current_dateview
     d = Dateview.new
     d.start_date = DateTime.parse(session[:dateview_start]) if session[:dateview_start]
     d.end_date = DateTime.parse(session[:dateview_end]) if session[:dateview_end]
+    session[:dateview_start] = nil
+    session[:dateview_end] = nil
     return d
   end
 

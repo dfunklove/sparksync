@@ -183,12 +183,16 @@ class GroupLessonsController < ApplicationController
     @group_lesson.lessons.each do |lesson|
       lesson.time_out = temp_params[:time_out]
     end
-    if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
-  		session.delete(:group_lesson_id)
-      redirect_to '/group_lessons/new'
-    else
-      render 'checkout'
-  	end
+    
+    respond_to do |format|
+      if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
+        session.delete(:group_lesson_id)
+        format.html { redirect_to '/group_lessons/new' }
+      else
+        format.html { render action: 'checkout'}
+        format.js { render 'error', locals: { object: @group_lesson } }
+      end
+    end
   end
 
   def update

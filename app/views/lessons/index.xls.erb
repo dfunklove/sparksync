@@ -19,7 +19,7 @@
         <Cell><Data ss:Type="String">Progress</Data></Cell>
         <Cell><Data ss:Type="String">Behavior</Data></Cell>
         <Cell><Data ss:Type="String">Notes</Data></Cell>
-        <Cell><Data ss:Type="String">Group Lesson ID</Data></Cell>
+        <Cell><Data ss:Type="String">Group Lesson</Data></Cell>
       </Row>
     <% @messons.each do |lesson| %>
       <Row>
@@ -35,7 +35,7 @@
         <Cell><Data ss:Type="String"><%= lesson.progress %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.behavior %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.notes %></Data></Cell>
-        <Cell><Data ss:Type="String"><%= lesson.group_lesson_id %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.group_lesson_id? %></Data></Cell>
       </Row>
     <% end %>
     </Table>

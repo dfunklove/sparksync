@@ -1,24 +1,13 @@
 <% provide(:title, 'Student Check Out') %>
 <h1><%= @lesson.student.first_name %> <%= @lesson.student.last_name %> . Check Out</h1>
 
-<% if @lesson.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
-    </div>
-    <ul>
-    <% @lesson.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= render '/shared/error_messages', object: @lesson %>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
     Check in time: <%= @lesson.time_in.strftime(Lesson::DATETIME_FORMAT) %><br>
 
-    <%= form_for(@lesson, url: '/lessons/checkout', html: {class: "all-block"}) do |lesson| %>
+    <%= form_for(@lesson, url: '/lessons/checkout', remote: true, html: {class: "all-block"}) do |lesson| %>
       <%= lesson.label :behavior, "Behavior" %>
       <label class="radio-label-inline">Worse</label>
       <% for i in 1..6 do %>

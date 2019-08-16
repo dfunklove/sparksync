@@ -269,12 +269,16 @@ end
     end
 
     temp_params[:time_out] = Time.now
-  	if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
-  		session.delete(:lesson_id)
-      redirect_to root_url
-  	else
-      render 'checkout'
-  	end
+
+    respond_to do |format|
+      if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
+        session.delete(:lesson_id)
+        format.html { redirect_to root_url }
+      else
+        format.html { render action: 'checkout' }
+        format.js { render '/shared/error', locals: { object: @lesson } }
+      end
+    end
   end
 
   def sort

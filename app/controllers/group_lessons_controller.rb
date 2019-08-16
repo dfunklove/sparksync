@@ -101,14 +101,14 @@ class GroupLessonsController < ApplicationController
           format.js
         else
           format.html { render action: 'new'}
-          format.js { render 'error', locals: { object: @lesson } }
+          format.js { render 'checkout_error', locals: { object: @lesson } }
         end
       elsif @payload.errors.count == 0 && @payload.save
         session[:group_lesson_id] = @payload.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
         format.html { render action: 'new'}
-        format.js { render 'error', locals: { object: @payload } }
+        format.js { render 'checkout_error', locals: { object: @payload } }
       end
     end
   end
@@ -190,7 +190,7 @@ class GroupLessonsController < ApplicationController
         format.html { redirect_to '/group_lessons/new' }
       else
         format.html { render action: 'checkout'}
-        format.js { render 'error', locals: { object: @group_lesson } }
+        format.js { render '/shared/error', locals: { object: @group_lesson } }
       end
     end
   end

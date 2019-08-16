@@ -1,1 +1,5 @@
+<%
+  # Parameters
+  # object : an ActiveRecord object from which to read the errors
+%>
 $("#error_wrapper").replaceWith("<%= j render '/shared/error_messages', object: object %>")

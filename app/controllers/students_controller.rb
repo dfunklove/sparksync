@@ -57,6 +57,7 @@ class StudentsController < ApplicationController
   end
 
   def prepare_index
+    @title = current_user.teacher? ? "My Students" : "Students"
     @changev = current_visibility
     @students = find_right_students
     @showbtns = current_user.admin?

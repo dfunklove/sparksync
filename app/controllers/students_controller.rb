@@ -18,7 +18,7 @@ class StudentsController < ApplicationController
 
     @showstudent = false
     @showschool = true
-    @showteacher = true
+    @showteacher = !current_user.teacher?
     @showhours = true
 
     @lessons = Lesson.find_by_student(@student_id, @dateview.start_date, @dateview.end_date)

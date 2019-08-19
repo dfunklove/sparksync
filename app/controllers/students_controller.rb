@@ -61,7 +61,7 @@ class StudentsController < ApplicationController
     @students = find_right_students
     @showbtns = current_user.admin?
     @show_visibility_btn = current_user.admin?
-    @show_create_btn = current_user.admin? || current_user.teacher?
+    @show_create_btn = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
   end
 

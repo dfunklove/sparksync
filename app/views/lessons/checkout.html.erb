@@ -5,7 +5,7 @@
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    Check in time: <%= @lesson.time_in.strftime(Lesson::DATETIME_FORMAT) %><br>
+    Lesson started at: <%= @lesson.time_in.strftime(Lesson::DATETIME_FORMAT) %><br>
 
     <%= form_for(@lesson, url: '/lessons/checkout', remote: true, html: {class: "all-block"}) do |lesson| %>
       <%= lesson.label :behavior, "Behavior" %>

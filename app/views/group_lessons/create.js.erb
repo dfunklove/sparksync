@@ -1,5 +1,5 @@
 <% i = @group_lesson.lessons.size - 1 %>
-$(".existing_student_row").last().after("<%= j render partial: 'lesson_row', locals: {i:i} %>");
+$(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {i:i} %>");
 $(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:i+1} %>");
 $("#add_student_hidden_field").remove();
 $("#new_student_hidden_field").remove();

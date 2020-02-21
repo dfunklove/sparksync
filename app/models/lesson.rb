@@ -13,7 +13,7 @@ class Lesson < ApplicationRecord
   belongs_to :school
   belongs_to :group_lesson, optional: true
 
-  before_create :check_student_activated
+  before_create :check_student_activated, :truncate_seconds
 
   def check_student_activated
     if !student.activated?
@@ -23,6 +23,11 @@ class Lesson < ApplicationRecord
         message: "This student is deactivated")
       throw :abort
     end
+  end
+
+  # Reducing the granularity allows for a unique constraint to prevent duplicates
+  def truncate_seconds
+    self.time_in = time_in.round
   end
 
   def self.in_progress

@@ -1,72 +1,36 @@
-<% provide(:title, 'Student Check In') %>
-<h1>Student Check In</h1>
-
-<% if @lesson.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-danger">
-      The form contains <%= pluralize(@lesson.errors.count, "error") %>.
-    </div>
-    <ul>
-    <% @lesson.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
-
-<div class="row">
-  <div class="col-md-6 col-md-offset-3">
-    <%= form_for(@lesson, url: '/lessons') do |lesson| %>
-	    <%= fields_for @student do |student| %>
-	      <%= student.label :first_name, "Student First Name" %>
-	      <%= student.text_field :first_name %>
-
-	      <%= student.label :last_name, "Student Last Name" %>
-	      <%= student.text_field :last_name %>
-	    <% end %>
-
-      <% if true %>
-        <div class="checkbox-withlabel">
-          <label for="new_student">New Student</label>
-          <input type="checkbox" name="new_student" value="true"></input>
-        </div>
-      <% end %>
-
-      <%= fields_for @school do |school| %>
-        <%= school.label :name, "School" %>
-        <% @allSchools.each do |this_school| %>
-          <div class="radio-withlabel">
-          <%= school.radio_button :name, this_school.name %>
-          <%= school.label :name, this_school.name, for: "school_name_"+this_school.name.downcase %>
-          </div>
+<h2>
+  Start Single Lesson
+</h2>
+<%= render '/shared/error_messages', object: @lesson %>
+  <table class="stdnt">
+	<tr>
+		<th>F Name</th>
+    <th>L Name</th>
+    <th>School</th>
+    <th>Instrument</th>
+    <th>Books</th>
+	</tr>
+  <% @students.each do |student| %> 
+    <tr>
+      <%= form_for(@lesson, url: '/lessons') do |lesson| %>
+        <td><%= student.first_name %></td>
+        <td><%= student.last_name %></td>
+        <td><%= student.school.name %></td>
+        <%= lesson.hidden_field(:student_id, value: student.id)%>
+        <%= lesson.fields_for :student do |lesson_student| %>
+          <%= lesson_student.hidden_field(:school_id, value: student.school.id)%>
         <% end %>
+        <td style="text-align: center">
+          <%= lesson.check_box :brought_instrument, checked: true %>
+        </td>
+        <td style="text-align: center">
+          <%= lesson.check_box :brought_books, checked: true %>
+        </td>
+        <td><%= lesson.submit "Start Lesson", class: "delete" %></td>
       <% end %>
-
-      <%= lesson.label :brought_instrument, "Student brought instrument" %>
-      <div class="all-inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_instrument, false %>
-          <label>No</label>
-        </div>
-      </div>
-
-      <%= lesson.label :brought_books, "Student brought books" %>
-      <div class="all-inline">
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, true, checked: true %>
-          <label>Yes</label>
-        </div>
-        <div class="radio-withlabel">
-          <%= lesson.radio_button :brought_books, false %>
-          <label>No</label>
-        </div>
-      </div>
-
-      <%= lesson.submit "Submit", class: "btn btn-primary" %>
-    <% end %>
-  </div>
-</div>
+    </tr> 
+  <% end %>
+  <tr>
+  <%= render "add_student_form" %>
+  </tr>
+</table>

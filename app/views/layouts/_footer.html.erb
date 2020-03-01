@@ -1,7 +1,7 @@
 <hr>
 <% if logged_in? %>
 <%= link_to "Logout", logout_path, method: :delete unless current_user.teacher? && current_user.lessons_in_progress.count > 0 %>
-<%= link_to "Single Lesson", '/lessons/new-single', method: :get if current_user.teacher? %>
+<%= link_to "Single Lesson", '/lessons/new', method: :get if current_user.teacher? %>
 <%= link_to "Group Lesson", '/group_lessons/new', method: :get if current_user.teacher? %>
 <%= link_to "Dashboard", '/', method: :get if current_user.admin? %>
 <%= link_to "Teachers", '/teachers', method: :get if current_user.admin? %>

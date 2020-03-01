@@ -49,14 +49,13 @@ Rails.application.routes.draw do
     root 'admins#dashboard'
   end
   constraints(TeacherConstraint.new) do
-    root 'lessons#new_single'
+    root 'lessons#new'
   end
   constraints(PartnerConstraint.new) do
     root 'partners#school'
   end
   root 'sessions#new'
 
-  get '/lessons/new-single'
   get '/lessons/checkout'
   post  '/lessons/checkout', to: 'lessons#finishCheckout'
   patch '/lessons/checkout', to: 'lessons#finishCheckout'

@@ -25,14 +25,6 @@ class LessonsController < ApplicationController
     prepare_new
   end
 
-  def new_single
-    prepare_new
-  end
-
-  def new_group
-    prepare_new
-  end
-
   def prepare_new
     @students = Student.find_by_teacher(current_user.id)
 
@@ -48,10 +40,11 @@ class LessonsController < ApplicationController
       session[:group_lesson_id] = open_group_lesson.id
       flash[:danger] = error_message
       redirect_to "/group_lessons/checkout"
-    end
-    @lesson ||= Lesson.new
-    if !@lesson.student
-      @lesson.student = Student.new
+    else
+      @lesson ||= Lesson.new
+      if !@lesson.student
+        @lesson.student = Student.new
+      end
     end
   end
 
@@ -195,11 +188,11 @@ class LessonsController < ApplicationController
         format.html { redirect_to "/lessons/checkout" }
       elsif @confirm_add_student
         prepare_new
-        format.html { render action: 'new_single'}
+        format.html { render action: 'new'}
         format.js { render 'confirm_add_student' }
       else
         prepare_new
-        format.html { render action: 'new_single'}
+        format.html { render action: 'new'}
         format.js # implied: render 'create'
       end
     end

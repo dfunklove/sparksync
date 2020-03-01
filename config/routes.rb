@@ -62,7 +62,6 @@ Rails.application.routes.draw do
   get '/group_lessons/checkout'
   post  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
   patch  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
-  get '/admins/new'
   get '/admins/dashboard'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
@@ -75,7 +74,7 @@ Rails.application.routes.draw do
   resources :group_lessons, only: [:index, :new, :create, :update, :destroy]
   resources :teachers, only: [:index, :create, :update, :show, :destroy]
   resources :partners, only: [:index, :new, :create, :update, :destroy]
-  resources :admins, only: [:index, :create, :update, :destroy]
+  resources :admins, only: [:index, :new, :create, :update, :destroy]
   resources :schools, only: [:index, :create, :update, :show, :destroy]
   resources :students, only: [:index, :create, :update, :show, :destroy]
   resources :dateviews, only: [:create]

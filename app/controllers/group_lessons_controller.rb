@@ -7,10 +7,6 @@ class GroupLessonsController < ApplicationController
   end
 
   def new
-    prepare_new
-  end
-
-  def prepare_new
     @students = Student.find_by_teacher(current_user.id)
 
     error_message = 'Please finish open lesson before starting a new one'
@@ -25,7 +21,7 @@ class GroupLessonsController < ApplicationController
       session[:lesson_id] = open_lesson.id
       flash[:danger] = error_message
       redirect_to "/lessons/checkout"
-    elsif !@group_lesson
+    else
       @group_lesson = GroupLesson.new
 
       # populate lessons from students

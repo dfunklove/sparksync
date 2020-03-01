@@ -56,20 +56,20 @@ Rails.application.routes.draw do
   end
   root 'sessions#new'
 
-  get '/lessons/checkout'
-  post  '/lessons/checkout', to: 'lessons#finishCheckout'
-  patch '/lessons/checkout', to: 'lessons#finishCheckout'
+  get '/admins/dashboard'
   get '/group_lessons/checkout'
   post  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
   patch  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
-  get '/admins/dashboard'
+  get '/lessons/checkout'
+  post  '/lessons/checkout', to: 'lessons#finishCheckout'
+  patch '/lessons/checkout', to: 'lessons#finishCheckout'
+  post '/lessons/sort'
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
+  get '/partners/school'
   post '/sessions/change_view'
   post '/teachers/change_table'
-  post '/lessons/sort'
-  get '/partners/school'
   resources :lessons, only: [:index, :new, :create, :update, :destroy]
   resources :group_lessons, only: [:index, :new, :create, :update, :destroy]
   resources :teachers, only: [:index, :create, :update, :show, :destroy]

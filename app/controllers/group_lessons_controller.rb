@@ -74,9 +74,6 @@ class GroupLessonsController < ApplicationController
       i += 1
     end
 
-    puts "group_lesson.lessons.size=#{@group_lesson.lessons.size}, listing="
-    p @group_lesson.lessons
-
     if @group_lesson.lessons.size < 2
       @group_lesson.errors.add(
         :base,
@@ -87,21 +84,17 @@ class GroupLessonsController < ApplicationController
 
     respond_to do |format|
       if @confirm_add_student
-        format.html { render action: 'new'} # is this tested?
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if @lesson.valid?
-          format.html { render action: 'new'}
           format.js
         else
-          format.html { render action: 'new'}
           format.js { render 'checkout_error', locals: { object: @lesson } }
         end
       elsif @group_lesson.errors.count == 0 && @group_lesson.save
         session[:group_lesson_id] = @group_lesson.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
-        format.html { render action: 'new'}
         format.js { render 'checkout_error', locals: { object: @group_lesson } }
       end
     end
@@ -117,7 +110,6 @@ class GroupLessonsController < ApplicationController
 
       if @stdnt_lookedup
    	    @lesson.student = @student = @stdnt_lookedup
-        puts "number of students " + nharrys.to_s
         if nharrys > 1
           @lesson.errors.add(
             :base,

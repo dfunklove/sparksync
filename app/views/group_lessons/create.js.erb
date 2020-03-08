@@ -1,6 +1,5 @@
-<% i = @group_lesson.lessons.size - 1 %>
-$(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {i:i} %>");
-$(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:i+1} %>");
+$(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {i:row_count} %>");
+$(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:row_count+1} %>");
 $("#add_student_hidden_field").remove();
 $("#new_student_hidden_field").remove();
 $("#error_wrapper").empty();

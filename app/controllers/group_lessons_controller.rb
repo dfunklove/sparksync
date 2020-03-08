@@ -39,7 +39,7 @@ class GroupLessonsController < ApplicationController
     @group_lesson.teacher = current_user
     @group_lesson.time_in = Time.now
     @selected = []
-    i = 0
+    row_count = 0
 
     # pick only the students/lessons which are selected
     params[:group_lesson][:lessons_attributes].keys.each do |key|
@@ -68,10 +68,10 @@ class GroupLessonsController < ApplicationController
         selected = @lesson.student.id
       end
       if selected
-        @selected[i] = true
+        @selected[row_count] = true
         @group_lesson.lessons << @lesson
       end        
-      i += 1
+      row_count += 1
     end
 
     if @group_lesson.lessons.size < 2
@@ -87,7 +87,7 @@ class GroupLessonsController < ApplicationController
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if @lesson.valid?
-          format.js
+          format.js { render 'create', locals: { row_count: row_count } }
         else
           format.js { render 'checkout_error', locals: { object: @lesson } }
         end
@@ -100,16 +100,27 @@ class GroupLessonsController < ApplicationController
     end
   end
 
+  # Description: ???
+  #
+  # Inputs
+  # @lesson
+  # @student
+  # @school
+  #
+  # Outputs
+  # @confirm_add_student
+  # @lesson
+  #
   def lookup_student_for_lesson
     if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
       harrys = Student.find_by_name(@student.first_name, @student.last_name, @school.id)
-      @stdnt_lookedup = harrys.first
+      stdnt_lookedup = harrys.first
       nharrys = harrys.count
 
-      if @stdnt_lookedup
-   	    @lesson.student = @student = @stdnt_lookedup
+      if stdnt_lookedup
+   	    @lesson.student = @student = stdnt_lookedup
         if nharrys > 1
           @lesson.errors.add(
             :base,

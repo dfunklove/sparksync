@@ -1,11 +1,11 @@
 <% 
   # parameters:
-  # group_lesson : a group_lesson object containing one lesson for each row to be displayed
+  # lesson : a lesson object with data to populate the row
   # i : index into the lessons array which this row will point to
 %>
-<% brought_instrument = group_lesson.lessons[i].brought_instrument %>
-<% brought_books = group_lesson.lessons[i].brought_books %>
-<% student = group_lesson.lessons[i].student %>
+<% brought_instrument = lesson.brought_instrument %>
+<% brought_books = lesson.brought_books %>
+<% student = lesson.student %>
 <tr class="existing_student_row">
   <input value="<%= student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
   <input value="<%= student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />

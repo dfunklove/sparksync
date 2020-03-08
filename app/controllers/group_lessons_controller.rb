@@ -35,7 +35,6 @@ class GroupLessonsController < ApplicationController
 
   def create
     @confirm_add_student = false
-    all_rows = GroupLesson.new
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
     group_lesson.time_in = Time.now
@@ -68,7 +67,6 @@ class GroupLessonsController < ApplicationController
         lookup_student_for_lesson lesson
         selected = lesson.student.id
       end
-      all_rows.lessons << lesson
       if selected
         group_lesson.lessons << lesson
       end        
@@ -88,7 +86,7 @@ class GroupLessonsController < ApplicationController
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if lesson.valid?
-          format.js { render 'create', locals: { group_lesson: all_rows, row_count: row_count } }
+          format.js { render 'create', locals: { lesson: lesson, total_students: row_count } }
         else
           format.js { render 'checkout_error', locals: { object: lesson } }
         end

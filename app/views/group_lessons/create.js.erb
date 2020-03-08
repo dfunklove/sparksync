@@ -1,5 +1,10 @@
-$(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {group_lesson:group_lesson, i:row_count-1} %>");
-$(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:row_count} %>");
+<% 
+  # parameters:
+  # lesson : a lesson object with data to populate the row
+  # total_students : the total number of students listed on the page
+%>
+$(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {lesson:lesson, i:total_students-1} %>");
+$(".new_student_row").replaceWith("<%= j render partial: 'new_student_row', locals: {i:total_students} %>");
 $("#add_student_hidden_field").remove();
 $("#new_student_hidden_field").remove();
 $("#error_wrapper").empty();

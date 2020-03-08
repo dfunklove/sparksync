@@ -39,7 +39,6 @@ class GroupLessonsController < ApplicationController
     @payload      = GroupLesson.new
     @group_lesson.teacher = @payload.teacher = current_user
     @group_lesson.time_in = @payload.time_in = Time.now
-    @selected = []
     row_count = 0
 
     # pick only the students/lessons which are selected
@@ -70,7 +69,6 @@ class GroupLessonsController < ApplicationController
       end
       @group_lesson.lessons << @lesson
       if selected
-        @selected[row_count] = true
         @payload.lessons << @lesson
       end        
       row_count += 1

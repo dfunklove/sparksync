@@ -86,7 +86,7 @@ class GroupLessonsController < ApplicationController
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if lesson.valid?
-          format.js { render 'create', locals: { lesson: lesson, total_students: row_count } }
+          format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count } }
         else
           format.js { render 'checkout_error', locals: { object: lesson } }
         end

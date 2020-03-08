@@ -104,7 +104,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     params = params_for_new_student(Student.first, 0)
     params["add_student"] = true
     post "/group_lessons", params: params, xhr: true
-    assert_template :create
+    assert_template :add_student
   end
 
   test "add new student without confirmation" do
@@ -128,7 +128,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     params["add_student"] = true
     params["new_student"] = true
     post "/group_lessons", params: params, xhr: true
-    assert_template :create
+    assert_template :add_student
     assert_equal count_before + 1, Student.count
   end
 end

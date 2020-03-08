@@ -32,6 +32,38 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url, "Unable to login"
   end
 
+  test "none selected" do
+    students = Student.limit(5)
+
+    # Select students 1 and 3
+    params = {}
+    for i in 0..4 do
+      params.merge! params_for_student(students[i], i, false)
+    end
+
+    count_before = GroupLesson.count
+    post "/group_lessons", params: params, xhr: true
+    assert_template :checkout_error
+    assert_nil session[:group_lesson_id]
+    assert_equal count_before, GroupLesson.count
+  end
+
+  test "one selected" do
+    students = Student.limit(5)
+
+    # Select students 1 and 3
+    params = {}
+    for i in 0..4 do
+      params.merge! params_for_student(students[i], i, i == 0)
+    end
+
+    count_before = GroupLesson.count
+    post "/group_lessons", params: params, xhr: true
+    assert_template :checkout_error
+    assert_nil session[:group_lesson_id]
+    assert_equal count_before, GroupLesson.count
+  end
+
   test "two listed students" do
     students = Student.limit(5)
 

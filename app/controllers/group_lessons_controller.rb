@@ -51,19 +51,14 @@ class GroupLessonsController < ApplicationController
       if !lesson.student_id && (params[:add_student] || params[:add_student_confirmed])
         begin
           student = Student.new(student_params lesson_data[:student])
-          lesson.school_id = student.school_id
-          if student.school_id
-            student.school = School.find(student.school_id)
-          else
-            student.school = School.new
-          end
+          student.school = School.find_by(id: student.school_id)
         rescue => e
           p e
-          lesson ||= Lesson.new
-          student ||= Student.new
-          student.school ||= School.new
+          student = Student.new
+          student.school = School.new
         end
         lesson.student = student
+        lesson.school_id = student.school_id
         lookup_student_for_lesson lesson
         selected = lesson.student.id
       end

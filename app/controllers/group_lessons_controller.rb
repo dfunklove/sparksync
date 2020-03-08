@@ -36,9 +36,9 @@ class GroupLessonsController < ApplicationController
   def create
     @confirm_add_student = false
     all_rows = GroupLesson.new
-    payload  = GroupLesson.new
-    payload.teacher = current_user
-    payload.time_in = Time.now
+    group_lesson  = GroupLesson.new
+    group_lesson.teacher = current_user
+    group_lesson.time_in = Time.now
     lesson = nil
     row_count = 0
 
@@ -48,7 +48,7 @@ class GroupLessonsController < ApplicationController
       selected = lesson_data["selected"]
       lesson = Lesson.new(lesson_params(lesson_data))
       lesson.teacher = current_user
-      lesson.time_in = payload.time_in
+      lesson.time_in = group_lesson.time_in
       if !lesson.student_id && (params[:add_student] || params[:new_student])
         begin
           student = Student.new(student_params lesson_data[:student])
@@ -70,13 +70,13 @@ class GroupLessonsController < ApplicationController
       end
       all_rows.lessons << lesson
       if selected
-        payload.lessons << lesson
+        group_lesson.lessons << lesson
       end        
       row_count += 1
     end
 
-    if payload.lessons.size < 2
-      payload.errors.add(
+    if group_lesson.lessons.size < 2
+      group_lesson.errors.add(
         :base,
         :add_more_students,
         message: "Please select two or more students"
@@ -92,11 +92,11 @@ class GroupLessonsController < ApplicationController
         else
           format.js { render 'checkout_error', locals: { object: lesson } }
         end
-      elsif payload.errors.count == 0 && payload.save
-        session[:group_lesson_id] = payload.id
+      elsif group_lesson.errors.count == 0 && group_lesson.save
+        session[:group_lesson_id] = group_lesson.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
-        format.js { render 'checkout_error', locals: { object: payload } }
+        format.js { render 'checkout_error', locals: { object: group_lesson } }
       end
     end
   end

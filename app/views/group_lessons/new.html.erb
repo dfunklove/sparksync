@@ -12,7 +12,7 @@
     <th>Instrument</th>
     <th>Books</th>
   </tr>
-    <% @selected ||= [] %>
+    <% selected ||= [] %>
     <% i = -1 %>
     <%= group_lesson.fields_for :lessons do |lesson_f| %>
       <% i += 1 %>
@@ -22,7 +22,7 @@
         <tr class="existing_student_row">
         <%= lesson_f.hidden_field(:student_id, value: student.id) %>
         <%= lesson_f.hidden_field(:school_id, value: student.school.id) %>
-        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, @selected[i] %></td>
+        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, selected[i] %></td>
         <td><%= student.first_name %></td>
         <td><%= student.last_name %></td>
         <td><%= student.school.name %></td>

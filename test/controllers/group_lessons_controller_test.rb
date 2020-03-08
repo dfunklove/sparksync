@@ -11,11 +11,11 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     retval
   end
 
-  def params_for_add_student(student, index)
+  def params_for_new_student(student, index)
     retval = {}
     retval["group_lesson[lessons_attributes][#{index}][student][first_name]"] = student.first_name
     retval["group_lesson[lessons_attributes][#{index}][student][last_name]"] = student.last_name
-    retval["group_lesson[lessons_attributes][#{index}][student][school_id]"] = student.school.id
+    retval["group_lesson[lessons_attributes][#{index}][student][school_id]"] = student.school_id
     retval["group_lesson[lessons_attributes][#{index}][brought_instrument]"] = 1
     retval["group_lesson[lessons_attributes][#{index}][brought_books]"] = 1
     retval
@@ -32,7 +32,25 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url, "Unable to login"
   end
 
-  test "none selected" do
+  test "empty list" do
+    count_before = GroupLesson.count
+    post "/group_lessons", params: params_for_new_student(Student.new, 0), xhr: true
+    assert_template :checkout_error
+    assert_nil session[:group_lesson_id]
+    assert_equal count_before, GroupLesson.count
+  end
+
+  test "one of one selected" do
+    count_before = GroupLesson.count
+    params = params_for_student(Student.first, 0, true)
+    params.merge! params_for_new_student(Student.new, 1)
+    post "/group_lessons", params: params, xhr: true
+    assert_template :checkout_error
+    assert_nil session[:group_lesson_id]
+    assert_equal count_before, GroupLesson.count
+  end
+
+  test "none of many selected" do
     students = Student.limit(5)
 
     # Select students 1 and 3
@@ -48,7 +66,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     assert_equal count_before, GroupLesson.count
   end
 
-  test "one selected" do
+  test "one of many selected" do
     students = Student.limit(5)
 
     # Select students 1 and 3
@@ -83,7 +101,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "add existing student" do
-    params = params_for_add_student(Student.first, 0)
+    params = params_for_new_student(Student.first, 0)
     params["add_student"] = true
     post "/group_lessons", params: params, xhr: true
     assert_template :create
@@ -94,7 +112,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     s.first_name = "Test"
     s.last_name = "1"
     s.school = School.first
-    params = params_for_add_student(s, 0)
+    params = params_for_new_student(s, 0)
     params["add_student"] = true
     post "/group_lessons", params: params, xhr: true
     assert_template :confirm_add_student
@@ -106,7 +124,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     s.first_name = "Test"
     s.last_name = "1"
     s.school = School.first
-    params = params_for_add_student(s, 0)
+    params = params_for_new_student(s, 0)
     params["add_student"] = true
     params["new_student"] = true
     post "/group_lessons", params: params, xhr: true

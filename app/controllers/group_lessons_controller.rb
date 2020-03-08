@@ -35,10 +35,10 @@ class GroupLessonsController < ApplicationController
 
   def create
     @confirm_add_student = false
-    group_lesson = GroupLesson.new
-    payload      = GroupLesson.new
-    group_lesson.teacher = payload.teacher = current_user
-    group_lesson.time_in = payload.time_in = Time.now
+    all_rows = GroupLesson.new
+    payload  = GroupLesson.new
+    payload.teacher = current_user
+    payload.time_in = Time.now
     lesson = nil
     row_count = 0
 
@@ -48,7 +48,7 @@ class GroupLessonsController < ApplicationController
       selected = lesson_data["selected"]
       lesson = Lesson.new(lesson_params(lesson_data))
       lesson.teacher = current_user
-      lesson.time_in = group_lesson.time_in
+      lesson.time_in = payload.time_in
       if !lesson.student_id && (params[:add_student] || params[:new_student])
         begin
           student = Student.new(student_params lesson_data[:student])
@@ -68,7 +68,7 @@ class GroupLessonsController < ApplicationController
         lookup_student_for_lesson lesson
         selected = lesson.student.id
       end
-      group_lesson.lessons << lesson
+      all_rows.lessons << lesson
       if selected
         payload.lessons << lesson
       end        
@@ -88,7 +88,7 @@ class GroupLessonsController < ApplicationController
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
         if lesson.valid?
-          format.js { render 'create', locals: { group_lesson: group_lesson, row_count: row_count } }
+          format.js { render 'create', locals: { group_lesson: all_rows, row_count: row_count } }
         else
           format.js { render 'checkout_error', locals: { object: lesson } }
         end

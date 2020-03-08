@@ -35,47 +35,48 @@ class GroupLessonsController < ApplicationController
 
   def create
     @confirm_add_student = false
-    @group_lesson = GroupLesson.new
-    @payload      = GroupLesson.new
-    @group_lesson.teacher = @payload.teacher = current_user
-    @group_lesson.time_in = @payload.time_in = Time.now
+    group_lesson = GroupLesson.new
+    payload      = GroupLesson.new
+    group_lesson.teacher = payload.teacher = current_user
+    group_lesson.time_in = payload.time_in = Time.now
+    lesson = nil
     row_count = 0
 
     # pick only the students/lessons which are selected
     params[:group_lesson][:lessons_attributes].keys.each do |key|
       lesson_data = params[:group_lesson][:lessons_attributes][key]
       selected = lesson_data["selected"]
-      @lesson = Lesson.new(lesson_params(lesson_data))
-      @lesson.teacher = current_user
-      @lesson.time_in = @group_lesson.time_in
-      if !@lesson.student_id && (params[:add_student] || params[:new_student])
+      lesson = Lesson.new(lesson_params(lesson_data))
+      lesson.teacher = current_user
+      lesson.time_in = group_lesson.time_in
+      if !lesson.student_id && (params[:add_student] || params[:new_student])
         begin
-          @student = Student.new(student_params lesson_data[:student])
-          @lesson.school_id = @student.school_id
-          if @student.school_id
-            @school = School.find(@student.school_id)
+          student = Student.new(student_params lesson_data[:student])
+          lesson.school_id = student.school_id
+          if student.school_id
+            student.school = School.find(student.school_id)
           else
-            @school = School.new
+            student.school = School.new
           end
         rescue => e
           p e
-          @lesson ||= Lesson.new
-          @student ||= Student.new
-          @school ||= School.new
+          lesson ||= Lesson.new
+          student ||= Student.new
+          student.school ||= School.new
         end
-        @lesson.student = @student
-        lookup_student_for_lesson
-        selected = @lesson.student.id
+        lesson.student = student
+        lookup_student_for_lesson lesson
+        selected = lesson.student.id
       end
-      @group_lesson.lessons << @lesson
+      group_lesson.lessons << lesson
       if selected
-        @payload.lessons << @lesson
+        payload.lessons << lesson
       end        
       row_count += 1
     end
 
-    if @payload.lessons.size < 2
-      @payload.errors.add(
+    if payload.lessons.size < 2
+      payload.errors.add(
         :base,
         :add_more_students,
         message: "Please select two or more students"
@@ -86,62 +87,63 @@ class GroupLessonsController < ApplicationController
       if @confirm_add_student
         format.js { render 'confirm_add_student' }
       elsif params[:new_student] || params[:add_student]
-        if @lesson.valid?
-          format.js { render 'create', locals: { row_count: row_count } }
+        if lesson.valid?
+          format.js { render 'create', locals: { group_lesson: group_lesson, row_count: row_count } }
         else
-          format.js { render 'checkout_error', locals: { object: @lesson } }
+          format.js { render 'checkout_error', locals: { object: lesson } }
         end
-      elsif @payload.errors.count == 0 && @payload.save
-        session[:group_lesson_id] = @payload.id
+      elsif payload.errors.count == 0 && payload.save
+        session[:group_lesson_id] = payload.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
-        format.js { render 'checkout_error', locals: { object: @payload } }
+        format.js { render 'checkout_error', locals: { object: payload } }
       end
     end
   end
 
-  # Description: ???
+  # Description: 
+  # This method has several responsibilities: 
+  #   -Lookup student ID for name and school id
+  #   -Add error message on ambiguous lookup
+  #   -Create new student
+  #   -Indicate the need to confirm before creating new student
   #
   # Inputs
-  # @lesson
-  # @student
-  # @school
+  #   lesson
   #
-  # Outputs
-  # @confirm_add_student
-  # @lesson
+  # Modifies
+  #   @confirm_add_student
+  #   lesson
   #
-  def lookup_student_for_lesson
-    if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
+  def lookup_student_for_lesson lesson
+    student = lesson.student
+    school = lesson.student.school
+    if school.valid? && !student.first_name.empty? && !student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
-      harrys = Student.find_by_name(@student.first_name, @student.last_name, @school.id)
+      harrys = Student.find_by_name(student.first_name, student.last_name, school.id)
       stdnt_lookedup = harrys.first
       nharrys = harrys.count
 
       if stdnt_lookedup
-   	    @lesson.student = @student = stdnt_lookedup
+   	    lesson.student = student = stdnt_lookedup
         if nharrys > 1
-          @lesson.errors.add(
+          lesson.errors.add(
             :base,
             :first_name_or_last_name_ambiguous,
             message: "Need to spell out entire name")
         end
 
       elsif params[:new_student]
-        @student.school = @school
-        @student.activated = true
-        @student.save
-        @lesson.student = @student
-        flash[:info] = "Created new student #{@student.first_name} #{@student.last_name} at #{@student.school.name}" 
+        student.school = school
+        student.activated = true
+        student.save
+        lesson.student = student
+        flash[:info] = "Created new student #{student.first_name} #{student.last_name} at #{student.school.name}" 
       else
-        @lesson.errors.add(
-          :base,
-          :not_found_in_database,
-          message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
         @confirm_add_student = true
       end
-      @lesson.school = @school
+      lesson.school = school
     end
   end
 

@@ -126,7 +126,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     s.school = School.first
     params = params_for_new_student(s, 0)
     params["add_student"] = true
-    params["new_student"] = true
+    params["add_student_confirmed"] = true
     post "/group_lessons", params: params, xhr: true
     assert_template :add_student
     assert_equal count_before + 1, Student.count

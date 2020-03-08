@@ -48,7 +48,7 @@ class GroupLessonsController < ApplicationController
       lesson = Lesson.new(lesson_params(lesson_data))
       lesson.teacher = current_user
       lesson.time_in = group_lesson.time_in
-      if !lesson.student_id && (params[:add_student] || params[:new_student])
+      if !lesson.student_id && (params[:add_student] || params[:add_student_confirmed])
         begin
           student = Student.new(student_params lesson_data[:student])
           lesson.school_id = student.school_id
@@ -84,7 +84,7 @@ class GroupLessonsController < ApplicationController
     respond_to do |format|
       if @confirm_add_student
         format.js { render 'confirm_add_student' }
-      elsif params[:new_student] || params[:add_student]
+      elsif params[:add_student] || params[:add_student_confirmed]
         if lesson.valid?
           format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count } }
         else
@@ -132,7 +132,7 @@ class GroupLessonsController < ApplicationController
             message: "Need to spell out entire name")
         end
 
-      elsif params[:new_student]
+      elsif params[:add_student_confirmed]
         student.school = school
         student.activated = true
         student.save

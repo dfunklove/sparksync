@@ -1,5 +1,5 @@
 if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
-  $("#new_group_lesson").append("<input type='hidden' id='new_student_hidden_field' name='new_student' value='true'/>");
+  $("#new_group_lesson").append("<input type='hidden' id='add_student_confirmed_hidden_field' name='add_student_confirmed' value='true'/>");
   $("#new_group_lesson").submit();
 } else {
   $("#add_student_hidden_field").remove();

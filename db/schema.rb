@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200221035828) do
+ActiveRecord::Schema.define(version: 20200308024443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20200221035828) do
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "activated"
+    t.boolean "activated", default: true
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 20200221035828) do
     t.bigint "school_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "activated"
+    t.boolean "activated", default: true
     t.index ["school_id"], name: "index_students_on_school_id"
   end
 
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 20200221035828) do
     t.datetime "updated_at", null: false
     t.string "type"
     t.string "password_digest"
-    t.boolean "activated"
+    t.boolean "activated", default: true
     t.integer "school_id"
     t.string "reset_digest"
     t.datetime "reset_sent_at"

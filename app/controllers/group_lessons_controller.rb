@@ -36,8 +36,9 @@ class GroupLessonsController < ApplicationController
   def create
     @confirm_add_student = false
     @group_lesson = GroupLesson.new
-    @group_lesson.teacher = current_user
-    @group_lesson.time_in = Time.now
+    @payload      = GroupLesson.new
+    @group_lesson.teacher = @payload.teacher = current_user
+    @group_lesson.time_in = @payload.time_in = Time.now
     @selected = []
     row_count = 0
 
@@ -67,15 +68,16 @@ class GroupLessonsController < ApplicationController
         lookup_student_for_lesson
         selected = @lesson.student.id
       end
+      @group_lesson.lessons << @lesson
       if selected
         @selected[row_count] = true
-        @group_lesson.lessons << @lesson
+        @payload.lessons << @lesson
       end        
       row_count += 1
     end
 
-    if @group_lesson.lessons.size < 2
-      @group_lesson.errors.add(
+    if @payload.lessons.size < 2
+      @payload.errors.add(
         :base,
         :add_more_students,
         message: "Please select two or more students"
@@ -91,11 +93,11 @@ class GroupLessonsController < ApplicationController
         else
           format.js { render 'checkout_error', locals: { object: @lesson } }
         end
-      elsif @group_lesson.errors.count == 0 && @group_lesson.save
-        session[:group_lesson_id] = @group_lesson.id
+      elsif @payload.errors.count == 0 && @payload.save
+        session[:group_lesson_id] = @payload.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
-        format.js { render 'checkout_error', locals: { object: @group_lesson } }
+        format.js { render 'checkout_error', locals: { object: @payload } }
       end
     end
   end

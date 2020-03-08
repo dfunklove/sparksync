@@ -8,6 +8,8 @@ class ActiveSupport::TestCase
 
   setup do
 
+host! "localhost:3000"
+
 Lesson.delete_all
 Login.delete_all
 Admin.delete_all

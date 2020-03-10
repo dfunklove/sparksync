@@ -1,6 +1,7 @@
 <h2>
   Start Group Lesson
 </h2>
+<% i = -1 %>
 <%= render '/shared/error_messages', object: @group_lesson %>
 <%= form_for(@group_lesson, url: '/group_lessons', remote: true, html: {id: "new_group_lesson"}) do |group_lesson| %>
 <table class="stdnt">
@@ -35,14 +36,25 @@
       </td>
   </tr>
   <% end %><!-- group_lesson.fields_for :lessons -->
-  <%= render partial: "new_student_row", locals: {i:i+1} %>
+  <%= render partial: "new_student_row", locals: {group_lesson: group_lesson} %>
 <tr>
   <td colspan="6"><button id="commit" name="commit" type="submit" style="width: 100%">Start Lesson</button></td>
 </tr>
 </table>
 <% end %><!-- form_for @group_lesson -->
+
+<%= form_for(Lesson.new, url: '/group_lessons/addStudent', remote: true, html: {id: "add_student_form"}) do |lesson| %>
+  <input type="hidden" id="row_count" name="row_count" />
+<% end %>
+
 <script>
-function addStudent() {
-  $("#new_group_lesson").append("<input type='hidden' id='add_student_hidden_field' name='add_student' value='true' />")
+var row_count = 0;
+$(document).ready(function () {
+  row_count = <%= i %>
+});
+
+function beforeSubmit() {
+  $("#row_count").val(row_count);
+  row_count += 1;
 }
 </script>

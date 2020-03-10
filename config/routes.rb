@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   get '/group_lessons/checkout'
   post  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
   patch  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
+  post '/group_lessons/addStudent'
   get '/lessons/checkout'
   post  '/lessons/checkout', to: 'lessons#finishCheckout'
   patch '/lessons/checkout', to: 'lessons#finishCheckout'

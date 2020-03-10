@@ -34,12 +34,9 @@ class GroupLessonsController < ApplicationController
   end
 
   def create
-    @confirm_add_student = false
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
     group_lesson.time_in = Time.now
-    lesson = nil
-    row_count = 0
 
     # pick only the students/lessons which are selected
     params[:group_lesson][:lessons_attributes].keys.each do |key|
@@ -48,24 +45,9 @@ class GroupLessonsController < ApplicationController
       lesson = Lesson.new(lesson_params(lesson_data))
       lesson.teacher = current_user
       lesson.time_in = group_lesson.time_in
-      if !lesson.student_id && (params[:add_student] || params[:add_student_confirmed])
-        begin
-          student = Student.new(student_params lesson_data[:student])
-          student.school = School.find_by(id: student.school_id)
-        rescue => e
-          p e
-          student = Student.new
-          student.school = School.new
-        end
-        lesson.student = student
-        lesson.school_id = student.school_id
-        lookup_student_for_lesson lesson
-        selected = lesson.student.id
-      end
       if selected
         group_lesson.lessons << lesson
       end        
-      row_count += 1
     end
 
     if group_lesson.lessons.size < 2
@@ -77,19 +59,41 @@ class GroupLessonsController < ApplicationController
     end
 
     respond_to do |format|
-      if @confirm_add_student
-        format.js { render 'confirm_add_student' }
-      elsif params[:add_student] || params[:add_student_confirmed]
-        if lesson.valid?
-          format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count } }
-        else
-          format.js { render 'checkout_error', locals: { object: lesson } }
-        end
-      elsif group_lesson.errors.count == 0 && group_lesson.save
+      if group_lesson.errors.count == 0 && group_lesson.save
         session[:group_lesson_id] = group_lesson.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
         format.js { render 'checkout_error', locals: { object: group_lesson } }
+      end
+    end
+  end
+
+  def addStudent
+    row_count = params[:row_count].to_i
+    add_student_confirmed = params[:add_student_confirmed]
+    lesson_data = params[:group_lesson][:lesson]
+    lesson = Lesson.new(lesson_params(lesson_data))
+    lesson.time_in = Time.now
+    lesson.teacher = current_user
+    begin
+      student = Student.new(student_params lesson_data[:student]  )
+      student.school = School.find_by(id: student.school_id) || School.new
+    rescue => e
+      p e
+      student = Student.new
+      student.school = School.new
+    end
+    lesson.student = student
+    lesson.school_id = student.school_id
+    confirm_add_student = lookup_student_for_lesson(lesson, add_student_confirmed)
+
+    respond_to do |format|
+      if confirm_add_student
+        format.js { render 'confirm_add_student' }
+      elsif lesson.valid?
+        format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count } }
+      else
+        format.js { render 'checkout_error', locals: { object: lesson } }
       end
     end
   end
@@ -105,10 +109,10 @@ class GroupLessonsController < ApplicationController
   #   lesson
   #
   # Modifies
-  #   @confirm_add_student
+  #   confirm_add_student
   #   lesson
   #
-  def lookup_student_for_lesson lesson
+  def lookup_student_for_lesson lesson, add_student_confirmed
     student = lesson.student
     school = lesson.student.school
     if school.valid? && !student.first_name.empty? && !student.last_name.empty?
@@ -127,17 +131,18 @@ class GroupLessonsController < ApplicationController
             message: "Need to spell out entire name")
         end
 
-      elsif params[:add_student_confirmed]
+      elsif add_student_confirmed
         student.school = school
         student.activated = true
         student.save
         lesson.student = student
         flash[:info] = "Created new student #{student.first_name} #{student.last_name} at #{student.school.name}" 
       else
-        @confirm_add_student = true
+        confirm_add_student = true
       end
       lesson.school = school
     end
+    confirm_add_student
   end
 
   def checkout

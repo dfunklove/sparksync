@@ -160,6 +160,8 @@ class LessonsController < ApplicationController
   end
 
   def create
+    p params
+
     begin
       @lesson = Lesson.new(lesson_params)
       @student = Student.new(student_params)

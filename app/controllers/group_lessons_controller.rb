@@ -118,28 +118,22 @@ class GroupLessonsController < ApplicationController
     if school.valid? && !student.first_name.empty? && !student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
-      harrys = Student.find_by_name(student.first_name, student.last_name, school.id)
-      stdnt_lookedup = harrys.first
-      nharrys = harrys.count
+      results = Student.find_by_name(student.first_name, student.last_name, school.id)
 
-      if stdnt_lookedup
-   	    lesson.student = student = stdnt_lookedup
-        if nharrys > 1
-          lesson.errors.add(
-            :base,
-            :first_name_or_last_name_ambiguous,
-            message: "Need to spell out entire name")
-        end
-
-      elsif add_student_confirmed
-        student.school = school
-        student.activated = true
-        student.save
-        lesson.student = student
+      if results.count == 1
+   	    lesson.student = results.first
+      elsif results.count > 1
+        lesson.errors.add(
+          :base,
+          :first_name_or_last_name_ambiguous,
+          message: "Need to spell out entire name")
       else
-        confirm_add_student = true
+        if add_student_confirmed
+          student.save
+        else
+          confirm_add_student = true
+        end
       end
-      lesson.school = school
     end
     confirm_add_student
   end

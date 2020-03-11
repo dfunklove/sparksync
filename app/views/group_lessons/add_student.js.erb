@@ -4,6 +4,7 @@
   # total_students : the total number of students listed on the page
 %>
 $(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {lesson:lesson, i:total_students-1} %>");
+$(".new_student_row *").val("");
 $("#add_student_hidden_field").remove();
 $("#add_student_confirmed_hidden_field").remove();
 $("#error_wrapper").empty();

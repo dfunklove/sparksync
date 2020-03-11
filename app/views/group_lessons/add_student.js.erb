@@ -2,9 +2,15 @@
   # parameters:
   # lesson : a lesson object with data to populate the row
   # total_students : the total number of students listed on the page
+  # student_created : boolean indicating whether a new student was created
 %>
+<% student = lesson.student %>
 $(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {lesson:lesson, i:total_students-1} %>");
-$(".new_student_row *").val("");
-$("#add_student_hidden_field").remove();
+<% if student_created %>
+	$("#flash_wrapper").append("<div class='notice'>Created new student <%= student.first_name %> <%= student.last_name %> at <%= student.school.name %></div>");
+<% end %>
+$(".new_student_row input[type='text']").val("");
+$(".new_student_row input[type='checkbox']").prop("checked", true);
+$(".new_student_row select option:selected").removeProp("selected");
 $("#add_student_confirmed_hidden_field").remove();
 $("#error_wrapper").empty();

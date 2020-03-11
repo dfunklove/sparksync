@@ -91,7 +91,7 @@ class GroupLessonsController < ApplicationController
       if confirm_add_student
         format.js { render 'confirm_add_student' }
       elsif lesson.valid?
-        format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count } }
+        format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count, student_created: add_student_confirmed } }
       else
         format.js { render 'checkout_error', locals: { object: lesson } }
       end
@@ -136,7 +136,6 @@ class GroupLessonsController < ApplicationController
         student.activated = true
         student.save
         lesson.student = student
-        flash[:info] = "Created new student #{student.first_name} #{student.last_name} at #{student.school.name}" 
       else
         confirm_add_student = true
       end

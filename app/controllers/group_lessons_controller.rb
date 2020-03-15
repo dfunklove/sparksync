@@ -38,16 +38,19 @@ class GroupLessonsController < ApplicationController
     group_lesson.teacher = current_user
     group_lesson.time_in = Time.now
 
-    # pick only the students/lessons which are selected
-    params[:group_lesson][:lessons_attributes].keys.each do |key|
-      lesson_data = params[:group_lesson][:lessons_attributes][key]
-      selected = lesson_data["selected"]
-      lesson = Lesson.new(lesson_params(lesson_data))
-      lesson.teacher = current_user
-      lesson.time_in = group_lesson.time_in
-      if selected
-        group_lesson.lessons << lesson
-      end        
+    if params[:group_lesson]
+
+      # pick only the students/lessons which are selected
+      params[:group_lesson][:lessons_attributes].keys.each do |key|
+        lesson_data = params[:group_lesson][:lessons_attributes][key]
+        selected = lesson_data["selected"]
+        lesson = Lesson.new(lesson_params(lesson_data))
+        lesson.teacher = current_user
+        lesson.time_in = group_lesson.time_in
+        if selected
+          group_lesson.lessons << lesson
+        end        
+      end
     end
 
     if group_lesson.lessons.size < 2
@@ -75,17 +78,22 @@ class GroupLessonsController < ApplicationController
     lesson = Lesson.new(lesson_params(lesson_data))
     lesson.time_in = Time.now
     lesson.teacher = current_user
-    begin
-      student = Student.new(student_params lesson_data[:student]  )
-      student.school = School.find_by(id: student.school_id) || School.new
-    rescue => e
-      p e
-      student = Student.new
-      student.school = School.new
+
+    confirm_add_student = false
+    if !lesson.student_id
+      begin
+        student = Student.new(student_params lesson_data[:student]  )
+        student.school = School.find_by(id: student.school_id) || School.new
+      rescue => e
+        p e
+        student = Student.new
+        student.school = School.new
+      end
+      lesson.student = student
+      lesson.school_id = student.school_id
+
+      confirm_add_student = lookup_student_for_lesson(lesson, add_student_confirmed)
     end
-    lesson.student = student
-    lesson.school_id = student.school_id
-    confirm_add_student = lookup_student_for_lesson(lesson, add_student_confirmed)
 
     respond_to do |format|
       if confirm_add_student

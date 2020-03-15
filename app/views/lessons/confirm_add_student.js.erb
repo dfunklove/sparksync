@@ -1,4 +1,4 @@
 if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
-  $("#add_student_form").append('<input type="hidden" name="new_student" value="true" />');
+  $("#add_student_form").append('<input type="hidden" name="add_student_confirmed" value="true" />');
   $("#add_student_form").submit();
 }

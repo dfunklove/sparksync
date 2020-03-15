@@ -1,20 +1,21 @@
-<%= form_for(@lesson, url: '/lessons', remote: true, html: {id: "add_student_form"}) do |lesson| %>
+<%= form_for(@lesson, url: '/lessons', remote: true, 
+    html: {id: "add_student_form", class: "tr" }) do |lesson| %>
   <%= lesson.fields_for :student do |lesson_student| %>
-    <td>
+    <span class="td">
       <%= lesson_student.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>
-    </td>
-    <td>
+    </span>
+    <span class="td">
       <%= lesson_student.text_field :last_name, class: "lname", placeholder: "..student..." %>
-    </td>
-    <td>
+    </span>
+    <span class="td">
       <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, :prompt => "School..." %>
-    </td>
+    </span>
   <% end %>
-  <td style="text-align: center">
+  <span class="td" style="text-align: center">
     <%= lesson.check_box :brought_instrument, checked: true %>
-  </td>
-  <td style="text-align: center">
+  </span>
+  <span class="td" style="text-align: center">
     <%= lesson.check_box :brought_books, checked: true %>
-  </td>
-<td><button type="submit" class="delete">Start Lesson</button></td>
+  </span>
+<span class="td"><button type="submit" class="delete">Start Lesson</button></span>
 <% end %>

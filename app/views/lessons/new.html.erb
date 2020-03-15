@@ -2,35 +2,35 @@
   Start Single Lesson
 </h2>
 <%= render '/shared/error_messages', object: @lesson %>
-  <table class="stdnt">
-	<tr>
-		<th>F Name</th>
-    <th>L Name</th>
-    <th>School</th>
-    <th>Instrument</th>
-    <th>Books</th>
-	</tr>
+  <div class="stdnt table">
+	<div class="thead">
+    <div class="tr">
+  		<span class="td">F Name</span>
+      <span class="td">L Name</span>
+      <span class="td">School</span>
+      <span class="td">Instrument</span>
+      <span class="td">Books</span>
+    </div>
+	</div>
   <% @students.each do |student| %> 
-    <tr>
-      <%= form_for(@lesson, url: '/lessons') do |lesson| %>
-        <td><%= student.first_name %></td>
-        <td><%= student.last_name %></td>
-        <td><%= student.school.name %></td>
+      <%= form_for(@lesson, url: '/lessons', remote: true, 
+          html: { class: "tr"}) do |lesson| %>
+        <span class="td"><%= student.first_name %></span>
+        <span class="td"><%= student.last_name %></span>
+        <span class="td"><%= student.school.name %></span>
         <%= lesson.hidden_field(:student_id, value: student.id)%>
+        <%= lesson.hidden_field(:school_id, value: student.school.id)%>
         <%= lesson.fields_for :student do |lesson_student| %>
           <%= lesson_student.hidden_field(:school_id, value: student.school.id)%>
         <% end %>
-        <td style="text-align: center">
+        <span class="td" style="text-align: center">
           <%= lesson.check_box :brought_instrument, checked: true %>
-        </td>
-        <td style="text-align: center">
+        </span>
+        <span class="td" style="text-align: center">
           <%= lesson.check_box :brought_books, checked: true %>
-        </td>
-        <td><%= lesson.submit "Start Lesson", class: "delete" %></td>
+        </span>
+        <span class="td"><%= lesson.submit "Start Lesson", class: "delete" %></span>
       <% end %>
-    </tr> 
   <% end %>
-  <tr>
   <%= render "add_student_form" %>
-  </tr>
-</table>
+</div>

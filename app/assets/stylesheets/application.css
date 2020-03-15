@@ -34,6 +34,20 @@ label { margin-top: 10px; }
 .radio-label-vertical  { display:block; font-size: 0.875em; }
 .radio-withlabel-vertical { display:inline-block; }
 .checkbox-withlabel * { display:inline; }
+
+/* display form as table */
+div.table { display:table; }
+div.thead { display:table-header-group; font-weight: bold }
+form.tr, div.tr { display:table-row; }
+span.td { display:table-cell; }
+
+div.stdnt {
+  border-collapse: collapse;
+}
+.stdnt span.td {
+  border: 1px solid black
+}
+
 /* admin table entries */
 .sideways { writing-mode: vertical-rl; text-orientation: mixed; }
 .delete { width: 7em; margin: 0px; padding: 0px; text-align: center }

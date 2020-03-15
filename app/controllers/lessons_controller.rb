@@ -120,9 +120,7 @@ class LessonsController < ApplicationController
   end
 
   def update
-    # puts "in update"
-    lesson_id = params[:id]
-    @lesson = Lesson.find(lesson_id)
+    @lesson = Lesson.find(params[:id])
     if params[:modify]
       begin
         time_in_obj = muckwithdate(messon_params[:time_in])
@@ -147,9 +145,7 @@ class LessonsController < ApplicationController
         handle_index_error
       end
     elsif params[:delete]
-      lesson_id = params[:id]
-      what_lesson = Lesson.find(lesson_id)
-      if what_lesson.delete
+      if @lesson.delete
         redirect_to lessons_path
       else
         handle_index_error
@@ -160,79 +156,64 @@ class LessonsController < ApplicationController
   end
 
   def create
-    p params
+    add_student_confirmed = params[:add_student_confirmed]
+    lesson = Lesson.new(lesson_params)
+    lesson.time_in = Time.now
+    lesson.teacher = current_user
 
-    begin
-      @lesson = Lesson.new(lesson_params)
-      @student = Student.new(student_params)
-      @lesson.school_id = @student.school_id
-      @school = School.find(@student.school_id)
-    rescue => e
-      p e
-      @lesson ||= Lesson.new
-      @student ||= Student.new
-      @school ||= School.new
+    confirm_add_student = false
+    if !lesson.student_id
+      begin
+        student = Student.new(student_params)
+        student.school = School.find_by(id: student.school_id) || School.new
+      rescue => e
+        p e
+        student = Student.new
+        student.school ||= school.new
+      end
+      lesson.student = student
+      lesson.school_id = student.school_id
+
+      confirm_add_student = lookup_student_for_lesson lesson, add_student_confirmed
     end
-
-    @confirm_add_student = false
-    if !@lesson.student_id
-      @lesson.student = @student
-      lookup_student_for_lesson
-    end
-
-    @lesson.teacher = current_user
-    @lesson.time_in = Time.now
 
     # check errors count first or custom errors get cleared
     respond_to do |format|
-      if @lesson.errors.count == 0 && @lesson.save
-        session[:lesson_id] = @lesson.id
-        format.html { redirect_to "/lessons/checkout" }
-      elsif @confirm_add_student
-        prepare_new
-        format.html { render action: 'new'}
+      if confirm_add_student
         format.js { render 'confirm_add_student' }
+      elsif lesson.errors.count == 0 && lesson.save
+        session[:lesson_id] = lesson.id
+        format.html { redirect_to "/lessons/checkout" }
       else
-        prepare_new
-        format.html { render action: 'new'}
-        format.js # implied: render 'create'
+        format.js { render '/shared/error', locals: { object: lesson } }
       end
     end
 end
 
-  def lookup_student_for_lesson
-    if @school.valid? && !@student.first_name.empty? && !@student.last_name.empty?
+  def lookup_student_for_lesson lesson, add_student_confirmed
+    student = lesson.student
+    school = lesson.student.school
+    if school.valid? && !student.first_name.empty? && !student.last_name.empty?
       # if student exists in db get all the column values
       # if student not in db prompt user to see if they want to create
-      harrys = Student.find_by_name(@student.first_name, @student.last_name, @school.id)
-      @stdnt_lookedup = harrys.first
-      nharrys = harrys.count
+      results = Student.find_by_name(student.first_name, student.last_name, school.id)
 
-      if @stdnt_lookedup
-   	    @lesson.student = @stdnt_lookedup
-        puts "number of students " + nharrys.to_s
-        if nharrys > 1
-          @lesson.errors.add(
-            :base,
-            :first_name_or_last_name_ambiguous,
-            message: "Need to spell out entire name")
-        end
-
-      elsif params[:new_student]
-        @student.school = @school
-        @student.activated = true
-        @student.save
-        @lesson.student = @student
-        flash[:info] = "Created new student #{@student.first_name} #{@student.last_name} at #{@student.school.name}" 
-      else
-        @lesson.errors.add(
+      if results.count == 1
+        lesson.student = results.first
+      elsif results.count > 1
+        lesson.errors.add(
           :base,
-          :not_found_in_database,
-          message: 'No student by that name at that school. Check "new student" if you wish to add a new student to database, otherwise correct spelling or school')
-        @confirm_add_student = true
+          :first_name_or_last_name_ambiguous,
+          message: "Need to spell out entire name")
+      else
+        if add_student_confirmed
+          student.save
+        else
+          confirm_add_student = true
+        end
       end
-      @lesson.school = @school
     end
+    confirm_add_student
   end
 
   # leaving checkin page, going to checkout page
@@ -268,7 +249,7 @@ end
     respond_to do |format|
       if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
         session.delete(:lesson_id)
-        format.html { redirect_to root_url }
+        format.html { redirect_to '/lessons/new' }
       else
         format.html { render action: 'checkout' }
         format.js { render '/shared/error', locals: { object: @lesson } }

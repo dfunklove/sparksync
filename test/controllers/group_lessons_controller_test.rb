@@ -13,11 +13,11 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
 
   def params_for_new_student(student, index)
     retval = {}
-    retval["group_lesson[lessons_attributes][#{index}][student][first_name]"] = student.first_name
-    retval["group_lesson[lessons_attributes][#{index}][student][last_name]"] = student.last_name
-    retval["group_lesson[lessons_attributes][#{index}][student][school_id]"] = student.school_id
-    retval["group_lesson[lessons_attributes][#{index}][brought_instrument]"] = 1
-    retval["group_lesson[lessons_attributes][#{index}][brought_books]"] = 1
+    retval["group_lesson[lesson][student][first_name]"] = student.first_name
+    retval["group_lesson[lesson][student][last_name]"] = student.last_name
+    retval["group_lesson[lesson][student][school_id]"] = student.school_id
+    retval["group_lesson[lesson][brought_instrument]"] = 1
+    retval["group_lesson[lesson][brought_books]"] = 1
     retval
   end
 
@@ -102,8 +102,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
 
   test "add existing student" do
     params = params_for_new_student(Student.first, 0)
-    params["add_student"] = true
-    post "/group_lessons", params: params, xhr: true
+    post "/group_lessons/addStudent", params: params, xhr: true
     assert_template :add_student
   end
 
@@ -113,8 +112,7 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     s.last_name = "1"
     s.school = School.first
     params = params_for_new_student(s, 0)
-    params["add_student"] = true
-    post "/group_lessons", params: params, xhr: true
+    post "/group_lessons/addStudent", params: params, xhr: true
     assert_template :confirm_add_student
   end
 
@@ -125,9 +123,8 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
     s.last_name = "1"
     s.school = School.first
     params = params_for_new_student(s, 0)
-    params["add_student"] = true
     params["add_student_confirmed"] = true
-    post "/group_lessons", params: params, xhr: true
+    post "/group_lessons/addStudent", params: params, xhr: true
     assert_template :add_student
     assert_equal count_before + 1, Student.count
   end

@@ -7,6 +7,7 @@ class GroupLessonsController < ApplicationController
   end
 
   def new
+    puts "test"
     @students = Student.find_by_teacher(current_user.id)
 
     error_message = 'Please finish open lesson before starting a new one'

@@ -37,7 +37,7 @@ label { margin-top: 10px; }
 
 /* display form as table */
 div.table { display:table; }
-div.thead { display:table-header-group; font-weight: bold }
+div.thead { display:table-header-group; font-weight: bold; text-align: center }
 form.tr, div.tr { display:table-row; }
 span.td { display:table-cell; }
 
@@ -45,7 +45,8 @@ div.stdnt {
   border-collapse: collapse;
 }
 .stdnt span.td {
-  border: 1px solid black
+  border: 1px solid black;
+  padding: 1px;
 }
 
 /* admin table entries */

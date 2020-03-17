@@ -100,13 +100,19 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "add new student without confirmation" do
+    lesson_count_before = GroupLesson.count
+    student_count_before = Student.count
     s = Student.new
     s.first_name = "Test"
     s.last_name = "1"
     s.school = School.first
     params = params_for_new_student(s, 0)
+
     post "/group_lessons/addStudent", params: params, xhr: true
+
     assert_template :confirm_add_student
+    assert_equal lesson_count_before, GroupLesson.count
+    assert_equal student_count_before, Student.count
   end
 
   test "add new student with confirmation" do

@@ -6,6 +6,13 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
+  def teacher_login
+    post "/login", params: { "session[email]" => "charL@yahoo.edu", 
+      "session[password]" => "testchar" }
+    assert_nil flash[:danger]
+    assert_redirected_to root_url, "Unable to login"
+  end
+
   setup do
 
 host! "localhost:3000"

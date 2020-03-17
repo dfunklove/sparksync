@@ -22,19 +22,12 @@ class GroupLessonsControllerTest < ActionDispatch::IntegrationTest
   end
 
   def setup
-    login
-  end
-
-  def login
-    post "/login", params: { "session[email]" => "charL@yahoo.edu", 
-      "session[password]" => "testchar" }
-    assert_nil flash[:danger]
-    assert_redirected_to root_url, "Unable to login"
+    teacher_login
   end
 
   test "empty list" do
     count_before = GroupLesson.count
-    post "/group_lessons", params: params_for_new_student(Student.new, 0), xhr: true
+    post "/group_lessons", xhr: true
     assert_template :checkout_error
     assert_nil session[:group_lesson_id]
     assert_equal count_before, GroupLesson.count

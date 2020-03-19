@@ -3,6 +3,7 @@
 </h2>
 <% i = -1 %>
 <%= render '/shared/error_messages', object: @group_lesson %>
+
 <%= form_for(@group_lesson, url: '/group_lessons', remote: true, html: {id: "new_group_lesson"}) do |group_lesson| %>
 <table class="stdnt">
   <tr>
@@ -36,9 +37,12 @@
       </td>
   </tr>
   <% end %><!-- group_lesson.fields_for :lessons -->
-  <%= render partial: "new_student_row", locals: {group_lesson: group_lesson} %>
+  <%= render partial: "new_student_row", locals: {group_lesson: group_lesson, school: @group_lesson.school } %>
 <tr>
-  <td colspan="6"><button id="commit" name="commit" type="submit" style="width: 100%">Start Lesson</button></td>
+  <td colspan="6">
+    <%= group_lesson.hidden_field :school_id %>
+    <button id="commit" name="commit" type="submit" style="width: 100%">Start Lesson</button>
+  </td>
 </tr>
 </table>
 <% end %><!-- form_for @group_lesson -->

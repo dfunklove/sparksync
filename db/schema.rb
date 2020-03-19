@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200318022650) do
+ActiveRecord::Schema.define(version: 20200319003844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20200318022650) do
     t.bigint "user_id"
     t.datetime "time_in"
     t.datetime "time_out"
+    t.integer "school_id"
     t.index ["user_id", "time_in"], name: "index_group_lessons_on_user_id_and_time_in", unique: true
     t.index ["user_id"], name: "index_group_lessons_on_user_id"
   end

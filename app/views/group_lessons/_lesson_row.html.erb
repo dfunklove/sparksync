@@ -8,7 +8,6 @@
 <% student = lesson.student %>
 <tr class="existing_student_row">
   <input value="<%= student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
-  <input value="<%= student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
 
   <td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" checked="checked" /></td>
   <td><%= student.first_name %></td>

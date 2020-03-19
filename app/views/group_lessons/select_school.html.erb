@@ -1,0 +1,7 @@
+<h2>
+  Start Group Lesson
+</h2>
+<%= form_for(@group_lesson, url: '/group_lessons/new', html: {id: "update_school_id"}) do |group_lesson| %>
+  <p><%= group_lesson.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, {:prompt => "Choose a school..."}, 
+    {onchange: "$('#update_school_id').submit()"} %></p>
+<% end %>

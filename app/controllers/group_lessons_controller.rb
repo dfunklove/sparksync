@@ -7,8 +7,6 @@ class GroupLessonsController < ApplicationController
   end
 
   def new
-    @students = Student.find_by_teacher(current_user.id)
-
     error_message = 'Please finish open lesson before starting a new one'
     open_lesson = current_user.lessons_in_progress.first
     open_group_lesson = current_user.group_lessons_in_progress.first
@@ -22,14 +20,27 @@ class GroupLessonsController < ApplicationController
       flash[:danger] = error_message
       redirect_to "/lessons/checkout"
     else
-      @group_lesson = GroupLesson.new
-
-      # populate lessons from students
-      @students.each do |student|
-        lesson = Lesson.new
-        lesson.student = student
-        @group_lesson.lessons << lesson
+      school_id = params[:group_lesson] ? params[:group_lesson][:school_id] : nil
+      if school_id =~ /[0-9]+/
+        prepare_new school_id
+        render 'new'
+      else
+        @group_lesson = GroupLesson.new
+        render 'select_school'
       end
+    end
+  end
+
+  def prepare_new school_id
+    @group_lesson = GroupLesson.new
+    @group_lesson.school = School.find_by(id: school_id)
+
+    # populate lessons from students
+    students = Student.find_by_teacher_and_school(current_user.id, school_id)
+    students.each do |student|
+      lesson = Lesson.new
+      lesson.student = student
+      @group_lesson.lessons << lesson
     end
   end
 
@@ -37,19 +48,21 @@ class GroupLessonsController < ApplicationController
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
     group_lesson.time_in = Time.now
+    group_lesson.school_id = params[:group_lesson][:school_id]
 
-    if params[:group_lesson]
+    if params[:group_lesson][:lessons_attributes]
 
       # pick only the students/lessons which are selected
       params[:group_lesson][:lessons_attributes].keys.each do |key|
         lesson_data = params[:group_lesson][:lessons_attributes][key]
         selected = lesson_data["selected"]
-        lesson = Lesson.new(lesson_params(lesson_data))
-        lesson.teacher = current_user
-        lesson.time_in = group_lesson.time_in
         if selected
+          lesson = Lesson.new(lesson_params(lesson_data))
+          lesson.teacher = current_user
+          lesson.time_in = group_lesson.time_in
+          lesson.school_id = group_lesson.school_id
           group_lesson.lessons << lesson
-        end        
+        end
       end
     end
 
@@ -201,7 +214,7 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes]})
+      params.require(:group_lesson).permit(:id, :school_id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes]})
     end
 
     def lesson_params params

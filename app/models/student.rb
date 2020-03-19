@@ -36,4 +36,11 @@ class Student < ApplicationRecord
     rightids &= self.where(activated: true).ids
     self.where({id: rightids})    
   end
+
+  def self.find_by_teacher_and_school(teacher_id, school_id)
+    sql = "select student_id from lessons where user_id = ? and school_id = ?"
+    rightids = Lesson.find_by_sql([sql, teacher_id, school_id]).map(&:student_id)
+    rightids &= self.where(activated: true).ids
+    self.where({id: rightids})    
+  end
 end

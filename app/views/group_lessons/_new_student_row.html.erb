@@ -1,7 +1,6 @@
 <%
   # parameters:
   # group_lesson - A FormHelper object
-  # school - A school object
 %>
 <tr class="new_student_row">
   <td></td>
@@ -14,8 +13,7 @@
         <%= lesson_student.text_field :last_name, class: "lname", placeholder: "..student...", form: "add_student_form" %>
       </td>
       <td>
-        <%= school.name %>
-        <%= lesson_student.hidden_field :school_id, { value: school.id, form: "add_student_form" } %>
+        <%= lesson_student.collection_select :school_id, School.where(activated: true).order(:name),:id,:name, {:prompt => "School..."}, {form: "add_student_form"} %>
       </td>
     <% end %>
     <td style="text-align: center">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200318022650) do
+ActiveRecord::Schema.define(version: 20200321012923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,9 +19,10 @@ ActiveRecord::Schema.define(version: 20200318022650) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.datetime "time_in"
+    t.bigint "user_id", null: false
+    t.datetime "time_in", null: false
     t.datetime "time_out"
+    t.integer "school_id", null: false
     t.index ["user_id", "time_in"], name: "index_group_lessons_on_user_id_and_time_in", unique: true
     t.index ["user_id"], name: "index_group_lessons_on_user_id"
   end
@@ -48,8 +49,8 @@ ActiveRecord::Schema.define(version: 20200318022650) do
   end
 
   create_table "logins", force: :cascade do |t|
-    t.integer "user_id"
-    t.datetime "time_in"
+    t.integer "user_id", null: false
+    t.datetime "time_in", null: false
     t.datetime "time_out"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -64,9 +65,9 @@ ActiveRecord::Schema.define(version: 20200318022650) do
   end
 
   create_table "students", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.bigint "school_id"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.bigint "school_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "activated", default: true
@@ -74,13 +75,13 @@ ActiveRecord::Schema.define(version: 20200318022650) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "type"
-    t.string "password_digest"
+    t.string "type", null: false
+    t.string "password_digest", null: false
     t.boolean "activated", default: true
     t.integer "school_id"
     t.string "reset_digest"

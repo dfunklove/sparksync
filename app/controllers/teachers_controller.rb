@@ -6,8 +6,8 @@ class TeachersController < UsersController
   before_action :correct_user, only: :show
 
   def show
-    teacher_id = params[:id]
-    @teacher = Teacher.find(teacher_id)
+    @teacher_id = params[:id]
+    @teacher = Teacher.find(@teacher_id)
 
     if session[:changet]
       @title = session[:changet] 
@@ -17,56 +17,36 @@ class TeachersController < UsersController
 
     @dateview = current_dateview
     if @title == "Hours"
-
-      @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
-  
-      @tot_hours = 0
-      @logins.each do |login|
-        @tot_hours += login[:time_out] - login[:time_in]
-      end
-      # convert seconds to hours
-      @tot_hours = @tot_hours/3600
-      @what_table = "hours_table"
+      show_hours
     else
-      # title and what column depend on user and in the case
-      # of admin, what view she wants
-      # nobody but admin and a particular teacher has any business
-      # doing a teacher/show 
-      # can you do the sorting after the db fetch? it would
-      # be preferable in order to sort on multiple columns
-
-      @showstudent = true
-      @showschool = true
-      @showteacher = false
-      @showhours = true
-
-      @lessons = Lesson.find_by_teacher(teacher_id, @dateview.start_date, @dateview.end_date)
-      if session[:sortcol]
-        sortcol = session[:sortcol]
-        # case by case as sorting by student' slast name or school name is not
-        # straightforward
-        if sortcol == "Student"
-          @lessons = @lessons.sort_by(&:last_name)
-        elsif sortcol == "Date"
-          @lessons = @lessons.sort_by(&:time_in).reverse! 
-        elsif sortcol == "School"
-          @lessons = @lessons.sort_by(&:name)
-        elsif sortcol == "Progress"
-          @lessons = @lessons.sort_by(&:progress)
-        elsif sortcol == "Behavior"
-          @lessons = @lessons.sort_by(&:behavior)
-        end
-      else
-        @lessons = @lessons.sort_by(&:time_in).reverse! 
-      end
-      @tot_hours = 0
-      @lessons.each do |lesson|
-        @tot_hours += lesson[:time_out] - lesson[:time_in]
-      end
-      # convert seconds to hours
-      @tot_hours = @tot_hours/3600
-      @what_table = "lessons/completed_table"
+      show_lessons
     end
+  end
+
+  def show_hours
+    @logins = Login.where(user_id: @teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
+
+    @tot_hours = Teacher.compute_hours(@logins)
+    @what_table = "hours_table"
+  end
+
+  def show_lessons
+    # title and what column depend on user and in the case
+    # of admin, what view she wants
+    # nobody but admin and a particular teacher has any business
+    # doing a teacher/show 
+    # can you do the sorting after the db fetch? it would
+    # be preferable in order to sort on multiple columns
+
+    @showstudent = true
+    @showschool = true
+    @showteacher = false
+    @showhours = true
+
+    @lessons = Lesson.find_by_teacher(@teacher_id, @dateview.start_date, @dateview.end_date)
+    @lessons = Lesson.sort(@lessons, session[:sortcol])
+    @tot_hours = Teacher.compute_hours(@lessons)
+    @what_table = "lessons/completed_table"
   end
 
   def change_table

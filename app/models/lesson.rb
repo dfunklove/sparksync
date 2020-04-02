@@ -30,6 +30,15 @@ class Lesson < ApplicationRecord
     self.time_in = time_in.round
   end
 
+  def self.compute_hours(lessons)
+    tot_hours = 0
+    lessons.each do |lesson|
+      tot_hours += lesson[:time_out] - lesson[:time_in]
+    end
+    # convert seconds to hours
+    tot_hours/3600
+  end
+
   def self.in_progress
   	self.joins(:student).where("lessons.time_out is null AND lessons.time_in > ?", Time.new.beginning_of_day).order("students.school_id")
   end
@@ -99,5 +108,23 @@ class Lesson < ApplicationRecord
       sql += " and schools.activated = true"
     end
     self.find_by_sql([sql, start_date.to_s, end_date.to_s])
+  end
+
+  def self.sort(lessons, sortcol)
+    # case by case as sorting by student' slast name or school name is not
+    # straightforward
+    if !sortcol
+      lessons.sort_by(&:time_in).reverse!
+    elsif sortcol == "Student"
+      lessons.sort_by(&:last_name)
+    elsif sortcol == "Date"
+      lessons.sort_by(&:time_in).reverse! 
+    elsif sortcol == "School"
+      lessons.sort_by(&:name)
+    elsif sortcol == "Progress"
+      lessons.sort_by(&:progress)
+    elsif sortcol == "Behavior"
+      lessons.sort_by(&:behavior)
+    end
   end
 end

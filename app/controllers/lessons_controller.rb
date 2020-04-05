@@ -69,39 +69,10 @@ class LessonsController < ApplicationController
     @showteacher = true
     @showhours = true
 
-    @schools = School.where("activated=?", true).order(:name).collect{|c| [c.name, c.id]}
-    @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
-    @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     @messons = Lesson.find_by_date(@dateview.start_date, @dateview.end_date)
-    if session[:sortcol]
-      sortcol = session[:sortcol]
-      # case by case as sorting by student' slast name or school name is not
-      # straightforward
-      # puts "final sortcol " + sortcol
-      if sortcol == "Student"
-        @messons = @messons.sort_by(&:student_last)
-      elsif sortcol == "Date" || sortcol == "Time In"
-      @messons = @messons.sort_by(&:time_in).reverse! 
-      elsif sortcol == "School"
-        @messons = @messons.sort_by(&:name)
-      elsif sortcol == "Teacher"
-        @messons = @messons.sort_by(&:teacher_last)
-      elsif sortcol == "Progress"
-        @messons = @messons.sort_by(&:progress)
-      elsif sortcol == "Behavior"
-        @messons = @messons.sort_by(&:behavior)
-      end
-    else
-      @messons = @messons.sort_by(&:time_in).reverse! 
-    end
-    @tot_hours = 0
-    @messons.each do |lesson|
-      @tot_hours += lesson[:time_out] - lesson[:time_in]
-      # puts "school " + lesson.name
-    end
-    # convert seconds to hours
-    @tot_hours = @tot_hours/3600
+    @messons = Lesson.sort(@messons, session[:sortcol])
+    @tot_hours = Teacher.compute_hours(@messons)
     respond_to do |format|
       format.html
       format.xls 

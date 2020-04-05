@@ -30,15 +30,6 @@ class Lesson < ApplicationRecord
     self.time_in = time_in.round
   end
 
-  def self.compute_hours(lessons)
-    tot_hours = 0
-    lessons.each do |lesson|
-      tot_hours += lesson[:time_out] - lesson[:time_in]
-    end
-    # convert seconds to hours
-    tot_hours/3600
-  end
-
   def self.in_progress
   	self.joins(:student).where("lessons.time_out is null AND lessons.time_in > ?", Time.new.beginning_of_day).order("students.school_id")
   end
@@ -98,7 +89,7 @@ class Lesson < ApplicationRecord
     teacher = Teacher.find(teacher_id)
     sql = "select name, time_in, time_out, progress, behavior, notes, "
     sql += "brought_instrument, brought_books, students.first_name, "
-    sql += "students.last_name, student_id, group_lesson_id "
+    sql += "students.last_name as student_last, student_id, group_lesson_id "
     sql += "from schools inner join lessons on schools.id = lessons.school_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += "where time_out is not null and user_id = " + teacher_id 
@@ -116,11 +107,13 @@ class Lesson < ApplicationRecord
     if !sortcol
       lessons.sort_by(&:time_in).reverse!
     elsif sortcol == "Student"
-      lessons.sort_by(&:last_name)
+      lessons.sort_by(&:student_last)
     elsif sortcol == "Date"
       lessons.sort_by(&:time_in).reverse! 
     elsif sortcol == "School"
       lessons.sort_by(&:name)
+    elsif sortcol == "Teacher"
+      lessons.sort_by(&:teacher_last)
     elsif sortcol == "Progress"
       lessons.sort_by(&:progress)
     elsif sortcol == "Behavior"

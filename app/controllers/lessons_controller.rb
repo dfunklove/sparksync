@@ -56,19 +56,6 @@ class LessonsController < ApplicationController
 
   def prepare_index
     @dateview = current_dateview
-
-    # title and what column depend on user and in the case
-    # of admin, what view she wants
-    # nobody but admin and a particular partner has any business
-    # doing a school/show
-    # can you do the sorting after the db fetch? it would
-    # be preferable in order to sort on multiple columns
-
-    @showstudent = true
-    @showschool = true
-    @showteacher = true
-    @showhours = true
-
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     @messons = Lesson.find_by_date(@dateview.start_date, @dateview.end_date)
     @messons = Lesson.sort(@messons, session[:sortcol])

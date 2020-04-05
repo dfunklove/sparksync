@@ -22,30 +22,8 @@ class SchoolsController < ApplicationController
     @showhours = true
 
     @lessons = Lesson.find_by_school(school_id, @dateview.start_date, @dateview.end_date)
-    if session[:sortcol]
-      sortcol = session[:sortcol]
-      # case by case as sorting by student' slast name or school name is not
-      # straightforward
-      if sortcol == "Student"
-        @lessons = @lessons.sort_by(&:student_last)
-      elsif sortcol == "Date"
-        @lessons = @lessons.sort_by(&:time_in).reverse! 
-      elsif sortcol == "Teacher"
-        @lessons = @lessons.sort_by(&:teacher_last)
-      elsif sortcol == "Progress"
-        @lessons = @lessons.sort_by(&:progress)
-      elsif sortcol == "Behavior"
-        @lessons = @lessons.sort_by(&:behavior)
-      end
-    else
-      @lessons = @lessons.sort_by(&:time_in).reverse! 
-    end
-    @tot_hours = 0
-    @lessons.each do |lesson|
-      @tot_hours += lesson[:time_out] - lesson[:time_in]
-    end
-    # convert seconds to hours
-    @tot_hours = @tot_hours/3600
+    @lessons = Lesson.sort(@lessons, session[:sortcol])
+    @tot_hours = Teacher.compute_hours(@lessons)
     respond_to do |format|
       format.html
       format.xls

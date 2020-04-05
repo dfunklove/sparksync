@@ -8,14 +8,6 @@ class StudentsController < ApplicationController
   # one student
   def show
     @dateview = current_dateview
-
-    # title and what column depend on user and in the case
-    # of admin, what view she wants
-    # nobody but admin and a particular partner has any business
-    # doing a school/show
-    # can you do the sorting after the db fetch? it would
-    # be preferable in order to sort on multiple columns
-
     @showstudent = false
     @showschool = true
     @showteacher = !current_user.teacher?

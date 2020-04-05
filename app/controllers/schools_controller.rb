@@ -5,17 +5,9 @@ class SchoolsController < ApplicationController
 
   def show
     school_id = params[:id]
-
     @school = School.find(school_id)
+
     @dateview = current_dateview
-
-    # title and what column depend on user and in the case
-    # of admin, what view she wants
-    # nobody but admin and a particular partner has any business
-    # doing a school/show
-    # can you do the sorting after the db fetch? it would
-    # be preferable in order to sort on multiple columns
-
     @showstudent = true
     @showschool = false
     @showteacher = true

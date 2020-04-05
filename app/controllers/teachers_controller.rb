@@ -31,13 +31,6 @@ class TeachersController < UsersController
   end
 
   def show_lessons
-    # title and what column depend on user and in the case
-    # of admin, what view she wants
-    # nobody but admin and a particular teacher has any business
-    # doing a teacher/show 
-    # can you do the sorting after the db fetch? it would
-    # be preferable in order to sort on multiple columns
-
     @showstudent = true
     @showschool = true
     @showteacher = false

@@ -22,6 +22,14 @@ admin2 = Admin.create!(  first_name: "Chris",
   type: "Admin",
   activated: true )
 
+teacher1 = Teacher.create!(  first_name: "Ima",
+  last_name: "Test",
+  email: "test@example.com",
+  password: "sparksISgr8*",
+  password_confirmation: "sparksISgr8*",
+  type: "Teacher",
+  activated: true )
+
 school1 = School.create!( name: "Blackshear", activated: true)
 school2 = School.create!( name: "Kealing", activated: true)
 school3 = School.create!( name: "Oak Springs", activated: true)

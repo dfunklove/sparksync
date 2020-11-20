@@ -1,8 +1,70 @@
 # sparksync
 A simple music lesson tracker built in Ruby on Rails.
 
-# Installation Guide
-This guide assumes you do not have Ruby installed on your machine.  The steps provided are not 
+# Deploy to Heroku
+Heroku is the preferred option for production deployment.  It's the simplest way to get Sparksync up and running for your organization.  Heroku provides free application hosting in the cloud.  You will need to create a free Heroku account to use their service.  
+
+Note: For better performance, it is recommended to use the lowest non-free tier, "Hobby".  See the Heroku documentation for instructions on switching your deployment to Hobby.
+
+Now, let's get started!
+
+### Git
+First make sure Git is installed.
+##### Mac
+On Mac, open a Terminal window and type
+- git --version
+
+If git is not already installed, you will be prompted to install it.
+
+##### Linux
+If you are on Linux, run this command on Debian/Ubuntu:
+- sudo apt install git-all
+
+On Fedora/CentOS/RHEL, run this:
+- sudo dnf install git-all
+
+### Heroku CLI
+Next we'll install Heroku CLI.
+
+##### Mac
+On Mac, the install command is:
+- brew tap heroku/brew && brew install heroku
+
+##### Linux
+If you are on Linux, run this command on Debian/Ubuntu:
+- sudo snap install heroku --classic
+
+If you prefer not to use Snap, you may install directly:
+- curl https://cli-assets.heroku.com/install.sh | sh
+
+### Deploy to Heroku
+Run the following commands in Terminal on Mac or Linux.
+- git clone https://github.com/dfunklove/sparksync.git
+- cd sparksync
+- heroku login
+    - Note: Use the browser window to login, following the instructions in Terminal.
+- heroku create
+- git push heroku master
+    -  Note: Save the URL where the app was deployed.  You'll need it shortly.
+- heroku run rake db:migrate
+- heroku run rake db:seed
+
+### SendGrid
+Finally we'll install SendGrid in your Heroku application.  This enables the app to send email.
+- Open a browser window to dashboard.heroku.com
+- Select the app which was listed in the output of the command 'git push heroku master'
+- Select 'Configure Add-Ons'
+- In the search box under 'Add Ons' type 'sendgrid'
+- Click the 'SendGrid' link that appears
+- Select 'Submit Order Form'
+
+That's it!  Sparksync is ready to go!
+
+# Setup Development Environment
+These steps are only needed if you intend to modify the source code and test it on your computer.  To deploy the app to the cloud for use in your organization, see the previous section, Deploy to Heroku.
+
+This guide assumes you do not have Ruby installed on your machine.  It outlines all the steps needed to setup your local machine to run this application.
+
 Start by downloading the Sparksync repository, either from the GitHub project page, or using the 'git clone' command.
 Regardless of where you choose to save it, this document refers to the root directory of the repository itself as \$APPDIR.
 
@@ -46,8 +108,7 @@ In order to run this application, you will need to install the following:
         3.  create role X with login createdb superuser;
         4.  Ctrl-D
     - rails db:setup
-9.  Ready to run the app
+9.  Run the app
     - rails s
     - Open a browser and go to localhost:3000
     - Try to login using credentials from \$APPDIR/db/seeds.rb
-10. Deploy on Heroku

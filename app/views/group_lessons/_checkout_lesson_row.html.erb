@@ -1,0 +1,46 @@
+<% 
+  # parameters:
+  # lesson : a lesson object with data to populate the row
+  # i : index into the lessons array which this row will point to
+  student = lesson.student
+%>
+<tr>
+<input value="<%= lesson.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][id]" id="group_lesson_lessons_attributes_<%=i%>_id">
+<input value="<%= student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
+<input value="<%= student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
+
+<% if lesson.student %>
+  <td class="first_name"><%= lesson.student.first_name %></td>
+  <td class="last_name"><%= lesson.student.last_name %></td>
+  <td><%= lesson.student.school.name %></td>
+<% else %>
+  <td></td>
+  <td></td>
+  <td></td>
+<% end %>
+<td class="cent">
+  <select name="group_lesson[lessons_attributes][<%=i%>][progress]" id="group_lesson_lessons_attributes_<%=i%>_progress">
+    <option value=""></option>
+    <option value="6">6</option>
+    <option value="5">5</option>
+    <option value="4">4</option>
+    <option value="3">3</option>
+    <option value="2">2</option>
+    <option value="1">1</option>
+  </select>
+</td>
+<td class="cent">
+  <select name="group_lesson[lessons_attributes][<%=i%>][behavior]" id="group_lesson_lessons_attributes_<%=i%>_behavior">
+    <option value=""></option>
+    <option value="6">6</option>
+    <option value="5">5</option>
+    <option value="4">4</option>
+    <option value="3">3</option>
+    <option value="2">2</option>
+    <option value="1">1</option>
+  </select>
+</td>
+<td>
+  <input class="gomodal" autocomplete="off" type="text" name="group_lesson[lessons_attributes][<%=i%>][notes]" id="group_lesson_lessons_attributes_<%=i%>_notes">
+</td>
+</tr> 

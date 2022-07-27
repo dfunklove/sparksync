@@ -8,6 +8,8 @@
 <input value="<%= lesson.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][id]" id="group_lesson_lessons_attributes_<%=i%>_id">
 <input value="<%= student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
 <input value="<%= student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
+<input value="1" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][brought_instrument]" id="group_lesson_lessons_attributes_<%=i%>_brought_instrument" />
+<input value="1" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][brought_books]" id="group_lesson_lessons_attributes_<%=i%>_brought_books" />
 
 <% if lesson.student %>
   <td class="first_name"><%= lesson.student.first_name %></td>

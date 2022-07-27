@@ -6,11 +6,13 @@
   # student_created : boolean indicating whether a new student was created
 %>
 <% student = lesson.student %>
+let row_markup = ""
 <% if lesson_in_progress %>
-  $(".new_student_row").first().before("<%= j render partial: 'checkout_lesson_row', locals: {lesson:lesson, i:total_students+1} %>");
+  row_markup = "<%= j render partial: 'checkout_lesson_row', locals: {lesson:lesson, i:total_students+1} %>"
 <% else %>
-  $(".new_student_row").first().before("<%= j render partial: 'lesson_row', locals: {lesson:lesson, i:total_students-1, selected: true} %>");
+  row_markup = "<%= j render partial: 'lesson_row', locals: {lesson:lesson, i:total_students-1, selected: true} %>"
 <% end %>
+$(".new_student_row").first().before(row_markup);
 <% if student_created %>
 	$("#flash_wrapper").append("<div class='notice'>Created new student <%= student.first_name %> <%= student.last_name %> at <%= student.school.name %></div>");
 <% end %>

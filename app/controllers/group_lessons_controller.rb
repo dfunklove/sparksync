@@ -181,7 +181,7 @@ class GroupLessonsController < ApplicationController
     @group_lesson.lessons.each do |lesson|
       lesson.time_out = temp_params[:time_out]
     end
-    
+
     respond_to do |format|
       if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
         session.delete(:group_lesson_id)
@@ -201,7 +201,7 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes]})
+      params.require(:group_lesson).permit(:id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes, { student_attributes: [:id, :permissions] }]})
     end
 
     def lesson_params params
@@ -209,7 +209,7 @@ class GroupLessonsController < ApplicationController
     end
 
     def student_params params
-      params.permit(:first_name, :last_name, :school_id)
+      params.permit(:first_name, :last_name, :school_id, :permissions)
     end
 
     def teacher_user
@@ -217,3 +217,4 @@ class GroupLessonsController < ApplicationController
       redirect_to(root_url) 
     end  
   end
+  

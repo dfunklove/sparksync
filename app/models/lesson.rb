@@ -13,6 +13,8 @@ class Lesson < ApplicationRecord
   belongs_to :school
   belongs_to :group_lesson, optional: true
 
+  accepts_nested_attributes_for :student
+
   before_create :check_student_activated, :truncate_seconds
 
   def check_student_activated

@@ -2,7 +2,6 @@ class StudentsController < ApplicationController
   # filter which of these methods can be used
   # only allow logged in admin to create or update a student
   before_action :logged_in_user, only: [:index, :create, :update, :show]
-  before_action :admin_user, only: [:create, :update]
   before_action :correct_user, only: [:show ]
 
   # one student
@@ -60,9 +59,7 @@ class StudentsController < ApplicationController
     @title = current_user.teacher? ? "My Students" : "Students"
     @changev = current_visibility
     @students = find_right_students
-    @showbtns = current_user.admin?
-    @show_visibility_btn = current_user.admin?
-    @show_create_btn = current_user.admin?
+    @isadmin = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"
   end
 
@@ -97,9 +94,7 @@ class StudentsController < ApplicationController
     @student = Student.find(student_id)
     if params[:modify]
       puts "modify"
-      if @student.update(school_id: student_params[:school_id],
-                        first_name: student_params[:first_name],
-                        last_name: student_params[:last_name])
+      if @student.update(student_params)
         redirect_to students_url
       else
         handle_error
@@ -134,7 +129,7 @@ class StudentsController < ApplicationController
 
   private
     def student_params
-      params.require(:student).permit(:first_name, :last_name, :email, :school_id)
+      params.require(:student).permit(:first_name, :last_name, :email, :school_id, :permissions)
     end
     def correct_user
       @student_id = params[:id]

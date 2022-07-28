@@ -22,6 +22,7 @@
         <td>
           <%= f.collection_select :school_id, School.all.order(:name),:id,:name %>
         </td>
+        <td><%= f.text_field :permissions %></td>
         <% if student.activated %>
           <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
           <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>

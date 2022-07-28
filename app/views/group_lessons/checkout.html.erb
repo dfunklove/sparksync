@@ -50,7 +50,7 @@ $(function() {
       <td class="cent"><%= lesson_f.select :behavior, [6,5,4,3,2,1], { include_blank: true } %></td>
       <td><%= lesson_f.text_field :notes, class: "gomodal", autocomplete: "off" %> </td>
       <%= lesson_f.fields_for :student do |student_f| %>
-        <td><%= student_f.text_area :permissions, autocomplete: "off", value: lesson.student.permissions, rows: 1 %> </td>
+        <td><%= student_f.text_field :permissions, autocomplete: "off", value: lesson.student.permissions %> </td>
         <%= student_f.text_field :first_name, type: "hidden", value: lesson.student.first_name %>
       <% end %>
       </tr> 

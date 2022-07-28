@@ -26,8 +26,8 @@ $(function() {
       <th>F Name</th>
       <th>L Name</th>
       <th>School</th>
-      <th>Progress</th>
-      <th>Behavior</th>
+      <th>Goals</th>
+      <th>Ratings</th>
       <th>Student Notes</th>
     </tr>
     <% i = -1 %>
@@ -45,13 +45,40 @@ $(function() {
         <td></td>
         <td></td>
       <% end %>
-      <td class="cent"><%= lesson_f.select :progress, [6,5,4,3,2,1], { include_blank: true } %></td>
-      <td class="cent"><%= lesson_f.select :behavior, [6,5,4,3,2,1], { include_blank: true } %></td>
-      <td><%= lesson_f.text_field :notes, class: "gomodal", autocomplete: "off" %> </td>
+      <td>
+        <select>
+          <option>Select Goal</option>
+          <option>Emotional Expression</option>
+          <option>Positive Statements</option>
+          <option>Friendly Interaction</option>
+        </select>
+        <br>
+        <select>
+          <option>Select Goal</option>
+          <option>Emotional Expression</option>
+          <option>Positive Statements</option>
+          <option>Friendly Interaction</option>
+        </select>
+        <br>
+        <select>
+          <option>Select Goal</option>
+          <option>Emotional Expression</option>
+          <option>Positive Statements</option>
+          <option>Friendly Interaction</option>
+        </select>
+      </td>
+      <td class="cent">
+        <%= lesson_f.select :progress, [10,9,8,7,6,5,4,3,2,1], { include_blank: true } %>
+        <br>
+        <%= lesson_f.select :behavior, [10,9,8,7,6,5,4,3,2,1], { include_blank: true } %>
+        <br>
+        <%= lesson_f.select :behavior, [10,9,8,7,6,5,4,3,2,1], { include_blank: true } %>
+        </td>
+      <td><%= lesson_f.text_area :notes, class: "gomodal", autocomplete: "off", rows: 3 %> </td>
       </tr> 
     <% end %>
     <tr>
-      <td colspan="6" style="text-align: center">
+      <td colspan="7" style="text-align: center">
         <br>
         <%= group_lesson_f.label :notes, "Group Notes" %>
         <%= group_lesson_f.text_area :notes, class: "notes", rows: 4 %>
@@ -59,7 +86,7 @@ $(function() {
       </td>
     </tr>
     <tr>
-      <td colspan="6" style="text-align: center">
+      <td colspan="7" style="text-align: center">
         <button type="submit" style="width: 100%">Finish Lesson</button>
       </td>
     </tr>

@@ -5,6 +5,7 @@ class Student < ApplicationRecord
 
   belongs_to :school
   has_many :lessons
+  has_and_belongs_to_many :goals
   default_scope -> { order(last_name: :asc) }
 
   before_save :check_school_activated, if :activated_changed?

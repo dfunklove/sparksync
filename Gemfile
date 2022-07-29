@@ -5,6 +5,8 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+# Avoid warnings from newer versions
+ruby '~> 2.6.6'
 
 # Avoid warnings from newer versions
 ruby '~> 2.6.6'

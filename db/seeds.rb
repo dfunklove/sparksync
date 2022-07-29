@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-admin1 = Admin.create!(  first_name: "Cynthia",
+admin1 = Admin.create(  first_name: "Cynthia",
   last_name: "Smith",
   email: "cynthia@sparksforsuccess.org",
   password: "sparksISgr8*",
@@ -14,7 +14,7 @@ admin1 = Admin.create!(  first_name: "Cynthia",
   type: "Admin",
   activated: true )
 
-admin2 = Admin.create!(  first_name: "Chris",
+admin2 = Admin.create(  first_name: "Chris",
   last_name: "Smith",
   email: "chris.smith@pelotonu.org",
   password: "sparksISgr8*",
@@ -22,7 +22,7 @@ admin2 = Admin.create!(  first_name: "Chris",
   type: "Admin",
   activated: true )
 
-teacher1 = Teacher.create!(  first_name: "Ima",
+teacher1 = Teacher.create(  first_name: "Ima",
   last_name: "Test",
   email: "test@example.com",
   password: "sparksISgr8*",
@@ -30,7 +30,18 @@ teacher1 = Teacher.create!(  first_name: "Ima",
   type: "Teacher",
   activated: true )
 
-school1 = School.create!( name: "Blackshear", activated: true)
-school2 = School.create!( name: "Kealing", activated: true)
-school3 = School.create!( name: "Oak Springs", activated: true)
-school4 = School.create!( name: "Zavala", activated: true)
+school1 = School.create( name: "Blackshear", activated: true)
+school2 = School.create( name: "Kealing", activated: true)
+school3 = School.create( name: "Oak Springs", activated: true)
+school4 = School.create( name: "Zavala", activated: true)
+
+Goal.create(name: "Active listening")
+Goal.create(name: "Appropriate behavior")
+Goal.create(name: "Communication")
+Goal.create(name: "Emotional expression")
+Goal.create(name: "Emotional regulation")
+Goal.create(name: "Following directions")
+Goal.create(name: "Leadership skills")
+Goal.create(name: "Making choices")
+Goal.create(name: "Social skills")
+Goal.create(name: "Turn taking")

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220729222109) do
+ActiveRecord::Schema.define(version: 20220730000257) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,10 @@ ActiveRecord::Schema.define(version: 20220729222109) do
     t.integer "score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "goal_id"
+    t.bigint "lesson_id"
+    t.index ["goal_id"], name: "index_ratings_on_goal_id"
+    t.index ["lesson_id"], name: "index_ratings_on_lesson_id"
   end
 
   create_table "schools", force: :cascade do |t|
@@ -114,5 +118,7 @@ ActiveRecord::Schema.define(version: 20220729222109) do
   add_foreign_key "lessons", "students", on_delete: :cascade
   add_foreign_key "lessons", "users", on_delete: :nullify
   add_foreign_key "logins", "users", on_delete: :cascade
+  add_foreign_key "ratings", "goals"
+  add_foreign_key "ratings", "lessons"
   add_foreign_key "students", "schools"
 end

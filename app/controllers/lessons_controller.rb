@@ -35,7 +35,7 @@ class LessonsController < ApplicationController
       @lesson = open_lesson
       session[:lesson_id] = open_lesson.id
       flash.now[:danger] = error_message
-      render "checkout"
+      redirect_to "/lessons/checkout"
     elsif open_group_lesson
       session[:group_lesson_id] = open_group_lesson.id
       flash[:danger] = error_message
@@ -222,6 +222,11 @@ end
   		redirect_to root_url
   	end
   	@lesson = Lesson.find(session[:lesson_id])
+    while @lesson.ratings.length < Goal::MAX_PER_STUDENT
+      x = Rating.new
+      x.goal = Goal.new
+      @lesson.ratings << x
+    end
   end
 
   # leaving checkout page, returning to checkin page
@@ -231,19 +236,6 @@ end
   	end
     @lesson = Lesson.find(session[:lesson_id])
   	temp_params = lesson_params
-    if (temp_params[:behavior] == nil)
-      @lesson.errors.add(
-        :base,
-        :behavior_missing,
-        message: "Behavior can't be blank")
-    end
-    if (temp_params[:progress] == nil)
-      @lesson.errors.add(
-        :base,
-        :progress_missing,
-        message: "Progress can't be blank")
-    end
-
     temp_params[:time_out] = Time.now
 
     respond_to do |format|
@@ -268,9 +260,7 @@ end
   private 
   def lesson_params
   	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-      :progress, :behavior, :notes, :school_id, :student_id
-      #student_attributes: [:id, :first_name, :last_name, :school_id]
-      )
+      :progress, :behavior, :notes, :school_id, :student_id, ratings_attributes: [:score, :goal_id])
   end
 
   def messon_params

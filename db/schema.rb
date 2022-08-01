@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220731231132) do
+ActiveRecord::Schema.define(version: 20220801010543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,13 +20,6 @@ ActiveRecord::Schema.define(version: 20220731231132) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_goals_on_name", unique: true
-  end
-
-  create_table "goals_students", id: false, force: :cascade do |t|
-    t.bigint "goal_id", null: false
-    t.bigint "student_id", null: false
-    t.index ["goal_id"], name: "index_goals_students_on_goal_id"
-    t.index ["student_id"], name: "index_goals_students_on_student_id"
   end
 
   create_table "group_lessons", force: :cascade do |t|
@@ -86,6 +79,13 @@ ActiveRecord::Schema.define(version: 20220731231132) do
     t.datetime "updated_at", null: false
     t.boolean "activated", default: true
     t.index ["name"], name: "index_schools_on_name", unique: true
+  end
+
+  create_table "student_goals", force: :cascade do |t|
+    t.bigint "goal_id", null: false
+    t.bigint "student_id", null: false
+    t.index ["goal_id"], name: "index_student_goals_on_goal_id"
+    t.index ["student_id"], name: "index_student_goals_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|

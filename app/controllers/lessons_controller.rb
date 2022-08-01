@@ -222,6 +222,11 @@ end
   		redirect_to root_url
   	end
   	@lesson = Lesson.find(session[:lesson_id])
+    @lesson.student.goals.each do |goal|
+      x = Rating.new
+      x.goal = goal
+      @lesson.ratings << x
+    end
     while @lesson.ratings.length < Goal::MAX_PER_STUDENT
       x = Rating.new
       x.goal = Goal.new
@@ -237,6 +242,15 @@ end
     @lesson = Lesson.find(session[:lesson_id])
   	temp_params = lesson_params
     temp_params[:time_out] = Time.now
+
+    temp_lesson = Lesson.new(lesson_params)
+    temp_lesson.ratings.each do |rating|
+      if not @lesson.student.goals.include? rating.goal and
+          not rating.goal.nil? and
+          not rating.goal.new_record?
+        @lesson.student.goals << rating.goal
+      end
+    end
 
     respond_to do |format|
       if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)

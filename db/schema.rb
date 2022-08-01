@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220801010543) do
+ActiveRecord::Schema.define(version: 20220801011337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20220801010543) do
   create_table "student_goals", force: :cascade do |t|
     t.bigint "goal_id", null: false
     t.bigint "student_id", null: false
+    t.index ["goal_id", "student_id"], name: "index_student_goals_on_goal_id_and_student_id", unique: true
     t.index ["goal_id"], name: "index_student_goals_on_goal_id"
     t.index ["student_id"], name: "index_student_goals_on_student_id"
   end

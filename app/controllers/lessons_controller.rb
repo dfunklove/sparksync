@@ -251,7 +251,7 @@ end
     temp_lesson.ratings.each do |rating|
       begin
         @lesson.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
-      rescue StandardError => e
+      rescue ActiveRecord::RecordInvalid => e
         logger.error(e)
         @lesson.errors.add(:goals, e.message)
       end

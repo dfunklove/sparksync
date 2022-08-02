@@ -3,6 +3,7 @@ class Lesson < ApplicationRecord
   validates :student, presence: true
   validates :teacher, presence: true
   validates :time_in, presence: true
+  validates :time_in, uniqueness: { scope: :user_id }
   validates_associated :school, :student, :ratings
 
   DATETIME_FORMAT = "%m-%d-%Y %l:%M %p".freeze 

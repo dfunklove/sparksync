@@ -98,7 +98,11 @@ class LessonsController < ApplicationController
     @tot_hours = 0
     @messons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
-      # puts "school " + lesson.name
+      while lesson.ratings.length < Goal::MAX_PER_STUDENT
+        x = Rating.new
+        x.goal = Goal.new
+        lesson.ratings << x
+      end  
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
@@ -121,38 +125,28 @@ class LessonsController < ApplicationController
 
   def update
     @lesson = Lesson.find(params[:id])
+    temp_params = lesson_params
     if params[:modify]
-      begin
-        time_in_obj = muckwithdate(messon_params[:time_in])
-        time_out_obj = muckwithdate(messon_params[:time_out]) 
-      rescue => e
-        @lesson.errors.add(
-            :base,
-            :invalid_date,
-            message: "Invalid date")
-      end
-      if @lesson.errors.count == 0 && @lesson.update(
-          # TODO these are assuming the time in params is GMT and converting to local fixit 
-          time_in: time_in_obj,
-          time_out: time_out_obj,
-          brought_instrument: messon_params[:brought_instrument],
-          brought_books: messon_params[:brought_books],
-          progress: messon_params[:progress],
-          behavior: messon_params[:behavior],
-          notes: messon_params[:notes])
-        redirect_to lessons_path
-      else 
-        handle_index_error
+      logger.error("temp_params: #{temp_params}")
+      logger.error("lesson.attributes: #{@lesson.attributes}")
+      if @lesson.errors.count == 0
+        @lesson.update_attributes(temp_params)
       end
     elsif params[:delete]
-      if @lesson.delete
-        redirect_to lessons_path
-      else
-        handle_index_error
-      end
+      @lesson.delete
     else
       raise Exception.new('not modify or delete. who called lesson update?')
-    end 
+    end
+
+    respond_to do |format|
+      if @lesson.errors.count == 0
+        format.html { redirect_to '/lessons' }
+      else
+        prepare_index
+        format.html { render action: 'index' }
+        format.js { render '/shared/error', locals: { object: @lesson } }
+      end
+    end
   end
 
   def create
@@ -278,13 +272,8 @@ end
 
   private 
   def lesson_params
-  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-      :progress, :behavior, :notes, :school_id, :student_id, ratings_attributes: [:score, :goal_id])
-  end
-
-  def messon_params
-  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-  		:progress, :behavior, :notes, :user_id, :school_id, :student_id)
+  	params.require(:lesson).permit(:id, :time_in, :time_out, :brought_instrument, :brought_books,
+      :progress, :behavior, :notes, :user_id, :school_id, :student_id, ratings_attributes: [:id, :score, :goal_id])
   end
 
   def student_params

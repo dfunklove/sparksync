@@ -57,8 +57,8 @@ div.stdnt {
 .email { width: 9em; margin: 0px; padding: 0px }
 .fname { width: 5em }
 .lname { width: 5em }
-.date { width: 5.2em }
-.timein{ width: 7em }
+.date { width: auto }
+.timein{ width: auto }
 .cent { text-align: center; width: 3em }
 .updatetab { width: 8em; margin: 0px; padding: 0px; text-align: center }
 table.stdnt {
@@ -71,6 +71,10 @@ table.stdnt td.no-border-left, th.no-border-left {
 }
 table.stdnt td, th {
   border: 1px solid black
+}
+table.noborder td, th { 
+  border: 0px;
+  padding: 0px;
 }
 textarea.notes {
 	width: 100%;

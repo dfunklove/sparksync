@@ -59,12 +59,11 @@ function hideGroupLesson(group_lesson_id) {
     <th>
       Minutes
     </th>
-    <th class="cent">
-      Progress
-    </th>
-    <th class="cent">
-      Behavior
-    </th>
+    <% Goal::MAX_PER_STUDENT.times do %>
+      <th class="cent">
+        Goal
+      </th>
+    <% end %>
     <th class="cent">
       Instru
     </th>
@@ -102,8 +101,8 @@ function hideGroupLesson(group_lesson_id) {
         group_lesson_id: current_gid,
         group_lesson_heading: false,
         lesson: lesson } %>
-      <% end # messons.each do |lesson| %>
-      <% if current_gid %>
+    <% end # messons.each do |lesson| %>
+    <% if current_gid %>
       <tr class="group-lesson-row group-lesson-<%= current_gid %>">
         <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
       </tr>

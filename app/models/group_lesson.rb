@@ -3,6 +3,7 @@ class GroupLesson < ApplicationRecord
   belongs_to :teacher, class_name: 'Teacher',foreign_key: 'user_id'
 
   validates :teacher, presence: true
+  validates :time_in, uniqueness: { scope: :user_id }
   validates_associated :lessons
 
   accepts_nested_attributes_for :lessons

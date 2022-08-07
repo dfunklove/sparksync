@@ -62,6 +62,11 @@ class TeachersController < UsersController
       @tot_hours = 0
       @lessons.each do |lesson|
         @tot_hours += lesson[:time_out] - lesson[:time_in]
+        while lesson.ratings.length < Goal::MAX_PER_STUDENT
+          x = Rating.new
+          x.goal = Goal.new
+          lesson.ratings << x
+        end  
       end
       # convert seconds to hours
       @tot_hours = @tot_hours/3600

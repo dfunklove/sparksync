@@ -2,6 +2,7 @@
   # parameters:
   # lesson : a lesson object with data to populate the row
   # i : index into the lessons array which this row will point to
+  # selected: boolean indicating whether this row is selected
 %>
 <% brought_instrument = lesson.brought_instrument %>
 <% brought_books = lesson.brought_books %>
@@ -10,7 +11,7 @@
   <input value="<%= student.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][student_id]" id="group_lesson_lessons_attributes_<%=i%>_student_id" />
   <input value="<%= student.school.id %>" type="hidden" name="group_lesson[lessons_attributes][<%=i%>][school_id]" id="group_lesson_lessons_attributes_<%=i%>_school_id" />
 
-  <td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" checked="checked" /></td>
+  <td><input type="checkbox" name="group_lesson[lessons_attributes][<%=i%>][selected]" id="group_lesson_lessons_attributes_<%=i%>_selected" value="true" <%= selected ? "checked" : "" %> /></td>
   <td><%= student.first_name %></td>
   <td><%= student.last_name %></td>
   <td><%= student.school.name %></td>

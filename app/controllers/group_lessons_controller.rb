@@ -78,6 +78,7 @@ class GroupLessonsController < ApplicationController
     lesson = Lesson.new(lesson_params(lesson_data))
     lesson.time_in = Time.now
     lesson.teacher = current_user
+    lesson_in_progress = session[:group_lesson_id]
 
     confirm_add_student = false
     if !lesson.student_id
@@ -98,8 +99,17 @@ class GroupLessonsController < ApplicationController
     respond_to do |format|
       if confirm_add_student
         format.js { render 'confirm_add_student' }
+      elsif lesson_in_progress
+        group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
+        lesson.time_in = group_lesson.time_in
+        group_lesson.lessons << lesson
+        if lesson.valid? && group_lesson.save
+          format.js { render 'add_student', locals: { lesson: lesson, lesson_in_progress: lesson_in_progress, total_students: row_count, student_created: add_student_confirmed } }
+        else
+          format.js { render 'checkout_error', locals: { object: lesson } }
+        end
       elsif lesson.valid?
-        format.js { render 'add_student', locals: { lesson: lesson, total_students: row_count, student_created: add_student_confirmed } }
+        format.js { render 'add_student', locals: { lesson: lesson, lesson_in_progress: lesson_in_progress, total_students: row_count, student_created: add_student_confirmed } }
       else
         format.js { render 'checkout_error', locals: { object: lesson } }
       end

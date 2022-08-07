@@ -35,7 +35,7 @@ class LessonsController < ApplicationController
       @lesson = open_lesson
       session[:lesson_id] = open_lesson.id
       flash.now[:danger] = error_message
-      render "checkout"
+      redirect_to "/lessons/checkout"
     elsif open_group_lesson
       session[:group_lesson_id] = open_group_lesson.id
       flash[:danger] = error_message
@@ -98,7 +98,11 @@ class LessonsController < ApplicationController
     @tot_hours = 0
     @messons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
-      # puts "school " + lesson.name
+      while lesson.ratings.length < Goal::MAX_PER_STUDENT
+        x = Rating.new
+        x.goal = Goal.new
+        lesson.ratings << x
+      end  
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
@@ -121,38 +125,28 @@ class LessonsController < ApplicationController
 
   def update
     @lesson = Lesson.find(params[:id])
+    temp_params = lesson_params
     if params[:modify]
-      begin
-        time_in_obj = muckwithdate(messon_params[:time_in])
-        time_out_obj = muckwithdate(messon_params[:time_out]) 
-      rescue => e
-        @lesson.errors.add(
-            :base,
-            :invalid_date,
-            message: "Invalid date")
-      end
-      if @lesson.errors.count == 0 && @lesson.update(
-          # TODO these are assuming the time in params is GMT and converting to local fixit 
-          time_in: time_in_obj,
-          time_out: time_out_obj,
-          brought_instrument: messon_params[:brought_instrument],
-          brought_books: messon_params[:brought_books],
-          progress: messon_params[:progress],
-          behavior: messon_params[:behavior],
-          notes: messon_params[:notes])
-        redirect_to lessons_path
-      else 
-        handle_index_error
+      logger.error("temp_params: #{temp_params}")
+      logger.error("lesson.attributes: #{@lesson.attributes}")
+      if @lesson.errors.count == 0
+        @lesson.update_attributes(temp_params)
       end
     elsif params[:delete]
-      if @lesson.delete
-        redirect_to lessons_path
-      else
-        handle_index_error
-      end
+      @lesson.delete
     else
       raise Exception.new('not modify or delete. who called lesson update?')
-    end 
+    end
+
+    respond_to do |format|
+      if @lesson.errors.count == 0
+        format.html { redirect_to '/lessons' }
+      else
+        prepare_index
+        format.html { render action: 'index' }
+        format.js { render '/shared/error', locals: { object: @lesson } }
+      end
+    end
   end
 
   def create
@@ -222,6 +216,16 @@ end
   		redirect_to root_url
   	end
   	@lesson = Lesson.find(session[:lesson_id])
+    @lesson.student.goals.each do |goal|
+      x = Rating.new
+      x.goal = goal
+      @lesson.ratings << x
+    end
+    while @lesson.ratings.length < Goal::MAX_PER_STUDENT
+      x = Rating.new
+      x.goal = Goal.new
+      @lesson.ratings << x
+    end
   end
 
   # leaving checkout page, returning to checkin page
@@ -231,20 +235,21 @@ end
   	end
     @lesson = Lesson.find(session[:lesson_id])
   	temp_params = lesson_params
-    if (temp_params[:behavior] == nil)
-      @lesson.errors.add(
-        :base,
-        :behavior_missing,
-        message: "Behavior can't be blank")
-    end
-    if (temp_params[:progress] == nil)
-      @lesson.errors.add(
-        :base,
-        :progress_missing,
-        message: "Progress can't be blank")
-    end
-
     temp_params[:time_out] = Time.now
+
+    # Clear the existing goals because we only want the new ones
+    @lesson.student.goals.clear
+
+    # Get goal id's from the ratings and save them to the student
+    temp_lesson = Lesson.new(lesson_params)
+    temp_lesson.ratings.each do |rating|
+      begin
+        @lesson.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
+      rescue ActiveRecord::RecordInvalid => e
+        logger.error(e)
+        @lesson.errors.add(:goals, e.message)
+      end
+    end
 
     respond_to do |format|
       if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
@@ -267,15 +272,8 @@ end
 
   private 
   def lesson_params
-  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-      :progress, :behavior, :notes, :school_id, :student_id
-      #student_attributes: [:id, :first_name, :last_name, :school_id]
-      )
-  end
-
-  def messon_params
-  	params.require(:lesson).permit(:time_in, :time_out, :brought_instrument, :brought_books,
-  		:progress, :behavior, :notes, :user_id, :school_id, :student_id)
+  	params.require(:lesson).permit(:id, :time_in, :time_out, :brought_instrument, :brought_books,
+      :progress, :behavior, :notes, :user_id, :school_id, :student_id, ratings_attributes: [:id, :score, :goal_id])
   end
 
   def student_params

@@ -170,23 +170,6 @@ class GroupLessonsController < ApplicationController
     end
     @group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     temp_params = group_lesson_params
-    temp_params[:lessons_attributes].keys.each do |key|
-      lesson_data = temp_params[:lessons_attributes][key]
-      if (lesson_data[:behavior].blank?)
-        @group_lesson.errors.add(
-          :base,
-          :behavior_missing,
-          message: "Behavior can't be blank")
-      end
-      if (lesson_data[:progress].blank?)
-        @group_lesson.errors.add(
-          :base,
-          :progress_missing,
-          message: "Progress can't be blank")
-      end
-      break if @group_lesson.errors.count > 0
-    end
-
     temp_params[:time_out] = Time.now
     @group_lesson.lessons.each do |lesson|
       lesson.time_out = temp_params[:time_out]

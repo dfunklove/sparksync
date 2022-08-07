@@ -3,7 +3,8 @@ class Lesson < ApplicationRecord
   validates :student, presence: true
   validates :teacher, presence: true
   validates :time_in, presence: true
-  validates_associated :school, :student
+  validates :time_in, uniqueness: { scope: :user_id }, if: -> { group_lesson_id.nil? }
+  validates_associated :school, :student, :ratings
 
   DATETIME_FORMAT = "%m-%d-%Y %l:%M %p".freeze 
   TIME_FORMAT = "%l:%M %p".freeze
@@ -12,6 +13,9 @@ class Lesson < ApplicationRecord
   belongs_to :teacher, class_name: 'Teacher',foreign_key: 'user_id'
   belongs_to :school
   belongs_to :group_lesson, optional: true
+  has_many :ratings
+
+  accepts_nested_attributes_for :ratings, reject_if: :all_blank
 
   accepts_nested_attributes_for :student
 

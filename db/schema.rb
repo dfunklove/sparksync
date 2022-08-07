@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20220727222030) do
+ActiveRecord::Schema.define(version: 20220801011337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "goals", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_goals_on_name", unique: true
+  end
 
   create_table "group_lessons", force: :cascade do |t|
     t.text "notes"
@@ -56,12 +63,30 @@ ActiveRecord::Schema.define(version: 20220727222030) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "ratings", force: :cascade do |t|
+    t.integer "score", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "goal_id"
+    t.bigint "lesson_id"
+    t.index ["goal_id"], name: "index_ratings_on_goal_id"
+    t.index ["lesson_id"], name: "index_ratings_on_lesson_id"
+  end
+
   create_table "schools", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "activated", default: true
     t.index ["name"], name: "index_schools_on_name", unique: true
+  end
+
+  create_table "student_goals", force: :cascade do |t|
+    t.bigint "goal_id", null: false
+    t.bigint "student_id", null: false
+    t.index ["goal_id", "student_id"], name: "index_student_goals_on_goal_id_and_student_id", unique: true
+    t.index ["goal_id"], name: "index_student_goals_on_goal_id"
+    t.index ["student_id"], name: "index_student_goals_on_student_id"
   end
 
   create_table "students", force: :cascade do |t|
@@ -95,5 +120,7 @@ ActiveRecord::Schema.define(version: 20220727222030) do
   add_foreign_key "lessons", "students", on_delete: :cascade
   add_foreign_key "lessons", "users", on_delete: :nullify
   add_foreign_key "logins", "users", on_delete: :cascade
+  add_foreign_key "ratings", "goals"
+  add_foreign_key "ratings", "lessons"
   add_foreign_key "students", "schools"
 end

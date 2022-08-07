@@ -279,7 +279,7 @@ end
   end
 
   def student_params
-  	params.require(:lesson).require(:student).permit(:first_name, :last_name, :school_id)
+  	params.require(:lesson).require(:student_attributes).permit(:first_name, :last_name, :school_id)
   end
 
   def school_params

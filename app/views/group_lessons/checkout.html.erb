@@ -31,6 +31,7 @@ $(function() {
       <th>Progress</th>
       <th>Behavior</th>
       <th>Student Notes</th>
+      <th>Permissions</th>
     </tr>
     <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
       <tr>
@@ -50,11 +51,15 @@ $(function() {
       <td class="cent"><%= lesson_f.select :progress, [6,5,4,3,2,1], { include_blank: true } %></td>
       <td class="cent"><%= lesson_f.select :behavior, [6,5,4,3,2,1], { include_blank: true } %></td>
       <td><%= lesson_f.text_field :notes, class: "gomodal", autocomplete: "off" %> </td>
+      <%= lesson_f.fields_for :student do |student_f| %>
+        <td><%= student_f.text_field :permissions, autocomplete: "off", value: lesson.student.permissions %> </td>
+        <%= student_f.text_field :first_name, type: "hidden", value: lesson.student.first_name %>
+      <% end %>
       </tr> 
     <% end %>
     <%= render partial: "new_student_row", locals: {group_lesson: group_lesson_f} %>
     <tr>
-      <td colspan="6" style="text-align: center">
+      <td colspan="7" style="text-align: center">
         <br>
         <%= group_lesson_f.label :notes, "Group Notes" %>
         <%= group_lesson_f.text_area :notes, class: "notes", rows: 4 %>
@@ -62,7 +67,7 @@ $(function() {
       </td>
     </tr>
     <tr>
-      <td colspan="6" style="text-align: center">
+      <td colspan="7" style="text-align: center">
         <button type="submit" style="width: 100%">Finish Lesson</button>
       </td>
     </tr>

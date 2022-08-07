@@ -70,12 +70,11 @@ function hideGroupLesson(group_lesson_id) {
       Minutes
     </th>
     <% end %>
-    <th class="cent">
-      Progress
-    </th>
-    <th class="cent">
-      Behavior
-    </th>
+    <% Goal::MAX_PER_STUDENT.times do %>
+      <th class="cent">
+        Goal
+      </th>
+    <% end %>
     <th class="cent">
       Brought Instrument
     </th>

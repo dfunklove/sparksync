@@ -44,10 +44,18 @@
 
 <% end %>
 <% if group_lesson_heading %>
-  <td colspan="5">Group Lesson</td>
+  <td colspan="6">Group Lesson</td>
 <% else %>
-  <td class="cent"><%= lesson['progress'] %> </td>
-  <td class="cent"><%= lesson['behavior'] %> </td>
+  <% lesson.ratings.each do |rating| %>
+    <td>
+      <table class="noborder">
+        <tr class="noborder">
+          <td class="noborder"><%= rating.goal.name %></td>
+          <td class="noborder"><%= rating.score %></td>
+        </tr>
+      </table
+    </td>
+  <% end %>
   <td class="cent">
     <%= if lesson['brought_instrument'] then "Y" else "N" end %>
   </td>

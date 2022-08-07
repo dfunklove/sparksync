@@ -190,18 +190,7 @@ class GroupLessonsController < ApplicationController
     # Update student goals from ratings
     temp_group_lesson = GroupLesson.new(temp_params)
     temp_group_lesson.lessons.each do |lesson|
-      # Clear the existing goals because we only want the new ones
-      lesson.student.goals.clear
-
-      # Get goal id's from the ratings and save them to the student
-      lesson.ratings.each do |rating|
-        begin
-          lesson.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
-        rescue ActiveRecord::RecordInvalid => e
-          logger.error(e)
-          lesson.errors.add(:goals, e.message)
-        end
-      end
+      lesson.save_goals_to_student
     end
 
     respond_to do |format|

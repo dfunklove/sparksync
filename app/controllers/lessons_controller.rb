@@ -237,19 +237,10 @@ end
   	temp_params = lesson_params
     temp_params[:time_out] = Time.now
 
-    # Clear the existing goals because we only want the new ones
-    @lesson.student.goals.clear
-
-    # Get goal id's from the ratings and save them to the student
+    # Update student goals from ratings
     temp_lesson = Lesson.new(lesson_params)
-    temp_lesson.ratings.each do |rating|
-      begin
-        @lesson.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
-      rescue ActiveRecord::RecordInvalid => e
-        logger.error(e)
-        @lesson.errors.add(:goals, e.message)
-      end
-    end
+    temp_lesson.student = @lesson.student
+    temp_lesson.save_goals_to_student
 
     respond_to do |format|
       if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)

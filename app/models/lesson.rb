@@ -36,6 +36,22 @@ class Lesson < ApplicationRecord
     self.time_in = time_in.round
   end
 
+  # Overwrite student goals with those from ratings
+  def save_goals_to_student
+    # Clear the existing goals because we only want the new ones
+    self.student.goals.clear
+
+    # Get goal id's from the ratings and save them to the student
+    self.ratings.each do |rating|
+      begin
+        self.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
+      rescue ActiveRecord::RecordInvalid => e
+        logger.error(e)
+        self.errors.add(:goals, e.message)
+      end
+    end
+  end
+
   def self.in_progress
   	self.joins(:student).where("lessons.time_out is null AND lessons.time_in > ?", Time.new.beginning_of_day).order("students.school_id")
   end

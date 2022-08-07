@@ -162,6 +162,18 @@ class GroupLessonsController < ApplicationController
   	end
   	@group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     @students = Student.find_by_teacher(current_user.id)
+    @group_lesson.lessons.each do |lesson|
+      lesson.student.goals.each do |goal|
+        x = Rating.new
+        x.goal = goal
+        lesson.ratings << x
+      end
+      while lesson.ratings.length < Goal::MAX_PER_STUDENT
+        x = Rating.new
+        x.goal = Goal.new
+        lesson.ratings << x
+      end
+    end
   end
 
   def finishCheckout
@@ -173,6 +185,23 @@ class GroupLessonsController < ApplicationController
     temp_params[:time_out] = Time.now
     @group_lesson.lessons.each do |lesson|
       lesson.time_out = temp_params[:time_out]
+    end
+
+    # Update student goals from ratings
+    temp_group_lesson = GroupLesson.new(temp_params)
+    temp_group_lesson.lessons.each do |lesson|
+      # Clear the existing goals because we only want the new ones
+      lesson.student.goals.clear
+
+      # Get goal id's from the ratings and save them to the student
+      lesson.ratings.each do |rating|
+        begin
+          lesson.student.goals << Goal.find(rating.goal.id) unless rating.goal.nil? or rating.goal.new_record?
+        rescue ActiveRecord::RecordInvalid => e
+          logger.error(e)
+          lesson.errors.add(:goals, e.message)
+        end
+      end
     end
 
     respond_to do |format|
@@ -194,11 +223,16 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:id, :notes, { lessons_attributes: [:id, :brought_books, :brought_instrument, :student_id, :school_id, :progress, :behavior, :notes, { student_attributes: [:id, :permissions] }]})
+      params.require(:group_lesson).permit(:id, :notes, lessons_attributes: 
+          [:id, :brought_books, :brought_instrument, :student_id, :school_id, :notes, 
+          ratings_attributes: [:id, :score, :goal_id],
+          student_attributes: [:id, :permissions]])
     end
 
     def lesson_params params
-      params.permit(:brought_books, :brought_instrument, :student, :student_id, :school_id)
+      params.permit(:brought_books, :brought_instrument, :student, :student_id, :school_id, :notes,
+          ratings_attributes: [:id, :score, :goal_id],
+          student_attributes: [:id, :permissions])
     end
 
     def student_params params

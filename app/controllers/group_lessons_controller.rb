@@ -163,16 +163,8 @@ class GroupLessonsController < ApplicationController
   	@group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     @students = Student.find_by_teacher(current_user.id)
     @group_lesson.lessons.each do |lesson|
-      lesson.student.goals.each do |goal|
-        x = Rating.new
-        x.goal = goal
-        lesson.ratings << x
-      end
-      while lesson.ratings.length < Goal::MAX_PER_STUDENT
-        x = Rating.new
-        x.goal = Goal.new
-        lesson.ratings << x
-      end
+      lesson.get_goals_from_student
+      LessonsHelper::add_empty_ratings(lesson)
     end
   end
 

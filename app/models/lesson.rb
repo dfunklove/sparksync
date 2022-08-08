@@ -36,6 +36,15 @@ class Lesson < ApplicationRecord
     self.time_in = time_in.round
   end
 
+  # Populate ratings from student goals
+  def get_goals_from_student
+    self.student.goals.each do |goal|
+      x = Rating.new
+      x.goal = goal
+      self.ratings << x
+    end
+  end
+
   # Overwrite student goals with those from ratings
   def save_goals_to_student
     # Clear the existing goals because we only want the new ones
@@ -94,7 +103,7 @@ class Lesson < ApplicationRecord
     student = Student.find(student_id)
     sql = "select users.first_name, users.last_name as teacher_last, "
     sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, schools.name, user_id, student_id, group_lesson_id "
+    sql += "brought_books, schools.name, user_id, student_id, lessons.school_id, group_lesson_id "
     sql += "from users inner join lessons on users.id = lessons.user_id "
     sql += " inner join students on lessons.student_id = students.id "
     sql += " inner join schools on students.school_id = schools.id "

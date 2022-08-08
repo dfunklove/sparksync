@@ -98,11 +98,7 @@ class LessonsController < ApplicationController
     @tot_hours = 0
     @messons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
-      while lesson.ratings.length < Goal::MAX_PER_STUDENT
-        x = Rating.new
-        x.goal = Goal.new
-        lesson.ratings << x
-      end  
+      LessonsHelper::add_empty_ratings(lesson)
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600
@@ -216,16 +212,8 @@ end
   		redirect_to root_url
   	end
   	@lesson = Lesson.find(session[:lesson_id])
-    @lesson.student.goals.each do |goal|
-      x = Rating.new
-      x.goal = goal
-      @lesson.ratings << x
-    end
-    while @lesson.ratings.length < Goal::MAX_PER_STUDENT
-      x = Rating.new
-      x.goal = Goal.new
-      @lesson.ratings << x
-    end
+    @lesson.get_goals_from_student
+    LessonsHelper::add_empty_ratings(@lesson)
   end
 
   # leaving checkout page, returning to checkin page

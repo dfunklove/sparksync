@@ -86,6 +86,7 @@ function hideGroupLesson(group_lesson_id) {
     </th>
 	</tr>
   <% if @lessons.length > 0 %>
+    <% notes_width = @showteacher && @showstudent ? "14" : "13" %>
     <% current_gid = nil %>
     <% previous = nil %>
     <% @lessons.each do |lesson| %>
@@ -94,7 +95,7 @@ function hideGroupLesson(group_lesson_id) {
         if current_gid && (!lesson.group_lesson_id || current_gid != lesson.group_lesson_id)
       %>
         <tr class="group-lesson-row group-lesson-<%= current_gid %>">
-          <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
+          <td class="no-border-left"></td><td colspan="<%= notes_width %>">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
         </tr>
       <%  
         current_gid = nil
@@ -117,7 +118,7 @@ function hideGroupLesson(group_lesson_id) {
     <% end # lessons.each do |lesson| %>
     <% if current_gid %>
       <tr class="group-lesson-row group-lesson-<%= current_gid %>">
-        <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
+        <td class="no-border-left"></td><td colspan="<%= notes_width %>">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
       </tr>
     <% end %>
   <% else %>

@@ -42,6 +42,7 @@ class StudentsController < ApplicationController
     @tot_hours = 0
     @lessons.each do |lesson|
       @tot_hours += lesson[:time_out] - lesson[:time_in]
+      LessonsHelper::add_empty_ratings(lesson)
     end
     # convert seconds to hours
     @tot_hours = @tot_hours/3600

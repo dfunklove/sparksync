@@ -66,64 +66,44 @@ class Lesson < ApplicationRecord
   end
 
   def self.find_by_date(start_date, end_date)
-    sql = "select users.first_name, users.last_name as teacher_last, "
-    sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, lessons.id, lessons.school_id, name, "
-    sql += "students.first_name, "
-    sql += "students.last_name as student_last, user_id, student_id, group_lesson_id "
-    sql += "from users inner join lessons on users.id = lessons.user_id "
-    sql += " inner join students on lessons.student_id = students.id "
-    sql += " inner join schools on lessons.school_id = schools.id "
-    sql += "where time_out is not null"
-    sql += " and ? <= time_in and time_in <= ? "
-    sql += " and students.activated = true"
-    sql += " and users.activated = true"
-    sql += " and schools.activated = true"
-    self.find_by_sql([sql, start_date.to_s, end_date.to_s])
-  end
+    sql = "? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
+    args = [start_date.to_s, end_date.to_s]
+    sql += " and schools.activated = ?"
+    sql += " and students.activated = ?"
+    sql += " and users.activated = ?"
+    args.concat([true, true, true])
+    self.includes(:group_lesson, :school, :student, :teacher, ratings: [:goal]).where(sql, *args).references(:group_lesson, :school, :student, :teacher, ratings: [:goal])  end
 
   def self.find_by_school(school_id, start_date, end_date)
-    school = School.find(school_id)
-    sql = "select users.first_name, users.last_name as teacher_last, "
-    sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, students.first_name, "
-    sql += "students.last_name as student_last, user_id, student_id, group_lesson_id "
-    sql += "from users inner join lessons on users.id = lessons.user_id "
-    sql += " inner join students on lessons.student_id = students.id "
-    sql += "where time_out is not null and lessons.school_id = " + school_id 
-    sql += " and ? <= time_in and time_in <= ? "
-    if school.activated?
-      sql += " and students.activated = true"
-      sql += " and users.activated = true"
+    sql = "lessons.school_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
+    args = [school_id, start_date.to_s, end_date.to_s]
+    if School.find(school_id).activated?
+      sql += " and students.activated = ?"
+      sql += " and users.activated = ?"
+      args.concat([true, true])
     end
-    self.find_by_sql([sql, start_date.to_s, end_date.to_s])    
+    self.includes(:group_lesson, :student, :teacher, ratings: [:goal]).where(sql, *args).references(:group_lesson, :student, :teacher, ratings: [:goal])
   end
 
   def self.find_by_student(student_id, start_date, end_date)
-    student = Student.find(student_id)
-    sql = "select users.first_name, users.last_name as teacher_last, "
-    sql += "time_in, time_out, progress, behavior, notes, brought_instrument, "
-    sql += "brought_books, schools.name, user_id, student_id, lessons.school_id, group_lesson_id "
-    sql += "from users inner join lessons on users.id = lessons.user_id "
-    sql += " inner join students on lessons.student_id = students.id "
-    sql += " inner join schools on students.school_id = schools.id "
-    sql += "where time_out is not null and lessons.student_id = " + student_id 
-    sql += " and ? <= time_in and time_in <= ? "
-    if student.activated?
-      sql += " and users.activated = true"
-      sql += " and schools.activated = true"
+    sql = "lessons.student_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
+    args = [student_id, start_date.to_s, end_date.to_s]
+    if Student.find(student_id).activated?
+      sql += " and schools.activated = ?"
+      sql += " and users.activated = ?"
+      args.concat([true, true])
     end
-    self.find_by_sql([sql, start_date.to_s, end_date.to_s])
+    self.includes(:group_lesson, :school, :teacher, ratings: [:goal]).where(sql, *args).references(:group_lesson, :school, :teacher, ratings: [:goal])
   end
 
   def self.find_by_teacher(teacher_id, start_date, end_date)
     sql = "lessons.user_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
     args = [teacher_id, start_date.to_s, end_date.to_s]
     if Teacher.find(teacher_id).activated?
-      sql += " and students.activated = ?"
       sql += " and schools.activated = ?"
+      sql += " and students.activated = ?"
       args.concat([true, true])
     end
-    self.includes(:group_lesson, :student, :school, ratings: [:goal]).where(sql, *args).references(:group_lesson, :student, :school, ratings: [:goal])
+    self.includes(:group_lesson, :school, :student, ratings: [:goal]).where(sql, *args).references(:group_lesson, :school, :student, ratings: [:goal])
   end
 end

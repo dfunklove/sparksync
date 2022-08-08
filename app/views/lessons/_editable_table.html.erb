@@ -76,13 +76,14 @@ function hideGroupLesson(group_lesson_id) {
 	</tr>
   <% if @messons.length > 0 %>
     <% current_gid = nil %>
+    <% previous = nil %>
     <% @messons.each do |lesson| %>
       <% group_lesson_heading = false %>
       <% # Last row of group lesson
         if current_gid && (!lesson.group_lesson_id || current_gid != lesson.group_lesson_id)
       %>
         <tr class="group-lesson-row group-lesson-<%= current_gid %>">
-          <td class="no-border-left"></td><td colspan="11">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
+          <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
         </tr>
       <%  
         current_gid = nil
@@ -101,10 +102,11 @@ function hideGroupLesson(group_lesson_id) {
         group_lesson_id: current_gid,
         group_lesson_heading: false,
         lesson: lesson } %>
+      <% previous = lesson %>
     <% end # messons.each do |lesson| %>
     <% if current_gid %>
       <tr class="group-lesson-row group-lesson-<%= current_gid %>">
-        <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= GroupLesson.find(current_gid).notes %></td>
+        <td class="no-border-left"></td><td colspan="12">Group Lesson Notes:<br><%= previous.group_lesson.notes %></td>
       </tr>
     <% end %>
   <% else %>

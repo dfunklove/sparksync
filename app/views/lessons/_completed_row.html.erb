@@ -20,7 +20,7 @@
   <% end %>
 </td>
 <% if @showschool %>
-  <td><%= lesson['name'] %> </td>
+  <td><%= lesson.school['name'] %> </td>
 <% end %>
 <% if @showteacher %>
   <td><%= lesson.teacher['first_name'] %> </td>
@@ -50,7 +50,7 @@
     <td>
       <table class="noborder">
         <tr class="noborder">
-          <td class="noborder"><%= rating.goal.name %></td>
+          <td class="noborder"><%= rating.goal.present? ? rating.goal.name : "" %></td>
           <td class="noborder"><%= rating.score %></td>
         </tr>
       </table

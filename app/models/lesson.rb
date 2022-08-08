@@ -108,18 +108,13 @@ class Lesson < ApplicationRecord
   end
 
   def self.find_by_teacher(teacher_id, start_date, end_date)
-    teacher = Teacher.find(teacher_id)
-    sql = "select name, time_in, time_out, progress, behavior, notes, "
-    sql += "brought_instrument, brought_books, students.first_name, "
-    sql += "students.last_name, student_id, group_lesson_id "
-    sql += "from schools inner join lessons on schools.id = lessons.school_id "
-    sql += " inner join students on lessons.student_id = students.id "
-    sql += "where time_out is not null and user_id = " + teacher_id 
-    sql += " and ? <= time_in and time_in <= ? "
-    if teacher.activated?
-      sql += " and students.activated = true"
-      sql += " and schools.activated = true"
+    sql = "lessons.user_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
+    args = [teacher_id, start_date.to_s, end_date.to_s]
+    if Teacher.find(teacher_id).activated?
+      sql += " and students.activated = ?"
+      sql += " and schools.activated = ?"
+      args.concat([true, true])
     end
-    self.find_by_sql([sql, start_date.to_s, end_date.to_s])
+    self.includes(:group_lesson, :student, :school, ratings: [:goal]).where(sql, *args).references(:group_lesson, :student, :school, ratings: [:goal])
   end
 end

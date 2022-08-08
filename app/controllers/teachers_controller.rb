@@ -64,7 +64,6 @@ class TeachersController < UsersController
         @tot_hours += lesson[:time_out] - lesson[:time_in]
         while lesson.ratings.length < Goal::MAX_PER_STUDENT
           x = Rating.new
-          x.goal = Goal.new
           lesson.ratings << x
         end  
       end

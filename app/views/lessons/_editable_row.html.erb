@@ -20,7 +20,7 @@
       <% end %>
     </td>
   <%= form_for(lesson, url: lesson_path(lesson.id)) do |f| %>
-    <td><%= lesson.student.school.name %></td>
+    <td><%= lesson.school.name %></td>
     <td><%= lesson.teacher.first_name %> <%= lesson.teacher.last_name %></td>
     <td>
       <% if group_lesson_heading %>
@@ -34,7 +34,7 @@
         <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
     </td>
     <% if group_lesson_heading %>
-      <td colspan="5">Group Lesson</td>
+      <td colspan="6">Group Lesson</td>
     <% else %>
       <%= f.fields_for :ratings do |rating_f| %>
         <td>

@@ -95,7 +95,21 @@ class StudentsController < ApplicationController
     @student = Student.find(student_id)
     if params[:modify]
       puts "modify"
-      if @student.update(student_params)
+      @student.goals.clear
+      student_params[:goals_attributes].each do |key, goal_params|
+        goal = Goal.find_by(id: goal_params[:id])
+        logger.error("goal = #{goal}")
+        if goal
+          begin
+            @student.goals << goal
+          rescue ActiveRecord::RecordInvalid => e
+            logger.error(e)
+            @student.errors.add(:goals, e.message)
+          end
+        end
+      end
+      logger.error("student.goals = #{@student.goals.to_a}")
+      if @student.errors.count == 0 && @student.update(student_params)
         redirect_to students_url
       else
         handle_error
@@ -130,7 +144,7 @@ class StudentsController < ApplicationController
 
   private
     def student_params
-      params.require(:student).permit(:first_name, :last_name, :email, :school_id, :permissions)
+      params.require(:student).permit(:first_name, :last_name, :email, :school_id, :permissions, goals_attributes: [:id, :name])
     end
     def correct_user
       @student_id = params[:id]

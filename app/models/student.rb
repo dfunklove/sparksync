@@ -7,6 +7,7 @@ class Student < ApplicationRecord
   has_many :lessons
   has_many :student_goals
   has_many :goals, through: :student_goals
+  accepts_nested_attributes_for :goals, reject_if: :all_blank
   default_scope -> { order(last_name: :asc) }
 
   before_save :check_school_activated, if :activated_changed?
@@ -36,6 +37,6 @@ class Student < ApplicationRecord
     sql = "select student_id from lessons where user_id = ?"
     rightids = Lesson.find_by_sql([sql, teacher_id]).map(&:student_id)
     rightids &= self.where(activated: true).ids
-    self.where({id: rightids})    
+    self.includes(:school, :goals).where({id: rightids}).references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
   end
 end

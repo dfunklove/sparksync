@@ -4,6 +4,7 @@
 		<th>F Name</th>
     <th>L Name</th>
     <th>School</th>
+    <th>Goals</th>
     <th>Permissions</th>
     <% if @isadmin %>
       <th colspan="2"></th>
@@ -31,11 +32,26 @@
           <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
         <% end %>
       <% else %>
-          <td><%= student.first_name %></td>
-          <td><%= student.last_name %></td>
-          <td><%= student.school.name %></td>
-          <td><%= f.text_field :permissions %></td>
-          <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
+        <td><%= student.first_name %></td>
+        <td><%= student.last_name %></td>
+        <td><%= student.school.name %></td>
+        <td>
+          <% # use select_tag because collection_select creates a hidden field with the same id as the select %>
+          <% i = 0 %>
+          <% student.goals.each do |goal| %>
+            <%= select_tag "student[goals_attributes][#{i}][id]", options_from_collection_for_select(Goal.all, :id, :name, selected: goal.id), prompt: false, include_blank: "[None]" %>
+            <% i += 1 %>
+          <% end %>
+          <% 
+            (i...Goal::MAX_PER_STUDENT).each do |i|
+          %>
+            <%= f.fields_for :goals, student.goals.build do |goals_f| %>
+              <%= select_tag "student[goals_attributes][#{i}][id]", options_from_collection_for_select(Goal.all, :id, :name), prompt: false, include_blank: "[None]" %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= f.text_field :permissions %></td>
+        <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
       <% end %>
     <% end %> <!-- form_for -->
     </tr> 

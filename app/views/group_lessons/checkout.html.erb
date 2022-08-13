@@ -5,16 +5,16 @@ function modal_pop(e) {
     full_name = parent_row.find(".first_name").html() + " " + parent_row.find(".last_name").html();
     $("#modal_title").html("Notes for " + full_name);
     $("#modal_note_text").val($(e.target).val());
-    $("#modal_note").show();
-    $("#modal_note").modal();
+    //$("#modal_note").show();
+    document.getElementById('modal_note').showModal();
     $("#modal_note_text").focus();
+}
+function modal_close(event, modal) {
+  $(modal_field).val($("#modal_note_text").val());
+  document.getElementById('modal_note').close();
 }
 $(function() {
   $(".gomodal").on("click", modal_pop);
-  $('body').on($.modal.CLOSE, function(event, modal) {
-    $("#modal_note").hide();
-    $(modal_field).val($("#modal_note_text").val());
-  });
 });
 </script>
 <h2>
@@ -96,8 +96,9 @@ function beforeSubmit() {
 }
 </script>
 
-<div id="modal_note" class="all-block center-contents hidden">
+<dialog id="modal_note" class="all-block center-contents">
   <label id="modal_title"></label>
-  <textarea id="modal_note_text" rows="4" style="width: 100%"></textarea>
-	<button onclick="$.modal.close()">Done</button>
-</div>
+  <textarea id="modal_note_text" rows="4"></textarea>
+	<button onclick="modal_close()">Done</button>
+</dialog>
+

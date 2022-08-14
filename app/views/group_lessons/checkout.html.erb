@@ -1,22 +1,3 @@
-<script>
-function modal_pop(e) {
-    modal_field = e.target;
-    parent_row = $(e.target).parent().parent();
-    full_name = parent_row.find(".first_name").html() + " " + parent_row.find(".last_name").html();
-    $("#modal_title").html("Notes for " + full_name);
-    $("#modal_note_text").val($(e.target).val());
-    //$("#modal_note").show();
-    document.getElementById('modal_note').showModal();
-    $("#modal_note_text").focus();
-}
-function modal_close(event, modal) {
-  $(modal_field).val($("#modal_note_text").val());
-  document.getElementById('modal_note').close();
-}
-$(function() {
-  $(".gomodal").on("click", modal_pop);
-});
-</script>
 <h2>
   Group Lesson Checkout
 </h2>
@@ -59,10 +40,9 @@ $(function() {
           <% end %>
         </table>
       </td>
-      <td><%= lesson_f.text_area :notes, class: "gomodal", autocomplete: "off", rows: Goal::MAX_PER_STUDENT %> </td>
+      <td><%= lesson_f.text_area :notes, autocomplete: "off", rows: Goal::MAX_PER_STUDENT %> </td>
       <%= lesson_f.fields_for :student do |student_f| %>
         <td><%= student_f.text_area :permissions, autocomplete: "off", rows: Goal::MAX_PER_STUDENT, value: lesson.student.permissions %> </td>
-        <%= student_f.text_field :first_name, type: "hidden", value: lesson.student.first_name %>
       <% end %>
       </tr> 
     <% end %>
@@ -97,10 +77,3 @@ function beforeSubmit() {
   row_count += 1;
 }
 </script>
-
-<dialog id="modal_note" class="all-block center-contents">
-  <label id="modal_title"></label>
-  <textarea id="modal_note_text" rows="4"></textarea>
-	<button onclick="modal_close()">Done</button>
-</dialog>
-

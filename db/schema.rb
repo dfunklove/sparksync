@@ -29,7 +29,6 @@ ActiveRecord::Schema.define(version: 20220801011337) do
     t.bigint "user_id", null: false
     t.datetime "time_in", null: false
     t.datetime "time_out"
-    t.integer "school_id", null: false
     t.index ["user_id", "time_in"], name: "index_group_lessons_on_user_id_and_time_in", unique: true
     t.index ["user_id"], name: "index_group_lessons_on_user_id"
   end
@@ -112,7 +111,7 @@ ActiveRecord::Schema.define(version: 20220801011337) do
     t.integer "school_id"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
-    t.index ["email"], name: "index_users_on_email"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "lessons", "group_lessons", on_delete: :cascade

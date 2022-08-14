@@ -31,7 +31,7 @@ module SessionsHelper
       if @login && !@login.time_out
         @login.update_attributes( time_out: Time.zone.now )
       elsif Rails.env.development?
-        raise Exception.new('Teacher time out wasnt null')
+        logger.error('Teacher time out wasnt null')
       end
     end
     if session[:sort_col]

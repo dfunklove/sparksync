@@ -16,7 +16,7 @@ class GroupLessonsController < ApplicationController
       @group_lesson = open_group_lesson
       session[:group_lesson_id] = open_group_lesson.id
       flash.now[:danger] = error_message
-      render "checkout"
+      redirect_to "/group_lessons/checkout"
     elsif open_lesson
       session[:lesson_id] = open_lesson.id
       flash[:danger] = error_message

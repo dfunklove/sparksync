@@ -48,14 +48,16 @@ $(function() {
         <td></td>
       <% end %>
       <td>
-      <%= lesson_f.fields_for :ratings do |rating_f| %>
-        <div class="all-inline">
-          <%= rating_f.fields_for :goal do |goal_f| %>
-            <%= rating_f.collection_select :goal_id, Goal.all, :id, :name, prompt: true, include_blank: "[None]" %>
+        <table class="noborder">
+          <%= lesson_f.fields_for :ratings do |rating_f| %>
+            <tr>
+            <%= rating_f.fields_for :goal do |goal_f| %>
+              <td><%= rating_f.collection_select :goal_id, Goal.all, :id, :name, prompt: true, include_blank: "[None]" %></td>
+            <% end %>
+            <td><%= rating_f.select :score, [10,9,8,7,6,5,4,3,2,1], include_blank: true %></td>
+            </tr>
           <% end %>
-          <%= rating_f.select :score, [10,9,8,7,6,5,4,3,2,1], include_blank: true %>
-        </div>
-      <% end %>
+        </table>
       </td>
       <td><%= lesson_f.text_area :notes, class: "gomodal", autocomplete: "off", rows: Goal::MAX_PER_STUDENT %> </td>
       <%= lesson_f.fields_for :student do |student_f| %>

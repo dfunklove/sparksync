@@ -41,5 +41,5 @@
       </td>
     <% end %>
   <% end %><!-- group_lesson.fields_for :lesson -->
-<td style="text-align: center"><button type="submit" onclick="beforeSubmit()" form="add_student_form">Add Student</button></td>
+<td <%= !instrument_checkbox && !books_checkbox ? "colspan=3" : "" %> ><button type="submit" onclick="beforeSubmit()" form="add_student_form">Add Student</button></td>
 </tr>

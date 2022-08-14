@@ -34,15 +34,11 @@
       <td style="text-align: center">
         <%= lesson_f.check_box :brought_instrument, checked: true, form: "add_student_form" %>
       </td>
-    <% else %>
-      <td></td>
     <% end %>
     <% if books_checkbox %>
       <td style="text-align: center">
         <%= lesson_f.check_box :brought_books, checked: true, form: "add_student_form" %>
       </td>
-    <% else %>
-      <td></td>
     <% end %>
   <% end %><!-- group_lesson.fields_for :lesson -->
 <td style="text-align: center"><button type="submit" onclick="beforeSubmit()" form="add_student_form">Add Student</button></td>

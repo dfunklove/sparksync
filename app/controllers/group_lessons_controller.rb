@@ -13,9 +13,8 @@ class GroupLessonsController < ApplicationController
     open_lesson = current_user.lessons_in_progress.first
     open_group_lesson = current_user.group_lessons_in_progress.first
     if open_group_lesson
-      @group_lesson = open_group_lesson
       session[:group_lesson_id] = open_group_lesson.id
-      flash.now[:danger] = error_message
+      flash[:danger] = error_message
       redirect_to "/group_lessons/checkout"
     elsif open_lesson
       session[:lesson_id] = open_lesson.id
@@ -34,6 +33,12 @@ class GroupLessonsController < ApplicationController
   end
 
   def create
+    if session[:group_lesson_id]
+      logger.warn("create: group lesson already in progress")
+  		redirect_to "/group_lessons/checkout"
+      return
+  	end
+    
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
     group_lesson.time_in = Time.now
@@ -158,7 +163,9 @@ class GroupLessonsController < ApplicationController
 
   def checkout
   	if !session[:group_lesson_id]
+      logger.warn("checkout: no group lesson in progress")
   		redirect_to root_url
+      return
   	end
   	@group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     @students = Student.find_by_teacher(current_user.id)
@@ -170,7 +177,9 @@ class GroupLessonsController < ApplicationController
 
   def finishCheckout
   	if !session[:group_lesson_id]
+      logger.warn("finishCheckout: no group lesson in progress")
   		redirect_to root_url
+      return
     end
     @group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     temp_params = group_lesson_params

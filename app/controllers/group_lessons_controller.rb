@@ -41,7 +41,9 @@ class GroupLessonsController < ApplicationController
     
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
-    group_lesson.time_in = Time.now
+
+    # Round time to the second to prevent double form submission
+    group_lesson.time_in = Time.at((Time.now.to_f).round)
 
     if params[:group_lesson]
 

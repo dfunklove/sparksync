@@ -148,8 +148,10 @@ class LessonsController < ApplicationController
   def create
     add_student_confirmed = params[:add_student_confirmed]
     lesson = Lesson.new(lesson_params)
-    lesson.time_in = Time.now
     lesson.teacher = current_user
+
+    # Round time to the second to prevent double form submission
+    lesson.time_in = Time.at((Time.now.to_f).round)
 
     confirm_add_student = false
     if !lesson.student_id

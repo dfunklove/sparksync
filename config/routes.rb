@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   root 'sessions#new'
 
   get '/admins/dashboard'
+  get '/courses/teach/:id', to: 'courses#teach'
   get '/group_lessons/checkout'
   post  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
   patch  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'

@@ -25,6 +25,7 @@ label { margin-top: 10px; }
 .center-contents * { margin:auto; }
 .group-lesson-row { display: none }
 .hidden { display:none; }
+.ul { list-style: none; }
 .minimize { padding: 0px; margin: 0px; }
 .slider { display:inline; }
 .radio-nolabel { display:inline; }

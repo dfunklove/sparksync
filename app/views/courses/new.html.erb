@@ -1,16 +1,17 @@
 <h2>New Course</h2>
 <%
 students_by_school = []
-students = Student.find_by_teacher
-Schools.all.each do |school|
+@students = Student.find_by_teacher(current_user.id)
+School.all.each do |school|
   students_by_school[school.id] = []
-  students.where(school_id: school.id).each do |student|
+  @students.where(school_id: school.id).each do |student|
     students_by_school[school.id] << student
   end
 end
 %>
 <%= render '/shared/error_messages', object: @course %>
-<%= form_for(@course, html: {class: "all-block"}) do |course_f| %>
+<%= form_for @course, remote: true do |course_f| %>
+<div class="all-block">
   <%= course_f.label :name %>
   <%= course_f.text_field :name %>
   <%= course_f.label :start_date %>
@@ -21,8 +22,19 @@ end
   <%= course_f.text_area :notes %>
   <%= course_f.label :school %>
   <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_schools()" } %>
+</div>
   <div id="student_list" class="hidden">
+    <ul>
+    <%= course_f.collection_check_boxes :student_ids, @students, :id, lambda {|s| "#{s.first_name} #{s.last_name}" } do |b| %>
+      <li>
+        <%= b.check_box %>
+        <%= b.label %>
+      </li>
+    <% end %>
+    </ul>
   </div>
+  <br>
+  <%= course_f.submit %>
 <% end %>
 <script>
 function show_schools() {

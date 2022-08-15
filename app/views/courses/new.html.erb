@@ -1,0 +1,32 @@
+<h2>New Course</h2>
+<%
+students_by_school = []
+students = Student.find_by_teacher
+Schools.all.each do |school|
+  students_by_school[school.id] = []
+  students.where(school_id: school.id).each do |student|
+    students_by_school[school.id] << student
+  end
+end
+%>
+<%= render '/shared/error_messages', object: @course %>
+<%= form_for(@course, html: {class: "all-block"}) do |course_f| %>
+  <%= course_f.label :name %>
+  <%= course_f.text_field :name %>
+  <%= course_f.label :start_date %>
+  <%= course_f.date_field :start_date, value: Date.today %>
+  <%= course_f.label :end_date %>
+  <%= course_f.date_field :end_date %>
+  <%= course_f.label :notes %>
+  <%= course_f.text_area :notes %>
+  <%= course_f.label :school %>
+  <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_schools()" } %>
+  <div id="student_list" class="hidden">
+  </div>
+<% end %>
+<script>
+function show_schools() {
+  $("#student_list").show()
+  console.log("show")
+}
+</script>

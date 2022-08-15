@@ -1,0 +1,15 @@
+<h2>Courses</h2>
+<h3>Current</h3>
+<table>
+<tr>
+  <th>Name</th>
+</tr>
+<% @courses.each do |course| %>
+<tr>
+  <td><%= course.name %></td>
+</tr>
+<% end %>
+</table>
+<br>
+<a href="/courses/new"><button>New Course</button></a>
+<h3>Past</h3>

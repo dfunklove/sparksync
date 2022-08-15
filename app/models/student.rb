@@ -5,6 +5,8 @@ class Student < ApplicationRecord
 
   belongs_to :school
   has_many :lessons
+  has_many :student_courses
+  has_many :courses, through: :student_courses
   has_many :student_goals
   has_many :goals, through: :student_goals
   accepts_nested_attributes_for :goals, reject_if: :all_blank

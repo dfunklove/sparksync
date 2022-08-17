@@ -1,0 +1,22 @@
+<div class="table courses">
+<div class="thead">
+  <div class="tr">
+    <span class="td">Name</span>
+    <span class="td">School</span>
+    <span class="td">Start</span>
+    <span class="td">End</span>
+  </div>
+</div>
+<% courses.each do |course| %>
+  <div class="tr">    
+    <% course_link = url_for action: 'teach', id: course.id %>
+    <span class="td"><%= button_to course.name, (url_for action: 'teach', id: course.id), data: { disable_with: "Please wait..." } %></span>
+    <span class="td"><%= course.school.name %></span>
+    <span class="td"><%= course.start_date %></span>
+    <span class="td"><%= course.end_date || "?" %></span>
+    <span class="td"><%= button_to "Edit", course, method: :get %></span>
+    <span class="td"><%= button_to "Clone", (url_for action: 'clone', id: course.id), data: { disable_with: "Please wait..." } %></span>
+    <span class="td"><%= button_to "Delete", course, method: :delete, data: { disable_with: "Please wait..." }  %></span>
+  </div>
+<% end %>
+</div>

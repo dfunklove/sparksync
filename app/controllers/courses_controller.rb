@@ -8,9 +8,27 @@ class CoursesController < ApplicationController
     render 'show'
   end
 
-  def show
-    @title = "Edit Course"
-    @course = Course.find_by(id: params[:id])
+  def clone
+    course = Course.find_by(id: params[:id])
+    attrs = course.attributes
+    attrs.delete('id')
+    attrs.delete('created_at')
+    attrs.delete('updated_at')
+
+    # make a unique name
+    names = Course.select(:name).reduce([]) { |names, course| names << course.name }
+    name = ""
+    i = 1
+    loop do
+      name = "#{attrs['name']} (#{i})"
+      break if not names.include? name
+      i += 1
+    end
+    attrs['name'] = name
+
+    course = Course.new(attrs)
+    course.save
+    redirect_to "/courses"
   end
 
   def create
@@ -26,8 +44,22 @@ class CoursesController < ApplicationController
     end
   end
 
+  def destroy
+    begin
+      Course.destroy(params[:id])
+    rescue ActiveRecord::RecordNotFound => e
+      logger.error(e)
+    end
+    redirect_to "/courses"
+  end
+
+  def show
+    @title = "Edit Course"
+    @course = Course.find_by(id: params[:id])
+  end
+
   def update
-    course = Course.find_by_id(params[:id])
+    course = Course.find_by(id: params[:id])
 
     respond_to do |format|
       if course.update_attributes(course_params)
@@ -45,6 +77,12 @@ class CoursesController < ApplicationController
   end
 
   def teach
+    if session[:group_lesson_id]
+      logger.warn("create: group lesson already in progress")
+  		redirect_to "/group_lessons/checkout"
+      return
+  	end
+        
     group_lesson = GroupLesson.new
     group_lesson.teacher = current_user
 

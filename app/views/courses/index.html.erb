@@ -1,37 +1,7 @@
 <h2>Courses</h2>
 <h3>Current</h3>
-<div class="table courses">
-<div class="thead">
-  <div class="tr">
-    <span class="td">School</span>
-    <span class="td">Name</span>
-    <span class="td">Start</span>
-    <span class="td">End</span>
-  </div>
-</div>
-<% @current_courses.each do |course| %>
-  <div class="tr">    
-    <%= render partial: "course_fields", locals: { course: course } %>
-    <span class="td"><a href="/courses/<%= course.id %>"><button>Edit</button></a></span>
-  </div>
-<% end %>
-</div>
+<%= render partial: "course_table", locals: { courses: @current_courses } %>
 <br>
-<a href="/courses/new"><button>New Course</button></a>
+<%= button_to "New Course", (url_for action: :new), method: :get %>
 <h3>Past</h3>
-<div class="table courses">
-<div class="thead">
-  <div class="tr">
-    <span class="td">School</span>
-    <span class="td">Name</span>
-    <span class="td">Start</span>
-    <span class="td">End</span>
-  </div>
-</div>
-<% @past_courses.each do |course| %>
-  <div class="tr">    
-    <%= render partial: "course_fields", locals: { course: course } %>
-    <span class="td"><a href="/courses/<%= course.id %>"><button>Edit</button></a></span>
-  </div>
-<% end %>
-</div>
+<%= render partial: "course_table", locals: { courses: @past_courses } %>

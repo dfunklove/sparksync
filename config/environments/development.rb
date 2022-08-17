@@ -61,5 +61,5 @@ Rails.application.configure do
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # Set log level
-  config.log_level = :INFO
+  config.log_level = :DEBUG
 end

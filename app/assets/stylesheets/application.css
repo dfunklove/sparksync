@@ -42,6 +42,8 @@ div.thead { display:table-header-group; font-weight: bold; text-align: center }
 form.tr, div.tr { display:table-row; }
 span.td { display:table-cell; }
 
+.courses span.td { padding: 0.125em }
+
 div.stdnt {
   border-collapse: collapse;
 }

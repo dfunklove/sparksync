@@ -1,0 +1,5 @@
+<% course_link = "/courses/teach/#{course.id}" %>
+<span class="td"><a href="<%= course_link %>"><%= course.school.name %></a></span>
+<span class="td"><a href="<%= course_link %>"><%= course.name %></a></span>
+<span class="td"><a href="<%= course_link %>"><%= course.start_date %></a></span>
+<span class="td"><a href="<%= course_link %>"><%= course.end_date || "?" %></a></span>

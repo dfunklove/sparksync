@@ -1,13 +1,37 @@
 <h2>Courses</h2>
 <h3>Current</h3>
-<table>
-<tr>
-  <th>Name</th>
-</tr>
-<% @courses.each do |course| %>
-  <tr><td><a href="/courses/teach/<%= course.id %>"><%= course.name %></a></td></tr>
+<div class="table courses">
+<div class="thead">
+  <div class="tr">
+    <span class="td">School</span>
+    <span class="td">Name</span>
+    <span class="td">Start</span>
+    <span class="td">End</span>
+  </div>
+</div>
+<% @current_courses.each do |course| %>
+  <div class="tr">    
+    <%= render partial: "course_fields", locals: { course: course } %>
+    <span class="td"><a href="/courses/<%= course.id %>"><button>Edit</button></a></span>
+  </div>
 <% end %>
-</table>
+</div>
 <br>
 <a href="/courses/new"><button>New Course</button></a>
 <h3>Past</h3>
+<div class="table courses">
+<div class="thead">
+  <div class="tr">
+    <span class="td">School</span>
+    <span class="td">Name</span>
+    <span class="td">Start</span>
+    <span class="td">End</span>
+  </div>
+</div>
+<% @past_courses.each do |course| %>
+  <div class="tr">    
+    <%= render partial: "course_fields", locals: { course: course } %>
+    <span class="td"><a href="/courses/<%= course.id %>"><button>Edit</button></a></span>
+  </div>
+<% end %>
+</div>

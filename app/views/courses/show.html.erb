@@ -1,4 +1,4 @@
-<h2>New Course</h2>
+<h2><%= @title %></h2>
 <%
 students_by_school = []
 @students = Student.find_by_teacher(current_user.id)
@@ -23,7 +23,7 @@ end
   <%= course_f.label :school %>
   <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_schools()" } %>
 </div>
-  <div id="student_list" class="hidden">
+  <div id="student_list" <%= @course.school_id ? "" : "class=hidden" %> >
     <ul>
     <%= course_f.collection_check_boxes :student_ids, @students, :id, lambda {|s| "#{s.first_name} #{s.last_name}" } do |b| %>
       <li>

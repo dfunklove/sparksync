@@ -72,7 +72,7 @@ Rails.application.routes.draw do
   get '/partners/school'
   post '/sessions/change_view'
   post '/teachers/change_table'
-  resources :courses, only: [:index, :new, :create, :update, :destroy]
+  resources :courses
   resources :lessons, only: [:index, :new, :create, :update, :destroy]
   resources :group_lessons, only: [:index, :new, :create, :update, :destroy]
   resources :teachers, only: [:index, :create, :update, :show, :destroy]

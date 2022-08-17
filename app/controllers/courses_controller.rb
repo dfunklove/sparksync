@@ -3,16 +3,19 @@ class CoursesController < ApplicationController
   before_action :teacher_user
 
   def new
+    @title = "New Course"
     @course = Course.new
+    render 'show'
+  end
+
+  def show
+    @title = "Edit Course"
+    @course = Course.find_by(id: params[:id])
   end
 
   def create
     course = Course.new(course_params)
     course.teacher = current_user
-    logger.error(course.attributes)
-    course.students.each do |s|
-      logger.error("student #{s.first_name}")
-    end
 
     respond_to do |format|
       if course.save
@@ -21,6 +24,24 @@ class CoursesController < ApplicationController
         format.js { render '/shared/error', locals: { object: course } }
       end
     end
+  end
+
+  def update
+    course = Course.find_by_id(params[:id])
+
+    respond_to do |format|
+      if course.update_attributes(course_params)
+        format.html { redirect_to "/courses" }
+      else
+        format.js { render '/shared/error', locals: { object: course } }
+      end
+    end
+  end
+
+  def index
+    courses = Course.where(user_id: current_user.id)
+    @current_courses = courses.where("end_date IS ?", nil).or(courses.where("end_date >= ?", Date.today))
+    @past_courses = courses.where("end_date < ?", Date.today)
   end
 
   def teach
@@ -51,16 +72,12 @@ class CoursesController < ApplicationController
     end
   end
 
-  def index
-    @courses = Course.where(user_id: current_user.id)
-  end
-
   def teacher_user
     return if current_user.teacher?
     redirect_to(root_url) 
   end  
 
   def course_params
-    params.require(:course).permit(:name, :start_date, :end_state, :school_id, student_ids: [])
+    params.require(:course).permit(:id, :name, :start_date, :end_date, :school_id, student_ids: [])
   end
 end

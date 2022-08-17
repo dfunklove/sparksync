@@ -29,7 +29,7 @@
         <span class="td" style="text-align: center">
           <%= lesson.check_box :brought_books, checked: true %>
         </span>
-        <span class="td"><%= lesson.submit "Start Lesson", class: "delete" %></span>
+        <span class="td"><%= lesson.submit "Start Lesson", class: "delete", data: { disable_with: "Please wait..."} %></span>
       <% end %>
   <% end %>
   <%= render "add_student_form" %>

@@ -17,5 +17,5 @@
   <span class="td" style="text-align: center">
     <%= lesson.check_box :brought_books, checked: true %>
   </span>
-<span class="td"><button type="submit" class="delete">Start Lesson</button></span>
+<span class="td"><%= lesson.submit "Start Lesson", data: { disable_with: "Please wait..."} %></span>
 <% end %>

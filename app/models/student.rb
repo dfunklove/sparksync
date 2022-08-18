@@ -14,6 +14,10 @@ class Student < ApplicationRecord
 
   before_save :check_school_activated, if :activated_changed?
 
+  def name
+    return "#{first_name} #{last_name}"
+  end
+
   # Do not allow students to be activated if their school is deactivated
   private
     def check_school_activated

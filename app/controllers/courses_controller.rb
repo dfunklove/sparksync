@@ -71,9 +71,9 @@ class CoursesController < ApplicationController
   end
 
   def index
-    courses = Course.where(user_id: current_user.id)
-    @current_courses = courses.where("end_date IS ?", nil).or(courses.where("end_date >= ?", Date.today))
-    @past_courses = courses.where("end_date < ?", Date.today)
+    courses = Course.where(user_id: current_user.id).includes(:school).references(:school)
+    @current_courses = courses.where("end_date IS ?", nil).or(courses.where("end_date >= ?", Date.today)).order("schools.name").order(:name)
+    @past_courses = courses.where("end_date < ?", Date.today).order("schools.name").order(:name)
   end
 
   def teach

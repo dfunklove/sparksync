@@ -7,7 +7,7 @@ School.all.each do |school|
   school_to_students[school.id] = Student.select(:id, :first_name, :last_name).where(school_id: school.id).reduce({}) { |ids, student| ids.update(student.id => student.name) }
 end
 # id needs to be a string to compare with school_to_students
-students_in_course = @course.students.reduce([]) { |all, one| all << one.id.to_s }
+students_in_course = @course.students.map { |student| student.id.to_s }
 %>
 <script>
   school_to_students = '<%== school_to_students.to_json %>'

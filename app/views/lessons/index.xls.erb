@@ -16,6 +16,10 @@
         <Cell><Data ss:Type="String">Time Out</Data></Cell>
         <Cell><Data ss:Type="String">Brought Instrument</Data></Cell>
         <Cell><Data ss:Type="String">Brought Books</Data></Cell>
+      <% Goal::MAX_PER_STUDENT.times do |i| %>
+        <Cell><Data ss:Type="String">Goal <%= i+1 %> Name</Data></Cell>
+        <Cell><Data ss:Type="String">Goal <%= i+1 %> Rating</Data></Cell>
+      <% end %>
         <Cell><Data ss:Type="String">Progress</Data></Cell>
         <Cell><Data ss:Type="String">Behavior</Data></Cell>
         <Cell><Data ss:Type="String">Notes</Data></Cell>
@@ -23,7 +27,7 @@
       </Row>
     <% @messons.each do |lesson| %>
       <Row>
-        <Cell><Data ss:Type="String"><%= lesson.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= lesson.school.name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.teacher.first_name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.teacher.last_name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.student.first_name %></Data></Cell>
@@ -32,6 +36,15 @@
         <Cell><Data ss:Type="String"><%= lesson.time_out %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.brought_instrument %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.brought_books %></Data></Cell>
+      <% Goal::MAX_PER_STUDENT.times do |i|
+          rating = lesson.ratings[i]
+          goal = rating ? rating.goal : nil
+          goal_name = goal ? goal.name : ""
+          score = rating ? rating.score : ""
+      %>
+        <Cell><Data ss:Type="String"><%= goal_name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= score %></Data></Cell>
+      <% end %>
         <Cell><Data ss:Type="String"><%= lesson.progress %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.behavior %></Data></Cell>
         <Cell><Data ss:Type="String"><%= lesson.notes %></Data></Cell>

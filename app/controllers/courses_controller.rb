@@ -76,6 +76,8 @@ class CoursesController < ApplicationController
       )
     end
 
+    course.students.clear
+
     respond_to do |format|
       if course.errors.count == 0 && course.update_attributes(course_params)
         format.html { redirect_to "/courses" }

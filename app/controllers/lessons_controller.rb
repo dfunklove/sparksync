@@ -55,8 +55,6 @@ class LessonsController < ApplicationController
   end
 
   def prepare_index
-    @dateview = current_dateview
-
     # title and what column depend on user and in the case
     # of admin, what view she wants
     # nobody but admin and a particular partner has any business
@@ -73,7 +71,9 @@ class LessonsController < ApplicationController
     @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
     @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
-    @messons = Lesson.find_by_date(@dateview.start_date, @dateview.end_date)
+    @start_date = params[:start_date] || Date.today - 7.days
+    @end_date = params[:end_date] || Date.today + 1.day
+    @messons = Lesson.find_by_date(@start_date, @end_date)
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not
@@ -263,10 +263,6 @@ end
 
   def school_params
   	params.require(:school).permit(:name)
-  end
-
-  def dateview_params
-    params.require(:dateview).permit(:start_date, :end_date)
   end
 
   def teacher_user

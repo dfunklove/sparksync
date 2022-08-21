@@ -81,6 +81,5 @@ Rails.application.routes.draw do
   resources :admins, only: [:index, :new, :create, :update, :destroy]
   resources :schools, only: [:index, :create, :update, :show, :destroy]
   resources :students, only: [:index, :create, :update, :show, :destroy]
-  resources :dateviews, only: [:create]
   resources :password_resets, only: [:new, :create, :edit, :update]
 end

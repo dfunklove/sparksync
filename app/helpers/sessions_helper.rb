@@ -1,6 +1,4 @@
 module SessionsHelper
-  attr_accessor :current_dateview
-
   # Logs in the given user.
   def log_in(user)
     session[:user_id] = user.id
@@ -42,21 +40,6 @@ module SessionsHelper
     end
     session.delete(:user_id)
     @current_user = nil
-  end
-
-  # Destroy the dateview after reading.  This gives it the life cycle of a request parameter.
-  def current_dateview
-    d = Dateview.new
-    d.start_date = DateTime.parse(session[:dateview_start]) if session[:dateview_start]
-    d.end_date = DateTime.parse(session[:dateview_end]) if session[:dateview_end]
-    session.delete(:dateview_start)
-    session.delete(:dateview_end)
-    return d
-  end
-
-  def set_current_dateview(value)
-    session[:dateview_start] = value.start_date
-    session[:dateview_end] = value.end_date
   end
 
   def current_visibility

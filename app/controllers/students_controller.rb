@@ -6,8 +6,6 @@ class StudentsController < ApplicationController
 
   # one student
   def show
-    @dateview = current_dateview
-
     # title and what column depend on user and in the case
     # of admin, what view she wants
     # nobody but admin and a particular partner has any business
@@ -20,7 +18,9 @@ class StudentsController < ApplicationController
     @showteacher = !current_user.teacher?
     @showhours = true
 
-    @lessons = Lesson.find_by_student(@student_id, @dateview.start_date, @dateview.end_date)
+    @start_date = params[:start_date] || LessonsHelper::default_start_date
+    @end_date = params[:end_date] || LessonsHelper::default_end_date
+    @lessons = Lesson.find_by_student(@student_id, @start_date, @end_date)
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not

@@ -7,7 +7,6 @@ class SchoolsController < ApplicationController
     school_id = params[:id]
 
     @school = School.find(school_id)
-    @dateview = current_dateview
 
     # title and what column depend on user and in the case
     # of admin, what view she wants
@@ -21,7 +20,9 @@ class SchoolsController < ApplicationController
     @showteacher = true
     @showhours = true
 
-    @lessons = Lesson.find_by_school(school_id, @dateview.start_date, @dateview.end_date)
+    @start_date = params[:start_date] || LessonsHelper::default_start_date
+    @end_date = params[:end_date] || LessonsHelper::default_end_date
+    @lessons = Lesson.find_by_school(school_id, @start_date, @end_date)
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not
@@ -132,9 +133,6 @@ class SchoolsController < ApplicationController
   private
     def school_params
       params.require(:school).permit(:name)
-    end
-    def dateview_params
-      params.require(:dateview).permit(:start_date, :end_date)
     end
     # Confirms the correct user.
     def correct_user

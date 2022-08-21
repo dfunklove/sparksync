@@ -10,34 +10,16 @@ function hideGroupLesson(group_lesson_id) {
   $(".expand-button-"+group_lesson_id).show();
 }
 </script>
-<table>
-<tr>
-<!-- post to /dateviews where new date is stored, then redirect back here -->
-<%= form_for @dateview, url: dateviews_path do |f| %>
-  <td>
-  <%= f.label :start_date %>
-  </td>
-  <td>
-  <%= f.text_field :s_date_formatted, class: "date" %>
-  </td>
-  <td>
-  <%= f.label :end_date %>
-  </td>
-  <td>
-  <%= f.text_field :e_date_formatted, class: "date"  %>
-  </td>
-  <td>
-  Total hours
-  </td>
-  <td>
+<%= form_tag (url_for only_path: false), method: :get do -%>
+  <label>Start Date</label>
+  <%= date_field_tag "start_date", @start_date, class: "search_field" %>
+  <label>End Date</label>
+  <%= date_field_tag "end_date", @end_date, class: "search_field" %>
+  <label>Total hours</label>
   <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
-  </td>
-  <td>
-  <td><%= f.submit "Update Table", class: "updatetab" %></td>
-  </td>
-<% end %>
-</tr>
-</table>
+  <%= submit_tag "Update Table" %>
+<% end -%>
+<br>
 <table class="stdnt">
   <tr>
     <th class="no-border-left"></th>

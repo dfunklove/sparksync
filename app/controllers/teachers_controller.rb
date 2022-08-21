@@ -15,10 +15,11 @@ class TeachersController < UsersController
       @title = "Lessons" # default
     end
 
-    @dateview = current_dateview
+    @start_date = params[:start_date] || LessonsHelper::default_start_date
+    @end_date = params[:end_date] || LessonsHelper::default_end_date
     if @title == "Hours"
 
-      @logins = Login.where(user_id: teacher_id).where(time_out: (@dateview.start_date..@dateview.end_date)) 
+      @logins = Login.where(user_id: teacher_id).where(time_out: (@start_date..@end_date)) 
   
       @tot_hours = 0
       @logins.each do |login|
@@ -40,7 +41,7 @@ class TeachersController < UsersController
       @showteacher = false
       @showhours = true
 
-      @lessons = Lesson.find_by_teacher(teacher_id, @dateview.start_date, @dateview.end_date)
+      @lessons = Lesson.find_by_teacher(teacher_id, @start_date, @end_date)
       if session[:sortcol]
         sortcol = session[:sortcol]
         # case by case as sorting by student' slast name or school name is not
@@ -159,9 +160,6 @@ class TeachersController < UsersController
   private
     def teacher_params
       params.require(:teacher).permit(:first_name, :last_name, :email)
-    end
-    def dateview_params
-      params.require(:dateview).permit(:start_date, :end_date)
     end
     # Confirms the correct user.
     def correct_user

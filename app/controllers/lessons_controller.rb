@@ -71,8 +71,8 @@ class LessonsController < ApplicationController
     @teachers = Teacher.where("activated=?", true).order(:last_name).collect{|t| ["#{t.first_name} #{t.last_name}", t.id]}
     @students = Student.where("activated=?", true).order(:last_name).collect{|s| ["#{s.first_name} #{s.last_name}", s.id]}
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
-    @start_date = params[:start_date] || Date.today - 7.days
-    @end_date = params[:end_date] || Date.today + 1.day
+    @start_date = params[:start_date] || LessonsHelper::default_start_date
+    @end_date = params[:end_date] || LessonsHelper::default_end_date
     @messons = Lesson.find_by_date(@start_date, @end_date)
     if session[:sortcol]
       sortcol = session[:sortcol]

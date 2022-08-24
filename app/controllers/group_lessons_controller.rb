@@ -71,7 +71,7 @@ class GroupLessonsController < ApplicationController
         session[:group_lesson_id] = group_lesson.id
         format.html { redirect_to "/group_lessons/checkout" }
       else
-        format.js { render 'checkout_error', locals: { object: group_lesson } }
+        format.js { render '/shared/error', locals: { object: group_lesson } }
       end
     end
   end

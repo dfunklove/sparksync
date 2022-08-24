@@ -18,7 +18,6 @@
       <% i += 1 %>
       <% lesson = @group_lesson.lessons[i] %>
       <%= lesson_f.hidden_field(:id, value: lesson.id)%>
-      <%# render partial: "checkout_lesson_row", locals: {lesson: lesson, i: i} %>
       <% if lesson.student %>
         <td class="first_name"><%= lesson.student.first_name %></td>
         <td class="last_name"><%= lesson.student.last_name %></td>

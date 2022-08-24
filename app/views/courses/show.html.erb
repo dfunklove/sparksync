@@ -74,6 +74,8 @@ function student_checkbox(id, name) {
 }
 function student_found(id, first_name, last_name) {
   $("#student_list").append(student_checkbox(id, first_name + " " + last_name))
+  $("#new_student_first").val('')
+  $("#new_student_last").val('')
 }
 function student_not_found() {
   if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {

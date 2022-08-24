@@ -7,8 +7,7 @@ School.all.each do |school|
   students_at_school = students.select { |student| student.school_id == school.id }
   school_to_students[school.id] = students_at_school.map { |student| student.attributes.to_h }
 end
-# id needs to be a string to compare with school_to_students
-students_in_course = @course.students.map { |student| student.id.to_s }
+students_in_course = @course.students.map { |student| student.id }
 %>
 <script>
   school_to_students = JSON.parse('<%== school_to_students.to_json %>')

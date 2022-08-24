@@ -56,8 +56,7 @@
 </table>
 <% end %><!-- form_for @group_lesson -->
 
-<form id="add_student_form" action="addStudent(event)">
-  <input type="hidden" id="row_count" name="row_count" />
+<form id="add_student_form" onsubmit="addStudent(event)">
 </form>
 
 <div class="hidden">
@@ -78,7 +77,7 @@
     </td>
   </tr>
   </tbody>
-  <table>
+  </table>
 </div>
 <script>
 var row_count = 0;

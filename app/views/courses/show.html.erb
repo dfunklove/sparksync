@@ -28,16 +28,16 @@ students_in_course = students_in_course.map { |student| student.id }
   <%= course_f.label :notes %>
   <%= course_f.text_area :notes %>
   <%= course_f.label :school %>
-  <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_schools()" } %>
+  <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_students()" } %>
 </div>
+<div id="student_list_container" class="hidden">
   <ul id="student_list" class="student_list"></ul>
   <div id="add_student">
     <input type="text" id="new_student_first" placeholder="First name"/>
     <input type="text" id="new_student_last" placeholder="Last name"/>
-    <input type="hidden" id="new_student_id" />
-    <input type="hidden" id="new_student_confirmed" />
     <button onclick="add_student(event)">Add Student</button>
   </div>
+</div>
   <br>
   <%= course_f.submit %>
 <% end %>
@@ -61,13 +61,13 @@ function add_student(e) {
       student_not_found()
     })
 }
-function show_schools() {
+function show_students() {
   school_id = $("#course_school_id").val()
   if (!school_id) return
   student_list = $("#student_list")
   student_list.empty()
   school_to_students[school_id].forEach(student => student_list.append(student_checkbox(student.id, student.first_name, student.last_name)))
-  $("#student_list").show()
+  $("#student_list_container").show()
 }
 function student_checkbox(id, first_name, last_name) {
   checked = students_in_course.includes(id) ? "checked" : ""
@@ -98,6 +98,6 @@ function student_not_found() {
   }
 }
 $(function() {
-  show_schools();
+  show_students();
 })
 </script>

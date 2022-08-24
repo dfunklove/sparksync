@@ -44,6 +44,7 @@ students_in_course = students_in_course.map { |student| student.id }
 <script>
 function add_student(e) {
   e.preventDefault()
+  clear_error()
   let first_name = $("#new_student_first").val()
   let last_name = $("#new_student_last").val()
   let school_id = $("#course_school_id").val()
@@ -61,6 +62,12 @@ function add_student(e) {
       student_not_found()
     })
 }
+function clear_error() {
+  $("#error_wrapper").html('')
+}
+function set_error(message) {
+  $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
+}
 function show_students() {
   school_id = $("#course_school_id").val()
   if (!school_id) return
@@ -74,6 +81,11 @@ function student_checkbox(id, first_name, last_name) {
   return `<li><input type="checkbox" value="${id}" name="course[student_ids][]" id="course_student_ids_${id}" ${checked}><label for="course_student_ids_${id}">${first_name} ${last_name}</label></li>`
 }
 function student_found(id, first_name, last_name) {
+  school_id = $("#course_school_id").val()
+  if (students_in_course.includes(id) || school_to_students[school_id].map(student => student.id).includes(id)) {
+    set_error("Student is already in the list")
+    return false
+  }
   students_in_course.push(id)
   $("#student_list").append(student_checkbox(id, first_name, last_name))
   $("#new_student_first").val('')
@@ -90,10 +102,10 @@ function student_not_found() {
         if (id > 0)
           student_found(id, first_name, last_name)
         else
-          $("#error_wrapper").append("<ul><li>Unable to create student</li></ul>")
+          set_error("Unable to create student")
       })
       .fail(function(result) {
-        $("#error_wrapper").append("<ul><li>Unable to create student</li></ul>")
+        set_error("Unable to create student")
       })
   }
 }

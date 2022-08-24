@@ -40,9 +40,6 @@ class Student < ApplicationRecord
   end
 
   def self.find_by_teacher(teacher_id)
-    sql = "select student_id from lessons where user_id = ?"
-    rightids = Lesson.find_by_sql([sql, teacher_id]).map(&:student_id)
-    rightids &= self.where(activated: true).ids
-    self.includes(:school, :goals).where({id: rightids}).references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
+    self.joins(:lessons).includes(:school, :goals).where(activated: true).where("lessons.user_id" => teacher_id).references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
   end
 end

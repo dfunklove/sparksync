@@ -47,11 +47,11 @@ function add_student(e) {
   let first_name = $("#new_student_first").val()
   let last_name = $("#new_student_last").val()
   let school_id = $("#course_school_id").val()
+  if (!first_name || !last_name)
+    return false
   $.ajax("/students/search",
     { method: "POST", dataType: "json", data: { first_name: first_name, last_name: last_name, school_id: school_id } })
-    .done(function(result) {
-      let id = 0
-      try { id = JSON.parse(result) } catch (error) {}
+    .done(function(id) {
       if (id > 0)
         student_found(id, first_name, last_name)
       else
@@ -86,9 +86,7 @@ function student_not_found() {
     let school_id = $("#course_school_id").val()
     $.ajax("/students",
       { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
-      .done(function(result) {
-        let id = 0
-        try { id = JSON.parse(result) } catch (error) {}
+      .done(function(id) {
         if (id > 0)
           student_found(id, first_name, last_name)
         else

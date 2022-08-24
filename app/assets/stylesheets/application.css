@@ -83,3 +83,8 @@ textarea.notes {
 	width: 100%;
 	box-sizing: border-box;
 }
+
+ul.student_list { 
+  list-style:none;
+  padding-inline-start:0;
+}

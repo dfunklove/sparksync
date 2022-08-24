@@ -56,31 +56,35 @@
 </table>
 <% end %><!-- form_for @group_lesson -->
 
-<!-- This form only exists as a container for the inputs in new_student_row -->
 <form id="add_student_form" action="addStudent(event)">
+  <input type="hidden" id="row_count" name="row_count" />
 </form>
 
 <div class="hidden">
   <table class="placeholder">
   <tbody class="student_row_template">
   <tr class="existing_student_row">
-    <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$id][student_id]" id="group_lesson_lessons_attributes_$id_student_id">
-    <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$id][school_id]" id="group_lesson_lessons_attributes_$id_school_id">
-    <td><input type="checkbox" name="group_lesson[lessons_attributes][$id][selected]" id="group_lesson_lessons_attributes_$id_selected" value="true" checked="checked"></td>
+    <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_id]" id="group_lesson_lessons_attributes_$row_student_id">
+    <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$row][school_id]" id="group_lesson_lessons_attributes_$row_school_id">
+    <td><input type="checkbox" name="group_lesson[lessons_attributes][$row][selected]" id="group_lesson_lessons_attributes_$row_selected" value="true" checked="checked"></td>
     <td>$first_name</td>
     <td>$last_name</td>
     <td>$school_name</td>
     <td style="text-align: center">
-      <input name="group_lesson[lessons_attributes][$id][brought_instrument]" type="hidden" value="0"><input type="checkbox" value="1" $brought_instrument_checked name="group_lesson[lessons_attributes][$id][brought_instrument]" id="group_lesson_lessons_attributes_$id_brought_instrument">
+      <input name="group_lesson[lessons_attributes][$row][brought_instrument]" type="hidden" value="0"><input type="checkbox" value="1" $brought_instrument_checked name="group_lesson[lessons_attributes][$row][brought_instrument]" id="group_lesson_lessons_attributes_$row_brought_instrument">
     </td>
     <td style="text-align: center">
-      <input name="group_lesson[lessons_attributes][$id][brought_books]" type="hidden" value="0"><input type="checkbox" value="1" $brought_books_checked name="group_lesson[lessons_attributes][$id][brought_books]" id="group_lesson_lessons_attributes_$id_brought_books">
+      <input name="group_lesson[lessons_attributes][$row][brought_books]" type="hidden" value="0"><input type="checkbox" value="1" $brought_books_checked name="group_lesson[lessons_attributes][$row][brought_books]" id="group_lesson_lessons_attributes_$row_brought_books">
     </td>
   </tr>
   </tbody>
   <table>
 </div>
 <script>
+var row_count = 0;
+$(document).ready(function () {
+  row_count = <%= i %>
+});
 function add_student(e) {
   e.preventDefault()
   clear_error()
@@ -132,6 +136,7 @@ function student_not_found() {
   }
 }
 function student_row(id, first_name, last_name) {
+  row_count += 1
   let brought_books = $("#new_student_brought_books").is(":checked")
   let brought_instrument = $("#new_student_brought_instrument").is(":checked")
   let school_id = $("#new_student_school_id").val();
@@ -139,6 +144,7 @@ function student_row(id, first_name, last_name) {
 
   // replace templated variables with data
   let template = $(".student_row_template").html()
+  template = template.replaceAll("$row", row_count)
   template = template.replaceAll("$id", id)
   template = template.replaceAll("$first_name", first_name)
   template = template.replaceAll("$last_name", last_name)

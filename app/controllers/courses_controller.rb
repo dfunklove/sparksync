@@ -34,13 +34,6 @@ class CoursesController < ApplicationController
   def create
     course = Course.new(course_params)
     course.teacher = current_user
-    if course.students.size < 2
-      course.errors.add(
-        :base,
-        :add_more_students,
-        message: "Please select two or more students"
-      )
-    end
 
     respond_to do |format|
       if course.errors.count == 0 && course.save
@@ -67,19 +60,16 @@ class CoursesController < ApplicationController
 
   def update
     course = Course.find_by(id: params[:id])
-    temp = Course.new(course_params)
-    if temp.students.size < 2
-      course.errors.add(
-        :base,
-        :add_more_students,
-        message: "Please select two or more students"
-      )
+
+    begin
+      course.attributes = course_params
+    rescue ActiveRecord::RecordInvalid => e
+      logger.error(e)
+      course.errors.add(:base, :unknown_error, message: e.message)
     end
 
-    course.students.clear
-
     respond_to do |format|
-      if course.errors.count == 0 && course.update_attributes(course_params)
+      if course.errors.count == 0 && course.students.clear && course.save
         format.html { redirect_to "/courses" }
       else
         format.js { render '/shared/error', locals: { object: course } }

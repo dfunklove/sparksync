@@ -36,25 +36,124 @@
       </td>
   </tr>
   <% end %><!-- group_lesson.fields_for :lessons -->
-  <%= render partial: "new_student_row", locals: {group_lesson: group_lesson, first_column_blank: true, instrument_checkbox: true, books_checkbox: true} %>
-<tr>
-  <td colspan="6"><%= group_lesson.submit "Start Lesson", style: "width: 100%", data: { disable_with: "Please wait..."} %></td>
-</tr>
+  <tr class="new_student_row">
+    <td></td>
+    <td><input class="fname" placeholder="Enter new..." form="add_student_form" type="text" id="new_student_first_name"></td>
+    <td><input class="lname" placeholder="..student..." form="add_student_form" type="text" id="new_student_last_name"></td>
+    <td>
+      <select form="add_student_form" id="new_student_school_id">
+        <option>School...</option>
+        <%= options_from_collection_for_select(School.all, :id, :name) %>
+      </select>
+    </td>
+    <td style="text-align: center"><input form="add_student_form" type="checkbox" value="1" checked="checked" id="new_student_brought_instrument"></td>
+    <td style="text-align: center"><input form="add_student_form" type="checkbox" value="1" checked="checked" id="new_student_brought_books"></td>
+    <td><button type="submit" onclick="add_student(event)" form="add_student_form">Add Student</button></td>
+  </tr>
+  <tr>
+    <td colspan="6"><%= group_lesson.submit "Start Lesson", style: "width: 100%", data: { disable_with: "Please wait..."} %></td>
+  </tr>
 </table>
 <% end %><!-- form_for @group_lesson -->
 
-<%= form_for(Lesson.new, url: '/group_lessons/addStudent', remote: true, html: {id: "add_student_form"}) do |lesson| %>
+<form id="add_student_form" action="addStudent(event)">
   <input type="hidden" id="row_count" name="row_count" />
-<% end %>
+</form>
 
+<div class="hidden">
+  <table class="placeholder">
+  <tbody class="student_row_template">
+  <tr class="existing_student_row">
+    <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$id][student_id]" id="group_lesson_lessons_attributes_$id_student_id">
+    <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$id][school_id]" id="group_lesson_lessons_attributes_$id_school_id">
+    <td><input type="checkbox" name="group_lesson[lessons_attributes][$id][selected]" id="group_lesson_lessons_attributes_$id_selected" value="true" checked="checked"></td>
+    <td>$first_name</td>
+    <td>$last_name</td>
+    <td>$school_name</td>
+    <td style="text-align: center">
+      <input name="group_lesson[lessons_attributes][$id][brought_instrument]" type="hidden" value="0"><input type="checkbox" value="1" $brought_instrument_checked name="group_lesson[lessons_attributes][$id][brought_instrument]" id="group_lesson_lessons_attributes_$id_brought_instrument">
+    </td>
+    <td style="text-align: center">
+      <input name="group_lesson[lessons_attributes][$id][brought_books]" type="hidden" value="0"><input type="checkbox" value="1" $brought_books_checked name="group_lesson[lessons_attributes][$id][brought_books]" id="group_lesson_lessons_attributes_$id_brought_books">
+    </td>
+  </tr>
+  </tbody>
+  <table>
+</div>
 <script>
 var row_count = 0;
 $(document).ready(function () {
   row_count = <%= i %>
 });
-
 function beforeSubmit() {
   $("#row_count").val(row_count);
   row_count += 1;
+}
+function add_student(e) {
+  e.preventDefault()
+  clear_error()
+  let first_name = $("#new_student_first_name").val()
+  let last_name = $("#new_student_last_name").val()
+  let school_id = $("#new_student_school_id").val()
+  if (!first_name || !last_name)
+    return false
+  $.ajax("/students/search",
+    { method: "POST", dataType: "json", data: { first_name: first_name, last_name: last_name, school_id: school_id }})
+    .done(function(id) {
+      if (id > 0)
+        student_found(id, first_name, last_name)
+      else
+        student_not_found()
+    })
+    .fail(function(result) {
+      student_not_found()
+    })
+}
+function clear_error() {
+  $("#error_wrapper").html('')
+}
+function set_error(message) {
+  $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
+}
+function student_found(id, first_name, last_name) {
+  $(".new_student_row").before(student_row(id, first_name, last_name))
+  $("#new_student_first_name").val('')
+  $("#new_student_last_name").val('')
+  $("#new_student_school_id option").eq(0).prop('selected', true)
+}
+function student_not_found() {
+  if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
+    let first_name = $("#new_student_first_name").val()
+    let last_name = $("#new_student_last_name").val()
+    let school_id = $("#new_student_school_id").val()
+    $.ajax("/students",
+      { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
+      .done(function(id) {
+        if (id > 0)
+          student_found(id, first_name, last_name)
+        else
+          set_error("Unable to create student")
+      })
+      .fail(function(result) {
+        set_error("Unable to create student")
+      })
+  }
+}
+function student_row(id, first_name, last_name) {
+  let brought_books = $("#new_student_brought_books").is(":checked")
+  let brought_instrument = $("#new_student_brought_instrument").is(":checked")
+  let school_id = $("#new_student_school_id").val();
+  let school_name = $("#new_student_school_id option:selected").text();
+
+  // replace templated variables with data
+  let template = $(".student_row_template").html()
+  template = template.replaceAll("$id", id)
+  template = template.replaceAll("$first_name", first_name)
+  template = template.replaceAll("$last_name", last_name)
+  template = template.replaceAll("$school_id", school_id)
+  template = template.replaceAll("$school_name", school_name)
+  template = template.replaceAll("$brought_books_checked", brought_books ? 'checked="checked"' : '')
+  template = template.replaceAll("$brought_instrument_checked", brought_instrument ? 'checked="checked"' : '')
+  return template
 }
 </script>

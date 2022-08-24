@@ -1,11 +1,11 @@
 <h2><%= @title %></h2>
 <%
 students = Student.find_by_teacher(current_user.id).to_a
-# make a hash of hashes.  top layer is keyed on school_id.  second layer is student.id => student.name
+# make a hash which maps school_id to arrays of student objects.
 school_to_students = {}
 School.all.each do |school|
   students_at_school = students.select { |student| student.school_id == school.id }
-  school_to_students[school.id] = students_at_school.reduce({}) { |ids, student| ids.update(student.id => student.name) }
+  school_to_students[school.id] = students_at_school.map { |student| student.attributes.to_h }
 end
 # id needs to be a string to compare with school_to_students
 students_in_course = @course.students.map { |student| student.id.to_s }
@@ -64,15 +64,15 @@ function show_schools() {
   if (!school_id) return
   student_list = $("#student_list")
   student_list.empty()
-  Object.keys(school_to_students[school_id]).forEach(student_id => student_list.append(student_checkbox(student_id, school_to_students[school_id][student_id])))
+  school_to_students[school_id].forEach(student => student_list.append(student_checkbox(student.id, student.first_name, student.last_name)))
   $("#student_list").show()
 }
-function student_checkbox(id, name) {
+function student_checkbox(id, first_name, last_name) {
   checked = students_in_course.includes(id) ? "checked" : ""
-  return `<li><input type="checkbox" value="${id}" name="course[student_ids][]" id="course_student_ids_${id}" ${checked}><label for="course_student_ids_${id}">${name}</label></li>`
+  return `<li><input type="checkbox" value="${id}" name="course[student_ids][]" id="course_student_ids_${id}" ${checked}><label for="course_student_ids_${id}">${first_name} ${last_name}</label></li>`
 }
 function student_found(id, first_name, last_name) {
-  $("#student_list").append(student_checkbox(id, first_name + " " + last_name))
+  $("#student_list").append(student_checkbox(id, first_name, last_name))
   $("#new_student_first").val('')
   $("#new_student_last").val('')
 }

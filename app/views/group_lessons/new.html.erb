@@ -56,8 +56,8 @@
 </table>
 <% end %><!-- form_for @group_lesson -->
 
+<!-- This form only exists as a container for the inputs in new_student_row -->
 <form id="add_student_form" action="addStudent(event)">
-  <input type="hidden" id="row_count" name="row_count" />
 </form>
 
 <div class="hidden">
@@ -81,14 +81,6 @@
   <table>
 </div>
 <script>
-var row_count = 0;
-$(document).ready(function () {
-  row_count = <%= i %>
-});
-function beforeSubmit() {
-  $("#row_count").val(row_count);
-  row_count += 1;
-}
 function add_student(e) {
   e.preventDefault()
   clear_error()

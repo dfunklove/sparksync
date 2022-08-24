@@ -4,12 +4,13 @@ class StudentsController < ApplicationController
   before_action :logged_in_user, only: [:index, :create, :update, :show]
   before_action :correct_user, only: [:show ]
 
-  # Return ID of student matching the parameters
+  # Return ID of student matching the parameters; case-insensitive
   def search
     first_name = params[:first_name]
     last_name = params[:last_name]
     school_id = params[:school_id]
-    student = Student.where(first_name: first_name, last_name: last_name, school_id: school_id).first
+    s = Student.arel_table
+    student = Student.where(s[:first_name].matches(first_name)).where(s[:last_name].matches(last_name)).where(s[:school_id].eq(school_id)).first
     id = student ? student.id : nil
     render json: id
   end

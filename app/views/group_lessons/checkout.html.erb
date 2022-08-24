@@ -46,7 +46,17 @@
       <% end %>
       </tr> 
     <% end %>
-    <%= render partial: "new_student_row", locals: {group_lesson: group_lesson_f} %>
+    <tr class="new_student_row">
+      <td><input class="fname" placeholder="Enter new..." form="add_student_form" type="text" id="new_student_first_name"></td>
+      <td><input class="lname" placeholder="..student..." form="add_student_form" type="text" id="new_student_last_name"></td>
+      <td>
+        <select form="add_student_form" id="new_student_school_id">
+          <option>School...</option>
+          <%= options_from_collection_for_select(School.all, :id, :name) %>
+        </select>
+      </td>
+      <td colspan="3"><button type="submit" onclick="add_student(event)" form="add_student_form">Add Student</button></td>
+    </tr>
     <tr>
       <td colspan="7" style="text-align: center">
         <br>
@@ -62,18 +72,119 @@
     </tr>
   </table>
 <% end %>
-<%= form_for(Lesson.new, url: '/group_lessons/addStudent', remote: true, html: {id: "add_student_form"}) do |lesson| %>
-  <input type="hidden" id="row_count" name="row_count" />
-<% end %>
+
+<form id="add_student_form" onsubmit="addStudent(event)">
+</form>
+
+<div class="hidden">
+  <table class="placeholder">
+  <tbody class="student_row_template">
+  <tr>
+    <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_id]" id="group_lesson_lessons_attributes_$row_student_id">
+    <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$row][school_id]" id="group_lesson_lessons_attributes_$row_school_id">
+    <input value="1" type="hidden" name="group_lesson[lessons_attributes][$row][brought_instrument]" id="group_lesson_lessons_attributes_$row_brought_instrument" />
+    <input value="1" type="hidden" name="group_lesson[lessons_attributes][$row][brought_books]" id="group_lesson_lessons_attributes_$row_brought_books" />
+    <td>$first_name</td>
+    <td>$last_name</td>
+    <td>$school_name</td>
+    <td>
+      <table class="noborder">
+        <tbody>
+        <% Goal::MAX_PER_STUDENT.times do |i| %>
+          <tr>
+            <td>
+              <select name="group_lesson[lessons_attributes][$row][ratings_attributes][<%= i %>][goal_id]" id="group_lesson_lessons_attributes_$row_ratings_attributes_<%= i %>_goal_id">
+                <option value="">[None]</option>
+                <%= options_from_collection_for_select(Goal.all, :id, :name) %>
+              </select>
+            </td>
+            <td>
+              <select name="group_lesson[lessons_attributes][$row][ratings_attributes][<%= i %>][score]" id="group_lesson_lessons_attributes_$row_ratings_attributes_<%= i %>_score">
+                <option value=""></option>
+                <%= options_for_select([10,9,8,7,6,5,4,3,2,1], include_blank: true) %>
+              </select>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </td>
+    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][notes]" id="group_lesson_lessons_attributes_$row_notes"></textarea> </td>
+    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][student_attributes][permissions]" id="group_lesson_lessons_attributes_$row_student_attributes_permissions">$permissions</textarea> </td>
+    <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_attributes][id]" id="group_lesson_lessons_attributes_$row_student_attributes_id" />
+  </tr>
+  </tbody>
+  </table>
+</div>
 
 <script>
 var row_count = 0;
 $(document).ready(function () {
   row_count = <%= i %>
 });
+function add_student(e) {
+  e.preventDefault()
+  clear_error()
+  let first_name = $("#new_student_first_name").val()
+  let last_name = $("#new_student_last_name").val()
+  let school_id = $("#new_student_school_id").val()
+  if (!first_name || !last_name)
+    return false
+  $.ajax("/students/search",
+    { method: "POST", dataType: "json", data: { first_name: first_name, last_name: last_name, school_id: school_id }})
+    .done(function(id) {
+      if (id > 0)
+        student_found(id, first_name, last_name)
+      else
+        student_not_found()
+    })
+    .fail(function(result) {
+      student_not_found()
+    })
+}
+function clear_error() {
+  $("#error_wrapper").html('')
+}
+function set_error(message) {
+  $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
+}
+function student_found(id, first_name, last_name) {
+  $(".new_student_row").before(student_row(id, first_name, last_name))
+  $("#new_student_first_name").val('')
+  $("#new_student_last_name").val('')
+  $("#new_student_school_id option").eq(0).prop('selected', true)
+}
+function student_not_found() {
+  if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
+    let first_name = $("#new_student_first_name").val()
+    let last_name = $("#new_student_last_name").val()
+    let school_id = $("#new_student_school_id").val()
+    $.ajax("/students",
+      { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
+      .done(function(id) {
+        if (id > 0)
+          student_found(id, first_name, last_name)
+        else
+          set_error("Unable to create student")
+      })
+      .fail(function(result) {
+        set_error("Unable to create student")
+      })
+  }
+}
+function student_row(id, first_name, last_name) {
+  row_count += 1
+  let school_id = $("#new_student_school_id").val();
+  let school_name = $("#new_student_school_id option:selected").text();
 
-function beforeSubmit() {
-  $("#row_count").val(row_count);
-  row_count += 1;
+  // replace templated variables with data
+  let template = $(".student_row_template").html()
+  template = template.replaceAll("$row", row_count)
+  template = template.replaceAll("$id", id)
+  template = template.replaceAll("$first_name", first_name)
+  template = template.replaceAll("$last_name", last_name)
+  template = template.replaceAll("$school_id", school_id)
+  template = template.replaceAll("$school_name", school_name)
+  return template
 }
 </script>

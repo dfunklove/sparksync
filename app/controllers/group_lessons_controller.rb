@@ -51,10 +51,8 @@ class GroupLessonsController < ApplicationController
       params[:group_lesson][:lessons_attributes].keys.each do |key|
         lesson_data = params[:group_lesson][:lessons_attributes][key]
         selected = lesson_data["selected"]
-        lesson = Lesson.new(lesson_params(lesson_data))
-        lesson.teacher = current_user
-        lesson.time_in = group_lesson.time_in
         if selected
+          lesson = Lesson.new(lesson_params(lesson_data))
           group_lesson.lessons << lesson
         end        
       end
@@ -76,91 +74,6 @@ class GroupLessonsController < ApplicationController
         format.js { render 'checkout_error', locals: { object: group_lesson } }
       end
     end
-  end
-
-  def addStudent
-    row_count = params[:row_count].to_i
-    add_student_confirmed = params[:add_student_confirmed]
-    lesson_data = params[:group_lesson][:lesson]
-    lesson = Lesson.new(lesson_params(lesson_data))
-    lesson.time_in = Time.now
-    lesson.teacher = current_user
-    lesson_in_progress = session[:group_lesson_id]
-
-    confirm_add_student = false
-    if !lesson.student_id
-      begin
-        student = Student.new(student_params lesson_data[:student]  )
-        student.school = School.find_by(id: student.school_id) || School.new
-      rescue => e
-        p e
-        student = Student.new
-        student.school = School.new
-      end
-      lesson.student = student
-      lesson.school_id = student.school_id
-
-      confirm_add_student = lookup_student_for_lesson(lesson, add_student_confirmed)
-    end
-
-    respond_to do |format|
-      if confirm_add_student
-        format.js { render 'confirm_add_student' }
-      elsif lesson_in_progress
-        group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
-        lesson.time_in = group_lesson.time_in
-        group_lesson.lessons << lesson
-        if lesson.valid? && group_lesson.save
-          format.js { render 'add_student', locals: { lesson: lesson, lesson_in_progress: lesson_in_progress, total_students: row_count, student_created: add_student_confirmed } }
-        else
-          format.js { render 'checkout_error', locals: { object: lesson } }
-        end
-      elsif lesson.valid?
-        format.js { render 'add_student', locals: { lesson: lesson, lesson_in_progress: lesson_in_progress, total_students: row_count, student_created: add_student_confirmed } }
-      else
-        format.js { render 'checkout_error', locals: { object: lesson } }
-      end
-    end
-  end
-
-  # Description: 
-  # This method has several responsibilities: 
-  #   -Lookup student ID for name and school id
-  #   -Add error message on ambiguous lookup
-  #   -Create new student
-  #   -Indicate the need to confirm before creating new student
-  #
-  # Inputs
-  #   lesson
-  #
-  # Modifies
-  #   confirm_add_student
-  #   lesson
-  #
-  def lookup_student_for_lesson lesson, add_student_confirmed
-    student = lesson.student
-    school = lesson.student.school
-    if school.valid? && !student.first_name.empty? && !student.last_name.empty?
-      # if student exists in db get all the column values
-      # if student not in db prompt user to see if they want to create
-      results = Student.find_by_name(student.first_name, student.last_name, school.id)
-
-      if results.count == 1
-   	    lesson.student = results.first
-      elsif results.count > 1
-        lesson.errors.add(
-          :base,
-          :first_name_or_last_name_ambiguous,
-          message: "Need to spell out entire name")
-      else
-        if add_student_confirmed
-          student.save
-        else
-          confirm_add_student = true
-        end
-      end
-    end
-    confirm_add_student
   end
 
   def checkout
@@ -186,9 +99,6 @@ class GroupLessonsController < ApplicationController
     @group_lesson = GroupLesson.find_by_id(session[:group_lesson_id])
     temp_params = group_lesson_params
     temp_params[:time_out] = Time.now
-    @group_lesson.lessons.each do |lesson|
-      lesson.time_out = temp_params[:time_out]
-    end
 
     # Update student goals from ratings
     temp_group_lesson = GroupLesson.new(temp_params)
@@ -222,7 +132,7 @@ class GroupLessonsController < ApplicationController
     end
 
     def lesson_params params
-      params.permit(:brought_books, :brought_instrument, :student, :student_id, :school_id, :notes,
+      params.permit(:brought_books, :brought_instrument, :student_id, :school_id, :notes,
           ratings_attributes: [:id, :score, :goal_id],
           student_attributes: [:id, :permissions])
     end

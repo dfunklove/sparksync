@@ -4,6 +4,16 @@ class StudentsController < ApplicationController
   before_action :logged_in_user, only: [:index, :create, :update, :show]
   before_action :correct_user, only: [:show ]
 
+  # Return ID of student matching the parameters
+  def search
+    first_name = params[:first_name]
+    last_name = params[:last_name]
+    school_id = params[:school_id]
+    student = Student.where(first_name: first_name, last_name: last_name, school_id: school_id).first
+    id = student ? student.id : nil
+    render json: id
+  end
+
   # one student
   def show
     # title and what column depend on user and in the case
@@ -82,10 +92,14 @@ class StudentsController < ApplicationController
   def create
     @student = Student.new(student_params)
     @student.activated = true
-    if @student.save
-      redirect_to students_url
-    else
-      handle_error
+    respond_to do |format|
+      if @student.save
+        format.html { redirect_to students_url }
+        format.json { render json: @student.id }
+      else
+        format.html { handle_error }
+        format.json { render json: 0 }
+      end
     end
   end
 
@@ -148,7 +162,7 @@ class StudentsController < ApplicationController
     end
     def correct_user
       @student_id = params[:id]
-      @student = Student.find(@student_id)
+      @student = Student.find_by_id(@student_id)
       return if current_user.admin?
       # puts "student " + @student_id.to_s + " school " + @student.school_id.to_s
       # puts "user " + current_user.id.to_s + " school " + current_user.school_id.to_s

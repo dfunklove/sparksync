@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   delete '/logout',  to: 'sessions#destroy'
   get '/partners/school'
   post '/sessions/change_view'
+  post '/students/search'
   post '/teachers/change_table'
   resources :courses
   resources :lessons, only: [:index, :new, :create, :update, :destroy]

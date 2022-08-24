@@ -29,11 +29,37 @@ students_in_course = @course.students.map { |student| student.id.to_s }
   <%= course_f.label :school %>
   <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_schools()" } %>
 </div>
-  <ul id="student_list"></ul>
+  <ul id="student_list" class="student_list"></ul>
+  <div id="add_student">
+    <input type="text" id="new_student_first" placeholder="First name"/>
+    <input type="text" id="new_student_last" placeholder="Last name"/>
+    <input type="hidden" id="new_student_id" />
+    <input type="hidden" id="new_student_confirmed" />
+    <button onclick="add_student(event)">Add Student</button>
+  </div>
   <br>
   <%= course_f.submit %>
 <% end %>
 <script>
+function add_student(e) {
+  e.preventDefault()
+  let first_name = $("#new_student_first").val()
+  let last_name = $("#new_student_last").val()
+  let school_id = $("#course_school_id").val()
+  $.ajax("/students/search",
+    { method: "POST", dataType: "json", data: { first_name: first_name, last_name: last_name, school_id: school_id } })
+    .done(function(result) {
+      let id = 0
+      try { id = JSON.parse(result) } catch (error) {}
+      if (id > 0)
+        student_found(id, first_name, last_name)
+      else
+        student_not_found()
+    })
+    .fail(function(result) {
+      student_not_found()
+    })
+}
 function show_schools() {
   school_id = $("#course_school_id").val()
   if (!school_id) return
@@ -45,6 +71,29 @@ function show_schools() {
 function student_checkbox(id, name) {
   checked = students_in_course.includes(id) ? "checked" : ""
   return `<li><input type="checkbox" value="${id}" name="course[student_ids][]" id="course_student_ids_${id}" ${checked}><label for="course_student_ids_${id}">${name}</label></li>`
+}
+function student_found(id, first_name, last_name) {
+  $("#student_list").append(student_checkbox(id, first_name + " " + last_name))
+}
+function student_not_found() {
+  if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
+    let first_name = $("#new_student_first").val()
+    let last_name = $("#new_student_last").val()
+    let school_id = $("#course_school_id").val()
+    $.ajax("/students",
+      { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
+      .done(function(result) {
+        let id = 0
+        try { id = JSON.parse(result) } catch (error) {}
+        if (id > 0)
+          student_found(id, first_name, last_name)
+        else
+          $("#error_wrapper").append("<ul><li>Unable to create student</li></ul>")
+      })
+      .fail(function(result) {
+        $("#error_wrapper").append("<ul><li>Unable to create student</li></ul>")
+      })
+  }
 }
 $(function() {
   show_schools();

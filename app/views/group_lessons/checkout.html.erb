@@ -135,10 +135,23 @@ function add_student(e) {
       if (student && student.id > 0)
         student_found(student)
       else
-        student_not_found()
+        student_not_found(first_name, last_name, school_id)
     })
     .fail(function(result) {
-      student_not_found()
+      student_not_found(first_name, last_name, school_id)
+    })
+}
+function create_student(first_name, last_name, school_id) {
+  $.ajax("/students",
+    { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
+    .done(function(student) {
+      if (student && student.id)
+        student_found(student)
+      else
+        set_error("Unable to create student")
+    })
+    .fail(function(result) {
+      set_error("Unable to create student")
     })
 }
 function clear_error() {
@@ -148,6 +161,8 @@ function set_error(message) {
   $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
 }
 function set_goals(student) {
+  if (!student.goals)
+    return
   let goal_iter = student.goals.values()
   $(`.student_${student.id} select[name$="[goal_id]"]`).each(function() { 
     let goal = goal_iter.next().value
@@ -162,22 +177,9 @@ function student_found(student) {
   $("#new_student_last_name").val('')
   $("#new_student_school_id option").eq(0).prop('selected', true)
 }
-function student_not_found() {
+function student_not_found(first_name, last_name, school_id) {
   if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
-    let first_name = $("#new_student_first_name").val()
-    let last_name = $("#new_student_last_name").val()
-    let school_id = $("#new_student_school_id").val()
-    $.ajax("/students",
-      { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
-      .done(function(student) {
-        if (student && student.id)
-          student_found(student)
-        else
-          set_error("Unable to create student")
-      })
-      .fail(function(result) {
-        set_error("Unable to create student")
-      })
+    create_student(first_name, last_name, school_id)
   }
 }
 function student_row(student) {
@@ -185,7 +187,7 @@ function student_row(student) {
   let id = student.id
   let first_name = student.first_name
   let last_name = student.last_name
-  let permissions = student.permissions
+  let permissions = student.permissions || ""
   let school_id = $("#new_student_school_id").val();
   let school_name = $("#new_student_school_id option:selected").text();
 

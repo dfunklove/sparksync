@@ -11,8 +11,7 @@ class StudentsController < ApplicationController
     school_id = params[:school_id]
     s = Student.arel_table
     student = Student.where(s[:first_name].matches(first_name)).where(s[:last_name].matches(last_name)).where(s[:school_id].eq(school_id)).first
-    id = student ? student.id : nil
-    render json: id
+    render json: student, include: ['goals']
   end
 
   # one student
@@ -96,10 +95,10 @@ class StudentsController < ApplicationController
     respond_to do |format|
       if @student.save
         format.html { redirect_to students_url }
-        format.json { render json: @student.id }
+        format.json { render json: @student }
       else
         format.html { handle_error }
-        format.json { render json: 0 }
+        format.json { render json: {} }
       end
     end
   end

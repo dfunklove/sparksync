@@ -78,7 +78,7 @@
 <div class="hidden">
   <table class="placeholder">
   <tbody class="student_row_template">
-  <tr>
+  <tr class="student_$id">
     <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_id]" id="group_lesson_lessons_attributes_$row_student_id">
     <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$row][school_id]" id="group_lesson_lessons_attributes_$row_school_id">
     <input value="1" type="hidden" name="group_lesson[lessons_attributes][$row][brought_instrument]" id="group_lesson_lessons_attributes_$row_brought_instrument" />
@@ -131,9 +131,9 @@ function add_student(e) {
     return false
   $.ajax("/students/search",
     { method: "POST", dataType: "json", data: { first_name: first_name, last_name: last_name, school_id: school_id }})
-    .done(function(id) {
-      if (id > 0)
-        student_found(id, first_name, last_name)
+    .done(function(student) {
+      if (student && student.id > 0)
+        student_found(student)
       else
         student_not_found()
     })
@@ -147,8 +147,17 @@ function clear_error() {
 function set_error(message) {
   $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
 }
-function student_found(id, first_name, last_name) {
-  $(".new_student_row").before(student_row(id, first_name, last_name))
+function set_goals(student) {
+  let goal_iter = student.goals.values()
+  $(`.student_${student.id} select[name$="[goal_id]"]`).each(function() { 
+    let goal = goal_iter.next().value
+    if (goal)
+      $(this).val(goal.id)
+  })
+}
+function student_found(student) {
+  $(".new_student_row").before(student_row(student))
+  set_goals(student)
   $("#new_student_first_name").val('')
   $("#new_student_last_name").val('')
   $("#new_student_school_id option").eq(0).prop('selected', true)
@@ -160,9 +169,9 @@ function student_not_found() {
     let school_id = $("#new_student_school_id").val()
     $.ajax("/students",
       { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
-      .done(function(id) {
-        if (id > 0)
-          student_found(id, first_name, last_name)
+      .done(function(student) {
+        if (student && student.id)
+          student_found(student)
         else
           set_error("Unable to create student")
       })
@@ -171,8 +180,12 @@ function student_not_found() {
       })
   }
 }
-function student_row(id, first_name, last_name) {
+function student_row(student) {
   row_count += 1
+  let id = student.id
+  let first_name = student.first_name
+  let last_name = student.last_name
+  let permissions = student.permissions
   let school_id = $("#new_student_school_id").val();
   let school_name = $("#new_student_school_id option:selected").text();
 
@@ -182,6 +195,7 @@ function student_row(id, first_name, last_name) {
   template = template.replaceAll("$id", id)
   template = template.replaceAll("$first_name", first_name)
   template = template.replaceAll("$last_name", last_name)
+  template = template.replaceAll("$permissions", permissions)
   template = template.replaceAll("$school_id", school_id)
   template = template.replaceAll("$school_name", school_name)
   return template

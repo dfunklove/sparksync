@@ -57,10 +57,10 @@
     </td>
   <% end %>
   <td class="cent">
-    <%= if lesson['brought_instrument'] then "Y" else "N" end %>
+    <%== if lesson['brought_instrument'] then "&check;" else "&#10007;" end %>
   </td>
   <td class="cent">
-    <%= if lesson['brought_books'] then "Y" else "N" end %> 
+    <%== if lesson['brought_books'] then "&check;" else "&#10007;" end %>
   </td>
   <td><%= lesson['notes'] %> </td>
 <% end %>

@@ -6,7 +6,7 @@
 <% if object.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-danger">
-      The form contains <%= pluralize(object.errors.count, "error") %>.
+      Please correct the following:
     </div>
     <ul>
     <% object.errors.keys.each do |key| %>

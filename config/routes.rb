@@ -49,7 +49,7 @@ Rails.application.routes.draw do
     root 'admins#dashboard'
   end
   constraints(TeacherConstraint.new) do
-    root 'lessons#new'
+    root 'courses#index'
   end
   constraints(PartnerConstraint.new) do
     root 'partners#school'

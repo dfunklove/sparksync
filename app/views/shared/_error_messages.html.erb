@@ -9,8 +9,12 @@
       The form contains <%= pluralize(object.errors.count, "error") %>.
     </div>
     <ul>
-    <% object.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
+    <% object.errors.keys.each do |key| %>
+      <% object.errors.details[key].each_with_index do |detail,i| %>
+        <% if detail[:error] != :invalid %>
+          <li><%= object.errors.messages[key][i] %></li>
+        <% end %>
+      <% end %>
     <% end %>
     </ul>
   </div>

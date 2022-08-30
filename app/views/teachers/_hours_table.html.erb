@@ -1,12 +1,4 @@
-<%= form_tag (url_for only_path: false), method: :get do -%>
-  <label>Start Date</label>
-  <%= date_field_tag "start_date", @start_date, class: "search_field" %>
-  <label>End Date</label>
-  <%= date_field_tag "end_date", @end_date, class: "search_field" %>
-  <label>Total hours</label>
-  <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
-  <%= submit_tag "Update Table" %>
-<% end -%>
+<%= render partial: '/lessons/search_form' %>
 <br>
 <table class="stdnt">
 	<tr>

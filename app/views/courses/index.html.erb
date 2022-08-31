@@ -1,6 +1,8 @@
 <h2>Courses</h2>
 <% if @current_courses.length > 0 %>
-  <h3>Current</h3>
+  <% if @past_courses.length > 0 %>
+    <h3>Current</h3>
+  <% end %>
   <%= render partial: "course_table", locals: { courses: @current_courses } %>
   <br>
 <% end %>

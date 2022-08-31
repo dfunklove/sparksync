@@ -20,16 +20,22 @@ class CoursesController < ApplicationController
     name = ""
     i = 1
     loop do
-      name = "#{attrs['name']} (#{i})"
+      name = "#{course.name} (#{i})"
       break if not names.include? name
       i += 1
     end
     attrs['name'] = name
 
-    course = Course.new(attrs)
-    course.save
-    redirect_to "/courses"
-  end
+    new_course = Course.new(attrs)
+    new_course.students = course.students
+    respond_to do |format|
+      if new_course.save
+        format.html { redirect_to "/courses" }
+      else
+        format.js { render '/shared/error', locals: { object: course } }
+      end
+    end
+end
 
   def create
     course = Course.new(course_params)

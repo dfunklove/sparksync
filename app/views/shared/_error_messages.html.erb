@@ -9,11 +9,9 @@
       Please correct the following:
     </div>
     <ul>
-    <% object.errors.keys.each do |key| %>
-      <% object.errors.details[key].each_with_index do |detail,i| %>
-        <% if detail[:error] != :invalid %>
-          <li><%= object.errors.messages[key][i] %></li>
-        <% end %>
+    <% object.errors.full_messages.each do |message| %>
+      <% if not message.include? "invalid" %>
+        <li><%= message %></li>
       <% end %>
     <% end %>
     </ul>

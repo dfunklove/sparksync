@@ -34,7 +34,7 @@ class CoursesController < ApplicationController
   def create
     course = Course.new(course_params)
     course.teacher = current_user
-    if !params[:course][:student_ids]
+    if !params[:course][:student_ids] || params[:course][:student_ids].length < 2
       course.errors.add(
         :base,
         :add_more_students,
@@ -67,7 +67,7 @@ class CoursesController < ApplicationController
 
   def update
     course = Course.find_by(id: params[:id])
-    if !params[:course][:student_ids]
+    if !params[:course][:student_ids] || params[:course][:student_ids].length < 2
       course.errors.add(
         :base,
         :add_more_students,

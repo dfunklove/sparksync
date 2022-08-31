@@ -1,7 +1,11 @@
 <h2>Courses</h2>
-<h3>Current</h3>
-<%= render partial: "course_table", locals: { courses: @current_courses } %>
-<br>
+<% if @current_courses.length > 0 %>
+  <h3>Current</h3>
+  <%= render partial: "course_table", locals: { courses: @current_courses } %>
+  <br>
+<% end %>
 <%= button_to "New Course", (url_for action: :new), method: :get %>
-<h3>Past</h3>
-<%= render partial: "course_table", locals: { courses: @past_courses } %>
+<% if @past_courses.length > 0 %>
+  <h3>Past</h3>
+  <%= render partial: "course_table", locals: { courses: @past_courses } %>
+<% end %>

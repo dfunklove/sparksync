@@ -112,12 +112,11 @@ class CoursesController < ApplicationController
     group_lesson.time_in = Time.at((Time.now.to_f).round)
 
     course = Course.find_by(id: params[:id])
+    group_lesson.course = course
     course.students.each do |student|
       lesson = Lesson.new
       lesson.student = student
       lesson.school = course.school
-      lesson.teacher = group_lesson.teacher
-      lesson.time_in = group_lesson.time_in
       group_lesson.lessons << lesson
     end
 

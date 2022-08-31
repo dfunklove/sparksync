@@ -44,7 +44,7 @@
 
 <% end %>
 <% if group_lesson_heading %>
-  <td colspan="6">Group Lesson</td>
+  <td colspan="6"><%= course_name ? "Course: #{course_name}" : "Group Lesson" %></td>
 <% else %>
   <% lesson.ratings.each do |rating| %>
     <td>

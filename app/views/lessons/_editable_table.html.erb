@@ -66,10 +66,12 @@ function hideGroupLesson(group_lesson_id) {
       <% # First row of group lesson
         if lesson.group_lesson_id && (!current_gid || current_gid != lesson.group_lesson_id)
           current_gid = lesson.group_lesson_id # start new group lesson
+          course_name = lesson.group_lesson.course ? lesson.group_lesson.course.name : nil
       %>
         <%= render partial: '/lessons/editable_row', locals: { 
           group_lesson_id: current_gid,
           group_lesson_heading: true,
+          course_name: course_name,
           lesson: lesson } %>
       <% end %>
       <%= render partial: '/lessons/editable_row', locals: { 

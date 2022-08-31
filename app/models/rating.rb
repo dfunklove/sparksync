@@ -1,7 +1,7 @@
 class Rating < ApplicationRecord
   validates :goal, presence: true
   validates :lesson, presence: true
-  validates :score, presence: { message: "Every goal needs a rating"}
+  validates :score, presence: true
 
   belongs_to :goal
   belongs_to :lesson

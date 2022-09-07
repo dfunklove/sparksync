@@ -16,7 +16,7 @@
     <span class="td"><%= course.end_date || "?" %></span>
     <span class="td"><%= button_to "Edit", course, method: :get %></span>
     <span class="td"><%= button_to "Clone", (url_for action: 'clone', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
-    <span class="td"><%= button_to "Delete", course, method: :delete, remote: true, data: { disable_with: "Please wait..." }  %></span>
+    <span class="td"><%= button_to "Delete", course, method: :delete, remote: true, data: { disable_with: "Please wait..." }, onclick: "return confirm('Deleting this course is irreversible.  Are you sure?')"  %></span>
   </div>
 <% end %>
 </div>

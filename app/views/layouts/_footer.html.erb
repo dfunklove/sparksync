@@ -14,5 +14,5 @@
 <%= link_to "Partners", '/partners', method: :get if current_user.admin? %>
 <%= link_to "Admins", '/admins', method: :get if current_user.admin? %>
 <%= link_to "All Lessons", '/lessons', method: :get if current_user.admin? %>
-<%= link_to "Help", 'https://docs.google.com/document/d/e/2PACX-1vQ8zlI3iH2Ol6P3lr-qedB_v1v_FjKrSaejri3o4KCzshPjrFJTbULhAfqLJ3_bOtw0MLc13-_OWTn4/pub', target: "_blank" if current_user.teacher? %>
+<%= link_to "Help", 'https://docs.google.com/document/d/1Ekmwxpz6_y6W6fWYu2gkNczTmpW0f9fvrCuGyA0lFyo/edit#heading=h.2a8lw4lpda22', target: "_blank" if current_user.teacher? %>
 <% end %>

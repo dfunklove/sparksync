@@ -109,7 +109,11 @@ class GroupLessonsController < ApplicationController
     respond_to do |format|
       if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
         session.delete(:group_lesson_id)
-        format.html { redirect_to '/group_lessons/new' }
+        if @group_lesson.course
+          format.html { redirect_to '/courses' }
+        else
+          format.html { redirect_to '/group_lessons/new' }
+        end
       else
         format.html { render action: 'checkout'}
         format.js { render '/shared/error', locals: { object: @group_lesson } }

@@ -45,8 +45,8 @@ students_in_course = students_in_course.map { |student| student.id }
 function add_student(e) {
   e.preventDefault()
   clear_error()
-  let first_name = $("#new_student_first").val()
-  let last_name = $("#new_student_last").val()
+  let first_name = $("#new_student_first").val().trim()
+  let last_name = $("#new_student_last").val().trim()
   let school_id = $("#course_school_id").val()
   if (!first_name || !last_name)
     return false

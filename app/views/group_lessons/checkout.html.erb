@@ -124,8 +124,8 @@ $(document).ready(function () {
 function add_student(e) {
   e.preventDefault()
   clear_error()
-  let first_name = $("#new_student_first_name").val()
-  let last_name = $("#new_student_last_name").val()
+  let first_name = $("#new_student_first_name").val().trim()
+  let last_name = $("#new_student_last_name").val().trim()
   let school_id = $("#new_student_school_id").val()
   if (!first_name || !last_name)
     return false

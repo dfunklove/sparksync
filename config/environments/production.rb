@@ -64,7 +64,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   # If DNS breaks, app is still hosted at the server below
   # host = 'safe-sands-25204.herokuapp.com'
-  host = 'sync.sparksforsuccess.org'
+  host = ENV['MAILER_HOSTNAME'] || 'sync.sparksforsuccess.org'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',

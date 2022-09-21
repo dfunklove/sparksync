@@ -13,7 +13,7 @@ class Course < ApplicationRecord
   has_many :students, through: :student_courses
 
   def start_date_before_end_date
-    if end_date <= start_date
+    if end_date && end_date <= start_date
       errors.add(:start_date, "must be earlier than end date")
     end
   end

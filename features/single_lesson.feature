@@ -6,6 +6,7 @@ I should be able to teach a lesson to one student
 Background:
   Given I am registered as a teacher
   And I am logged in
+  And Testing schools exist
 
 Scenario: See a link to page Start Single Lesson
   When I visit the homepage
@@ -66,19 +67,18 @@ Scenario: Finish first lesson
 Scenario: Student list size 1
   Given I have taught 1 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to that student
+  Then I have the option to teach a lesson to 1 students
 
 Scenario: Student list size 2
   Given I have taught 2 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to any of the students
+  Then I have the option to teach a lesson to 2 students
 
 Scenario: Student list size 3
   Given I have taught 3 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to any of the students
+  Then I have the option to teach a lesson to 3 students
 
 Scenario: Students not taught are not listed
-  Given I have not taught the student
-  When I am at the Start Single Lesson page
-  Then The student is not listed
+  When I go to the Start Single Lesson page
+  Then No students are listed

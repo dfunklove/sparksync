@@ -61,13 +61,27 @@ class Lesson < ApplicationRecord
     end
   end
 
+  def self.clean_start_date start_date
+    if !start_date.respond_to?(:utc)
+      start_date = start_date.to_time
+    end
+    return start_date
+  end
+
+  def self.clean_end_date end_date
+    if !end_date.respond_to?(:utc)
+      end_date = end_date.to_time.end_of_day
+    end
+    return end_date
+  end
+
   def self.in_progress
   	self.joins(:student).where("lessons.time_out is null AND lessons.time_in > ?", Time.new.beginning_of_day).order("students.school_id")
   end
 
   def self.find_by_date(start_date, end_date)
     sql = "? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
-    args = [start_date.to_s, end_date.to_s]
+    args = [clean_start_date(start_date), clean_end_date(end_date)]
     sql += " and schools.activated = ?"
     sql += " and students.activated = ?"
     sql += " and users.activated = ?"
@@ -76,7 +90,7 @@ class Lesson < ApplicationRecord
 
   def self.find_by_school(school_id, start_date, end_date)
     sql = "lessons.school_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
-    args = [school_id, start_date.to_s, end_date.to_s]
+    args = [school_id, clean_start_date(start_date), clean_end_date(end_date)]
     if School.find(school_id).activated?
       sql += " and students.activated = ?"
       sql += " and users.activated = ?"
@@ -87,7 +101,7 @@ class Lesson < ApplicationRecord
 
   def self.find_by_student(student_id, start_date, end_date)
     sql = "lessons.student_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
-    args = [student_id, start_date.to_s, end_date.to_s]
+    args = [student_id, clean_start_date(start_date), clean_end_date(end_date)]
     if Student.find(student_id).activated?
       sql += " and schools.activated = ?"
       sql += " and users.activated = ?"
@@ -98,7 +112,7 @@ class Lesson < ApplicationRecord
 
   def self.find_by_teacher(teacher_id, start_date, end_date)
     sql = "lessons.user_id = ? and ? <= lessons.time_in and lessons.time_in <= ? and lessons.time_out is not null"
-    args = [teacher_id, start_date.to_s, end_date.to_s]
+    args = [teacher_id, clean_start_date(start_date), clean_end_date(end_date)]
     if Teacher.find(teacher_id).activated?
       sql += " and schools.activated = ?"
       sql += " and students.activated = ?"

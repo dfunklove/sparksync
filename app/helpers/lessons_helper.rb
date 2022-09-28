@@ -8,10 +8,10 @@ module LessonsHelper
   end
 
   def self.default_start_date
-    return Time.now.beginning_of_day - 6.days
+    return Date.today - 6.days
   end
 
   def self.default_end_date
-    return Time.now.end_of_day
+    return Date.today + 1.day
   end
 end

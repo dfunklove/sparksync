@@ -1,8 +1,8 @@
 <%= form_tag (url_for only_path: false), method: :get do -%>
   <label>Start Date</label>
-  <%= date_field_tag "start_date", @start_date ? @start_date.to_date : nil, class: "search_field", onchange: "this.form.submit()" %>
+  <%= date_field_tag "start_date", @start_date, class: "search_field", onchange: "this.form.submit()" %>
   <label>End Date</label>
-  <%= date_field_tag "end_date", @end_date ? @end_date.to_date : nil, class: "search_field", onchange: "this.form.submit()" %>
+  <%= date_field_tag "end_date", @end_date, class: "search_field", onchange: "this.form.submit()" %>
   <label>Total hours</label>
   <%= number_with_precision(@tot_hours, :precision => 2) || 0  %>
   <%= submit_tag "Search" %>

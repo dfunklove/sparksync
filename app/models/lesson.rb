@@ -68,6 +68,7 @@ class Lesson < ApplicationRecord
     return start_date
   end
 
+  # Convert date to time explicitly because rails will set it to beginning_of_day
   def self.clean_end_date end_date
     if !end_date.respond_to?(:utc)
       end_date = end_date.to_time.end_of_day

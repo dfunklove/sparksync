@@ -11,10 +11,11 @@ School.all.each do |school|
   school_to_students[school.id] = students_at_school.map { |student| student.attributes.to_h }
 end
 students_in_course = students_in_course.map { |student| student.id }
+#school_to_students.keys.each { |key| school_to_students[key] = school_to_students[key].html_safe }
 %>
 <script>
-  school_to_students = JSON.parse('<%== school_to_students.to_json %>')
-  students_in_course = JSON.parse('<%== students_in_course.to_json %>')
+  school_to_students = JSON.parse("<%== escape_javascript(school_to_students.to_json) %>")
+  students_in_course = JSON.parse("<%== escape_javascript(students_in_course.to_json) %>")
 </script>
 <%= render '/shared/error_messages', object: @course %>
 <%= form_for @course, remote: true do |course_f| %>

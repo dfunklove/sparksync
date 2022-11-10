@@ -46,13 +46,13 @@ Rails.application.routes.draw do
   get 'password_resets/edit'
 
   constraints(AdminConstraint.new) do
-    root 'admins#dashboard'
+    root 'admins#dashboard', as: 'admin_root'
   end
   constraints(TeacherConstraint.new) do
-    root 'courses#index'
+    root 'courses#index', as: 'teacher_root'
   end
   constraints(PartnerConstraint.new) do
-    root 'partners#school'
+    root 'partners#school', as: 'partner_root'
   end
   root 'sessions#new'
 

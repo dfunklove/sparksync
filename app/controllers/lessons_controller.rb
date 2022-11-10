@@ -1,7 +1,6 @@
 class LessonsController < ApplicationController
   before_action :logged_in_user
   before_action :teacher_user, only: [:new, :create, :checkout, :finishCheckout]
-  before_action :admin_user, only: :index
 
   def new
     student_id=params[:s_id]
@@ -73,7 +72,11 @@ class LessonsController < ApplicationController
     @delete_warning = "Deleting this lesson record is irreversible. Are you sure?"
     @start_date = params[:start_date] || LessonsHelper::default_start_date
     @end_date = params[:end_date] || LessonsHelper::default_end_date
-    @messons = Lesson.find_by_date(@start_date, @end_date)
+    if current_user.teacher?
+      @messons = Lesson.find_by_teacher(current_user.id, @start_date, @end_date)
+    else
+      @messons = Lesson.find_by_date(@start_date, @end_date)
+    end
     if session[:sortcol]
       sortcol = session[:sortcol]
       # case by case as sorting by student' slast name or school name is not
@@ -121,6 +124,10 @@ class LessonsController < ApplicationController
 
   def update
     @lesson = Lesson.find(params[:id])
+    if teacher_user and not @lesson.user_id == current_user.id
+      format.html { redirect_to '/lessons' }
+      return
+    end
     temp_params = lesson_params
     if params[:modify]
       logger.error("temp_params: #{temp_params}")

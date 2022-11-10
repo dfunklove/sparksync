@@ -7,7 +7,7 @@
 <%= link_to "Teachers", '/teachers', method: :get if current_user.admin? %>
 <%= link_to "School", '/partners/school', method: :get if current_user.partner? %>
 <%= link_to "My Courses", '/courses', method: :get if current_user.teacher? %>
-<%= link_to "My Records", teacher_path(current_user), method: :get if current_user.teacher? %>
+<%= link_to "My Records", '/lessons', method: :get if current_user.teacher? %>
 <%= link_to "My Students", '/students', method: :get if current_user.teacher? %>
 <%= link_to "Students", '/students', method: :get if !current_user.teacher? %>
 <%= link_to "Schools", '/schools', method: :get if current_user.admin? %>

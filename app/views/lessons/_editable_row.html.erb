@@ -57,7 +57,7 @@
       <td class="cent">
         <%= f.check_box :brought_books %>
       </td>
-      <td><%= f.text_field :notes %> </td>
+      <td><%= f.text_area :notes %> </td>
       <td><%= f.submit "Modify", class: "welcome", name: "modify" %></td>
       <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
     <% end %>

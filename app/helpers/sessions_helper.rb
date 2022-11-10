@@ -27,7 +27,7 @@ module SessionsHelper
     if logged_in? && current_user.type == 'Teacher'
       @login = Login.where("user_id = ?", session[:user_id]).first
       if @login && !@login.time_out
-        @login.update_attributes( time_out: Time.zone.now )
+        @login.update( time_out: Time.zone.now )
       elsif Rails.env.development?
         logger.error('Teacher time out wasnt null')
       end

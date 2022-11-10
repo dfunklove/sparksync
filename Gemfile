@@ -9,7 +9,7 @@ end
 #ruby '~> 2.6.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.0.6'
+gem 'rails', '~> 6.1.7'
 # JQuery is not included as of rails 5.1
 gem 'jquery-rails'
 # User BCrypt to encrypt passwords

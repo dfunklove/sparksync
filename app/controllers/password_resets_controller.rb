@@ -29,7 +29,7 @@ class PasswordResetsController < ApplicationController
       if params[:admin][:password].empty?                  # Case (3)
         @user.errors.add(:password, "can't be empty")
         render 'edit'
-      elsif @user.update_attributes(admin_params)          # Case (4)
+      elsif @user.update(admin_params)          # Case (4)
         log_in @user
         @user.update_attribute(:reset_digest, nil)
         flash[:success] = "Password has been reset."
@@ -41,7 +41,7 @@ class PasswordResetsController < ApplicationController
       if params[:teacher][:password].empty?                  # Case (3)
         @user.errors.add(:password, "can't be empty")
         render 'edit'
-      elsif @user.update_attributes(teacher_params)          # Case (4)
+      elsif @user.update(teacher_params)          # Case (4)
         log_in @user
         @user.update_attribute(:reset_digest, nil)
         flash[:success] = "Password has been reset."
@@ -53,7 +53,7 @@ class PasswordResetsController < ApplicationController
       if params[:partner][:password].empty?                  # Case (3)
         @user.errors.add(:password, "can't be empty")
         render 'edit'
-      elsif @user.update_attributes(partner_params)          # Case (4)
+      elsif @user.update(partner_params)          # Case (4)
         log_in @user
         @user.update_attribute(:reset_digest, nil)
         flash[:success] = "Password has been reset."

@@ -133,7 +133,7 @@ class LessonsController < ApplicationController
       logger.error("temp_params: #{temp_params}")
       logger.error("lesson.attributes: #{@lesson.attributes}")
       if @lesson.errors.count == 0
-        @lesson.update_attributes(temp_params)
+        @lesson.update(temp_params)
       end
     elsif params[:delete]
       @lesson.delete
@@ -240,7 +240,7 @@ end
     temp_lesson.save_goals_to_student
 
     respond_to do |format|
-      if @lesson.errors.count == 0 && @lesson.update_attributes(temp_params)
+      if @lesson.errors.count == 0 && @lesson.update(temp_params)
         session.delete(:lesson_id)
         format.html { redirect_to '/lessons/new' }
       else

@@ -107,7 +107,7 @@ class GroupLessonsController < ApplicationController
     end
 
     respond_to do |format|
-      if @group_lesson.errors.count == 0 && @group_lesson.update_attributes(temp_params)
+      if @group_lesson.errors.count == 0 && @group_lesson.update(temp_params)
         session.delete(:group_lesson_id)
         if @group_lesson.course
           format.html { redirect_to '/courses' }

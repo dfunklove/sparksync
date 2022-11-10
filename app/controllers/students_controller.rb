@@ -68,7 +68,7 @@ class StudentsController < ApplicationController
 
   def prepare_index
     @title = current_user.teacher? ? "My Students" : "Students"
-    @show_visibility_btn = current_visibility
+    @changev = current_visibility
     @students = find_right_students
     @isadmin = current_user.admin?
     @delete_warning = "Deleting this student will delete all his/her lessons records as well and is irreversible. Are you sure?"

@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 20200321012923) do
     t.integer "school_id"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
-    t.index ["email"], name: "index_users_on_email"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "lessons", "group_lessons", on_delete: :cascade

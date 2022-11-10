@@ -4,7 +4,9 @@
 		<th>F Name</th>
     <th>L Name</th>
     <th>School</th>
-    <th>Goals</th>
+    <% if not @isadmin %>
+      <th>Goals</th>
+    <% end %>
     <th>Permissions</th>
     <% if @isadmin %>
       <th colspan="2"></th>

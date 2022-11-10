@@ -65,9 +65,10 @@ class TeachersController < UsersController
         @tot_hours += lesson[:time_out] - lesson[:time_in]
         LessonsHelper::add_empty_ratings(lesson)
       end
+      @messons = @lessons
       # convert seconds to hours
       @tot_hours = @tot_hours/3600
-      @what_table = "lessons/completed_table"
+      @what_table = "lessons/editable_table"
     end
   end
 

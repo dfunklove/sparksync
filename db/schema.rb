@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 20200321012923) do
     t.bigint "user_id", null: false
     t.datetime "time_in", null: false
     t.datetime "time_out"
-    t.integer "school_id", null: false
     t.index ["user_id", "time_in"], name: "index_group_lessons_on_user_id_and_time_in", unique: true
     t.index ["user_id"], name: "index_group_lessons_on_user_id"
   end

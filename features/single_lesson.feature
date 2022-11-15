@@ -23,8 +23,8 @@ Scenario: Prompt to confirm create first student on Single Lesson page
   * The student is not in the database
   When I enter a student name
   * I select a school
-  * I click Start Lesson
-  Then I am prompted to confirm creation of the student
+  * I click Start Lesson on the new student form
+  Then I am prompted to confirm creation of the student before starting the lesson
 
 Scenario: Cancel create first student on Single Lesson page
   Given I have not taught any lessons
@@ -32,8 +32,8 @@ Scenario: Cancel create first student on Single Lesson page
   * The student is not in the database
   * I enter a student name
   * I select a school
-  * I click Start Lesson
-  When I click No on the create student confirmation dialog
+  * I click Start Lesson on the new student form
+  When I click No on the create student confirmation dialog before starting the lesson
   Then I am at the Start Single Lesson page
   * The student is not in the database
 
@@ -43,8 +43,8 @@ Scenario: Confirm create first student on Single Lesson page
   * The student is not in the database
   * I enter a student name
   * I select a school
-  * I click Start Lesson
-  When I click Yes on the create student confirmation dialog
+  * I click Start Lesson on the new student form
+  When I click Yes on the create student confirmation dialog before starting the lesson
   Then I am at the Single Lesson Checkout page
   * The student is in the database
   * A lesson with the student is in the database
@@ -56,8 +56,8 @@ Scenario: Finish first lesson
   * The student is not in the database
   * I enter a student name
   * I select a school
-  * I click Start Lesson
-  * I click Yes on the create student confirmation dialog
+  * I click Start Lesson on the new student form
+  * I click Yes on the create student confirmation dialog before starting the lesson
   * I am at the Single Lesson Checkout page
   When I click Finish Lesson
   Then I am at the Start Single Lesson page
@@ -67,18 +67,18 @@ Scenario: Finish first lesson
 Scenario: Student list size 1
   Given I have taught 1 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to 1 students
+  Then I have the option to teach a single lesson to 1 students
 
 Scenario: Student list size 2
   Given I have taught 2 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to 2 students
+  Then I have the option to teach a single lesson to 2 students
 
 Scenario: Student list size 3
   Given I have taught 3 students
   When I go to the Start Single Lesson page
-  Then I have the option to teach a lesson to 3 students
+  Then I have the option to teach a single lesson to 3 students
 
 Scenario: Students not taught are not listed
   When I go to the Start Single Lesson page
-  Then No students are listed
+  Then No students are listed on the Start Single Lesson page

@@ -28,8 +28,17 @@ When('I enter the second student name') do
   fill_in("new_student_last_name", with: "Student")
 end
 
+When('I enter the other student name {int}') do |int|
+  fill_in("new_student_first_name", with: "Other#{int}")
+  fill_in("new_student_last_name", with: "Student")
+end
+
 When('I select a school') do
   select("Test1", from: "new_student_school_id")
+end
+
+When('I select school {int}') do |int|
+  select("Test#{int}", from: "new_student_school_id")
 end
 
 When('I select {int} students for the group lesson') do |int|
@@ -57,6 +66,18 @@ When('I click Add Student and I click Yes on the confirmation dialog') do
   accept_confirm do
     click_on("Add Student")
   end
+end
+
+When('I enter notes for each student') do
+  i = 1
+  all(".existing_student_row textarea.notes").each do |f|
+    f.fill_in with: "note Test#{i}"
+    i += 1
+  end
+end
+
+When('I enter notes for the group') do
+  fill_in "group_lesson_notes", with: "group note test"
 end
 
 #TODO use the UI to test these
@@ -91,6 +112,22 @@ Then('A group lesson with my first {int} students is in the database') do |int|
   end
 end
 
+Then('The lesson contains notes for each student') do
+  notes = []
+  count = 0
+  @lesson.lessons.each do |lesson|
+    notes << lesson.notes
+    count += 1
+  end
+  count.times do |i|
+    expect notes.include? "note Test#{i}"
+  end
+end
+
+Then('The lesson contains notes for the group') do
+  @lesson.notes == "group note test"
+end
+
 Then('I have the option to teach a group lesson to {int} students') do |int|
   assert_selector(:css, ".existing_student_row", count: int)
 end
@@ -105,13 +142,4 @@ end
 
 Then('The second student appears on the page') do
   assert_selector("td.first_name", text: "Test2")
-end
-
-Given('I enter the other student name {int}') do |int|
-  fill_in("new_student_first_name", with: "Other#{int}")
-  fill_in("new_student_last_name", with: "Student")
-end
-
-Given('I select school {int}') do |int|
-  select("Test#{int}", from: "new_student_school_id")
 end

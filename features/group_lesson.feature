@@ -58,10 +58,14 @@ Scenario: Finish first lesson
   * I click Add Student and I click Yes on the confirmation dialog
   * I click Start Lesson
   * I am at the Group Lesson Checkout page
+  * I enter notes for each student
+  * I enter notes for the group
   When I click Finish Lesson
   Then I am at the Start Group Lesson page
   * A group lesson with my first 2 students is in the database
   * The end time of the lesson is accurate
+  * The lesson contains notes for each student
+  * The lesson contains notes for the group
 
 Scenario: Student list size 1
   Given I have taught 1 students

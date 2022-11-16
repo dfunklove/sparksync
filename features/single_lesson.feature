@@ -22,8 +22,8 @@ Scenario: Prompt to confirm create first student on Single Lesson page
   * I go to the Start Single Lesson page
   * The student is not in the database
   When I enter a student name
-  * I select a school
-  * I click Start Lesson on the new student form
+  * I select a school from the add student form
+  * I click Start Lesson on the add student form
   Then I am prompted to confirm creation of the student before starting the lesson
 
 Scenario: Cancel create first student on Single Lesson page
@@ -31,8 +31,8 @@ Scenario: Cancel create first student on Single Lesson page
   * I go to the Start Single Lesson page
   * The student is not in the database
   * I enter a student name
-  * I select a school
-  * I click Start Lesson on the new student form
+  * I select a school from the add student form
+  * I click Start Lesson on the add student form
   When I click No on the create student confirmation dialog before starting the lesson
   Then I am at the Start Single Lesson page
   * The student is not in the database
@@ -42,8 +42,8 @@ Scenario: Confirm create first student on Single Lesson page
   * I go to the Start Single Lesson page
   * The student is not in the database
   * I enter a student name
-  * I select a school
-  * I click Start Lesson on the new student form
+  * I select a school from the add student form
+  * I click Start Lesson on the add student form
   When I click Yes on the create student confirmation dialog before starting the lesson
   Then I am at the Single Lesson Checkout page
   * The student is in the database
@@ -55,14 +55,16 @@ Scenario: Finish first lesson
   * I go to the Start Single Lesson page
   * The student is not in the database
   * I enter a student name
-  * I select a school
-  * I click Start Lesson on the new student form
+  * I select a school from the add student form
+  * I click Start Lesson on the add student form
   * I click Yes on the create student confirmation dialog before starting the lesson
   * I am at the Single Lesson Checkout page
+  * I enter a note
   When I click Finish Lesson
   Then I am at the Start Single Lesson page
   * A lesson with the student is in the database
   * The end time of the lesson is accurate
+  * The lesson contains my note
 
 Scenario: Student list size 1
   Given I have taught 1 students

@@ -31,7 +31,7 @@ When('I select a school from the add student form') do
   form.select("Test1", from: "lesson[student_attributes][school_id]")
 end
 
-When('I click Start Lesson on the new student form') do
+When('I click Start Lesson on the add student form') do
   form = find("#add_student_form")
   dismiss_confirm do
     form.click_on("Start Lesson")
@@ -59,6 +59,10 @@ When('I click Yes on the create student confirmation dialog before starting the 
   end
 end
 
+When('I enter a note') do
+  fill_in "lesson_notes", with: "test note"
+end
+
 Then('I am at the Single Lesson Checkout page') do
   expect(page).to have_current_path(lessons_checkout_path)
 end
@@ -73,6 +77,10 @@ Then('A lesson with the student is in the database') do
   @student = Student.where(first_name: "Test1", last_name: "Student", school_id: 1).first
   @lesson = Lesson.where(student_id: @student.id, user_id: @registered_user.id).first
   expect @lesson
+end
+
+Then('The lesson contains my note') do
+  expect @lesson.notes == "test note"
 end
 
 Then('I have the option to teach a single lesson to {int} students') do |int|

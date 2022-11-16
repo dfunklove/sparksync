@@ -1,3 +1,4 @@
+
 Given('Testing schools exist') do
   FactoryBot.create(:school,
     name: "Test1",
@@ -8,6 +9,21 @@ Given('Testing schools exist') do
     FactoryBot.create(:school,
     name: "Test3",
     id: 3)
+end
+
+Given('Other students exist') do
+  FactoryBot.create(:student,
+    first_name: "Other1",
+    last_name: "Student",
+    school_id: 1)
+  FactoryBot.create(:student,
+    first_name: "Other2",
+    last_name: "Student",
+    school_id: 2)
+  FactoryBot.create(:student,
+    first_name: "Other3",
+    last_name: "Student",
+    school_id: 3)
 end
 
 Given('I am registered as a teacher') do
@@ -50,7 +66,7 @@ Given('I have taught {int} students') do |int|
   int.times do |i|
     click_link "Single Lesson"
     form = find("#add_student_form")
-    form.fill_in("lesson[student_attributes][first_name]", with: "Test#{i}")
+    form.fill_in("lesson[student_attributes][first_name]", with: "Test#{i+1}")
     form.fill_in("lesson[student_attributes][last_name]", with: "Student")
     form.select("Test1", from: "lesson[student_attributes][school_id]")
     accept_confirm do

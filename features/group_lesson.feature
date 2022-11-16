@@ -23,8 +23,7 @@ Scenario: Prompt to confirm create first student on Group Lesson page
   * The first student is not in the database
   When I enter the first student name
   * I select a school
-  * I click Add Student
-  Then I am prompted to confirm creation of the student
+  Then I click Add Student and I click No on the confirmation dialog
 
 Scenario: Cancel create first student on Group Lesson page
   Given I have not taught any lessons
@@ -32,8 +31,7 @@ Scenario: Cancel create first student on Group Lesson page
   * The first student is not in the database
   * I enter the first student name
   * I select a school
-  * I click Add Student
-  When I click No on the create student confirmation dialog
+  When I click Add Student and I click No on the confirmation dialog
   Then I am at the Start Group Lesson page
   * The first student is not in the database
 
@@ -43,8 +41,7 @@ Scenario: Confirm create first student on Group Lesson page
   * The first student is not in the database
   * I enter the first student name
   * I select a school
-  * I click Add Student
-  When I click Yes on the create student confirmation dialog
+  When I click Add Student and I click Yes on the confirmation dialog
   Then I am at the Start Group Lesson page
   * The first student appears on the page
 
@@ -55,17 +52,15 @@ Scenario: Finish first lesson
   * The second student is not in the database
   * I enter the first student name
   * I select a school
-  * I click Add Student
-  * I click Yes on the create student confirmation dialog
+  * I click Add Student and I click Yes on the confirmation dialog
   * I enter the second student name
   * I select a school
-  * I click Add Student
-  * I click Yes on the create student confirmation dialog
+  * I click Add Student and I click Yes on the confirmation dialog
   * I click Start Lesson
   * I am at the Group Lesson Checkout page
   When I click Finish Lesson
   Then I am at the Start Group Lesson page
-  * A group lesson with 2 students is in the database
+  * A group lesson with my first 2 students is in the database
   * The end time of the lesson is accurate
 
 Scenario: Student list size 1
@@ -86,3 +81,57 @@ Scenario: Student list size 3
 Scenario: Students not taught are not listed
   When I go to the Start Group Lesson page
   Then No students are listed in group lesson
+
+Scenario: Teach a group lesson to previous students
+  Given I have taught 2 students
+  * I go to the Start Group Lesson page
+  * I select 2 students for the group lesson
+  * I click Start Lesson
+  * I am at the Group Lesson Checkout page
+  When I click Finish Lesson
+  Then I am at the Start Group Lesson page
+  * A group lesson with my first 2 students is in the database
+  * The end time of the lesson is accurate
+
+Scenario: Teach a group lesson to existing students who are new to me
+  Given Other students exist
+  * I go to the Start Group Lesson page
+  * I enter the other student name 1
+  * I select school 1
+  * I click Add Student
+  * I enter the other student name 2
+  * I select school 2
+  * I click Add Student
+  * I enter the other student name 3
+  * I select school 3
+  * I click Add Student
+  * I click Start Lesson
+  * I am at the Group Lesson Checkout page
+  When I click Finish Lesson
+  Then I am at the Start Group Lesson page
+  * A group lesson with 3 students is in the database
+  * The end time of the lesson is accurate
+
+Scenario: Add new students to a lesson in progress
+  Given Other students exist
+  * I go to the Start Group Lesson page
+  * I enter the other student name 1
+  * I select school 1
+  * I click Add Student
+  * I enter the other student name 2
+  * I select school 2
+  * I click Add Student
+  * I click Start Lesson
+  * I am at the Group Lesson Checkout page
+  When I enter the first student name
+  * I select a school
+  * I click Add Student and I click Yes on the confirmation dialog
+  * I enter the second student name
+  * I select a school
+  * I click Add Student and I click Yes on the confirmation dialog
+  Then The first student appears on the page
+  * The second student appears on the page
+  * I click Finish Lesson
+  * I am at the Start Group Lesson page
+  * A group lesson with 4 students is in the database
+  * The end time of the lesson is accurate

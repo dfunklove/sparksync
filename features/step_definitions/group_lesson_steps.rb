@@ -15,7 +15,7 @@ Then('I am at the Start Group Lesson page') do
 end
 
 Then('I am at the Group Lesson Checkout page') do
-  expect(page).to have_current_path(group_lessons_checkout_path, wait: 5)
+  expect(page).to have_current_path(group_lessons_checkout_path, wait: 10)
 end
 
 When('I enter the first student name') do
@@ -32,29 +32,28 @@ When('I select a school') do
   select("Test1", from: "new_student_school_id")
 end
 
-When('I click Add Student') do
-  dismiss_confirm do
-    click_on("Add Student")
+When('I select {int} students for the group lesson') do |int|
+  checkboxes = all('.student_select')
+  int.times do |i|
+    checkboxes[i].set(true)
   end
+end
+
+When('I click Add Student') do
+  click_on("Add Student")
 end
 
 When('I click Start Lesson') do
   click_on("Start Lesson")
 end
 
-Then('I am prompted to confirm creation of the student') do
+When('I click Add Student and I click No on the confirmation dialog') do
   dismiss_confirm do
     click_on("Add Student")
   end
 end
 
-When('I click No on the create student confirmation dialog') do
-  dismiss_confirm do
-    click_on("Add Student")
-  end
-end
-
-When('I click Yes on the create student confirmation dialog') do
+When('I click Add Student and I click Yes on the confirmation dialog') do
   accept_confirm do
     click_on("Add Student")
   end
@@ -80,14 +79,16 @@ Then('The second student is in the database') do
 end
 
 Then('A group lesson with {int} students is in the database') do |int|
-  @student = Student.where(first_name: "Test1", last_name: "Student", school_id: 1).first
-  @lesson1 = Lesson.where(student_id: @student.id, user_id: @registered_user.id).first
-  expect @lesson1
-  @student = Student.where(first_name: "Test2", last_name: "Student", school_id: 1).first
-  @lesson2 = Lesson.where(student_id: @student.id, user_id: @registered_user.id).first
-  expect @lesson2
-  expect @lesson1.group_lesson_id == @lesson2.group_lesson_id
-  @lesson = GroupLesson.find(@lesson1.group_lesson_id) # this variable is used by other steps
+  @lesson = GroupLesson.last
+  expect @lesson.lessons.length == int
+end
+
+Then('A group lesson with my first {int} students is in the database') do |int|
+  @lesson = GroupLesson.last
+  lessons = @lesson.lessons
+  int.times do |i|
+    lessons[i].student.first_name == "Test#{i+1}"
+  end
 end
 
 Then('I have the option to teach a group lesson to {int} students') do |int|
@@ -99,5 +100,18 @@ Then('No students are listed in group lesson') do
 end
 
 Then('The first student appears on the page') do
-  assert_selector("td", text: "Test1")
+  assert_selector("td.first_name", text: "Test1")
+end
+
+Then('The second student appears on the page') do
+  assert_selector("td.first_name", text: "Test2")
+end
+
+Given('I enter the other student name {int}') do |int|
+  fill_in("new_student_first_name", with: "Other#{int}")
+  fill_in("new_student_last_name", with: "Student")
+end
+
+Given('I select school {int}') do |int|
+  select("Test#{int}", from: "new_student_school_id")
 end

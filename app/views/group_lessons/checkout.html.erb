@@ -14,7 +14,7 @@
       <th>Permissions</th>
     </tr>
     <%= group_lesson_f.fields_for :lessons do |lesson_f| %>
-      <tr>
+      <tr class="existing_student_row">
       <% i += 1 %>
       <% lesson = @group_lesson.lessons[i] %>
       <%= lesson_f.hidden_field(:id, value: lesson.id)%>
@@ -39,9 +39,9 @@
           <% end %>
         </table>
       </td>
-      <td><%= lesson_f.text_area :notes, autocomplete: "off", rows: Goal::MAX_PER_STUDENT %> </td>
+      <td><%= lesson_f.text_area :notes, autocomplete: "off", rows: Goal::MAX_PER_STUDENT, class: "notes" %> </td>
       <%= lesson_f.fields_for :student do |student_f| %>
-        <td><%= student_f.text_area :permissions, autocomplete: "off", rows: Goal::MAX_PER_STUDENT, value: lesson.student.permissions %> </td>
+        <td><%= student_f.text_area :permissions, autocomplete: "off", rows: Goal::MAX_PER_STUDENT, value: lesson.student.permissions, class: "permissions" %> </td>
       <% end %>
       </tr> 
     <% end %>
@@ -105,8 +105,8 @@
         </tbody>
       </table>
     </td>
-    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][notes]" id="group_lesson_lessons_attributes_$row_notes"></textarea> </td>
-    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][student_attributes][permissions]" id="group_lesson_lessons_attributes_$row_student_attributes_permissions">$permissions</textarea> </td>
+    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][notes]" id="group_lesson_lessons_attributes_$row_notes" class="notes"></textarea> </td>
+    <td><textarea autocomplete="off" rows="<%= Goal::MAX_PER_STUDENT %>" name="group_lesson[lessons_attributes][$row][student_attributes][permissions]" id="group_lesson_lessons_attributes_$row_student_attributes_permissions" class="permissions">$permissions</textarea> </td>
     <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_attributes][id]" id="group_lesson_lessons_attributes_$row_student_attributes_id" />
   </tr>
   </tbody>

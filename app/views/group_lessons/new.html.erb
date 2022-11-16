@@ -23,9 +23,9 @@
         <tr class="existing_student_row">
         <%= lesson_f.hidden_field(:student_id, value: student.id) %>
         <%= lesson_f.hidden_field(:school_id, value: student.school.id) %>
-        <td class="student_select"><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, selected[i] %></td>
-        <td><%= student.first_name %></td>
-        <td><%= student.last_name %></td>
+        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, selected[i], class: "student_select" %></td>
+        <td class="first_name"><%= student.first_name %></td>
+        <td class="last_name"><%= student.last_name %></td>
         <td><%= student.school.name %></td>
       <% end %>
       <td style="text-align: center">
@@ -63,8 +63,8 @@
     <input type="hidden" value="$id" name="group_lesson[lessons_attributes][$row][student_id]" id="group_lesson_lessons_attributes_$row_student_id">
     <input type="hidden" value="$school_id" name="group_lesson[lessons_attributes][$row][school_id]" id="group_lesson_lessons_attributes_$row_school_id">
     <td><input type="checkbox" name="group_lesson[lessons_attributes][$row][selected]" id="group_lesson_lessons_attributes_$row_selected" value="true" checked="checked"></td>
-    <td>$first_name</td>
-    <td>$last_name</td>
+    <td class="first_name">$first_name</td>
+    <td class="last_name">$last_name</td>
     <td>$school_name</td>
     <td style="text-align: center">
       <input name="group_lesson[lessons_attributes][$row][brought_instrument]" type="hidden" value="0"><input type="checkbox" value="1" $brought_instrument_checked name="group_lesson[lessons_attributes][$row][brought_instrument]" id="group_lesson_lessons_attributes_$row_brought_instrument">

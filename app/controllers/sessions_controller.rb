@@ -14,6 +14,9 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    if current_user.teacher? && handle_open_lesson
+      return
+    end
     log_out
     redirect_to root_url
   end

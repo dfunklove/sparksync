@@ -139,6 +139,7 @@ class LessonsController < ApplicationController
     end
   end
 
+  # TODO migrate this to JS like group_lesson
   def create
     add_student_confirmed = params[:add_student_confirmed]
     lesson = Lesson.new(lesson_params)

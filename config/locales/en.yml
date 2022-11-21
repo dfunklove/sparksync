@@ -36,3 +36,8 @@ en:
         score: "Goal rating"
       lesson/ratings:
         score: "Goal rating"
+  activerecord:
+    models:
+      course:
+        one: "Session"
+        other: "Sessions"

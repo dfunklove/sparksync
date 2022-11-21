@@ -1,5 +1,5 @@
 class Course < ApplicationRecord
-  validates :name, presence: true, uniqueness: { scope: [:school, :teacher] }
+  validates :name, presence: true, uniqueness: true
   validates :school, presence: true
   validates :start_date, presence: true
   validates :teacher, presence: true

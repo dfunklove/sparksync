@@ -1,12 +1,12 @@
 <h2><%= @title %></h2>
 <%
-students = Student.find_by_teacher(current_user.id).to_a
+students = Student.where(activated: true).to_a
 students_in_course = @course.students.to_a
 students |= students_in_course
 
 # make a hash which maps school_id to arrays of student objects.
 school_to_students = {}
-School.all.each do |school|
+School.where(activated: true).each do |school|
   students_at_school = students.select { |student| student.school_id == school.id }
   school_to_students[school.id] = students_at_school.map { |student| student.attributes.to_h }
 end
@@ -28,8 +28,10 @@ students_in_course = students_in_course.map { |student| student.id }
   <%= course_f.date_field :end_date %>
   <%= course_f.label :notes %>
   <%= course_f.text_area :notes %>
+  <%= course_f.label :teacher %>
+  <%= course_f.collection_select :user_id, Teacher.where(activated: true), :id, :name, { prompt: true } %>
   <%= course_f.label :school %>
-  <%= course_f.collection_select :school_id, School.all, :id, :name, { prompt: true }, { onchange: "show_students()" } %>
+  <%= course_f.collection_select :school_id, School.where(activated: true), :id, :name, { prompt: true }, { onchange: "show_students()" } %>
 </div>
 <div id="student_list_container" class="hidden">
   <ul id="student_list" class="student_list"></ul>

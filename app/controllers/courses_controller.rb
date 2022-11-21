@@ -1,9 +1,8 @@
 class CoursesController < ApplicationController
   before_action :logged_in_user
-  before_action :teacher_user
 
   def new
-    @title = "New Course"
+    @title = "New Session"
     @course = Course.new
     render 'show'
   end
@@ -35,11 +34,10 @@ class CoursesController < ApplicationController
         format.js { render '/shared/error', locals: { object: course } }
       end
     end
-end
+  end
 
   def create
     course = Course.new(course_params)
-    course.teacher = current_user
     if !params[:course][:student_ids] || params[:course][:student_ids].length < 2
       course.errors.add(
         :base,
@@ -67,7 +65,7 @@ end
   end
 
   def show
-    @title = "Edit Course"
+    @title = "Edit Session"
     @course = Course.find_by(id: params[:id])
   end
 
@@ -99,7 +97,12 @@ end
   end
 
   def index
-    courses = Course.where(user_id: current_user.id).includes(:school).references(:school)
+    courses = nil
+    if current_user.admin?
+      courses = Course.all.includes(:school, :teacher).references(:school, :teacher)
+    else
+      courses = Course.where(user_id: current_user.id).includes(:school).references(:school)
+    end
     @current_courses = courses.where("end_date IS ?", nil).or(courses.where("end_date >= ?", Date.today)).order("schools.name").order(:name)
     @past_courses = courses.where("end_date < ?", Date.today).order("schools.name").order(:name)
   end
@@ -143,6 +146,6 @@ end
   end  
 
   def course_params
-    params.require(:course).permit(:id, :name, :notes, :start_date, :end_date, :school_id, student_ids: [])
+    params.require(:course).permit(:id, :name, :notes, :start_date, :end_date, :school_id, :user_id, student_ids: [])
   end
 end

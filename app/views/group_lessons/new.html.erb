@@ -1,19 +1,26 @@
 <h2>
-  Start Group Lesson
+  <%= @group_lesson.course ? 'Check Attendance' : 'Start Group Lesson' %>
 </h2>
 <% i = -1 %>
 <%= render '/shared/error_messages', object: @group_lesson %>
 <%= form_for(@group_lesson, url: '/group_lessons', remote: true, html: {id: "new_group_lesson"}) do |group_lesson| %>
 <table class="stdnt">
   <tr>
-    <th></th>
+    <th><%= @group_lesson.course ? 'Present?' : '' %></th>
   	<th>F Name</th>
     <th>L Name</th>
     <th>School</th>
     <th>Instrument</th>
     <th>Books</th>
   </tr>
-    <% selected ||= [] %>
+    <%
+      selected ||= [] 
+      if @group_lesson.course
+        for i in 0...@group_lesson.lessons.length
+          selected[i] = true
+        end
+      end
+    %>
     <% i = -1 %>
     <%= group_lesson.fields_for :lessons do |lesson_f| %>
       <% i += 1 %>
@@ -23,7 +30,7 @@
         <tr class="existing_student_row">
         <%= lesson_f.hidden_field(:student_id, value: student.id) %>
         <%= lesson_f.hidden_field(:school_id, value: student.school.id) %>
-        <td><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, selected[i], class: "student_select" %></td>
+        <td style="text-align: center"><%= check_box_tag "group_lesson[lessons_attributes][#{i}][selected]", true, selected[i], class: "student_select" %></td>
         <td class="first_name"><%= student.first_name %></td>
         <td class="last_name"><%= student.last_name %></td>
         <td><%= student.school.name %></td>
@@ -36,6 +43,7 @@
       </td>
   </tr>
   <% end %><!-- group_lesson.fields_for :lessons -->
+  <% if !@group_lesson.course %>
   <tr class="new_student_row">
     <td></td>
     <td><input class="fname" placeholder="Enter new..." form="add_student_form" type="text" id="new_student_first_name"></td>
@@ -50,6 +58,7 @@
     <td style="text-align: center"><input form="add_student_form" type="checkbox" value="1" checked="checked" id="new_student_brought_books"></td>
     <td><button type="submit" onclick="add_student_wrapper(event)" form="add_student_form">Add Student</button></td>
   </tr>
+  <% end %>
   <tr>
     <td colspan="6"><%= group_lesson.submit "Start Lesson", style: "width: 100%", data: { disable_with: "Please wait..."} %></td>
   </tr>

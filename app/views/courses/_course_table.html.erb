@@ -24,7 +24,7 @@
       <span class="td"><%= button_to "Clone", (url_for action: 'clone', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
       <span class="td"><%= button_to "Delete", course, method: :delete, remote: true, data: { disable_with: "Please wait..." }, onclick: "return confirm('Deleting this course is irreversible.  Are you sure?')"  %></span>
     <% else %>
-      <span class="td"><%= button_to "Teach this session", (url_for action: 'teach', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
+      <span class="td"><%= button_to "Teach this session", (url_for action: 'teach', id: course.id), data: { disable_with: "Please wait..." } %></span>
     <% end %>
   </div>
 <% end %>

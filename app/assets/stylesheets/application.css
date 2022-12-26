@@ -73,7 +73,11 @@ table.stdnt td.no-border-left, th.no-border-left {
   border-bottom:0px;
 }
 table.stdnt td, th {
-  border: 1px solid black
+  border: 1px solid black;
+}
+table th {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
 }
 table.noborder td, th { 
   border: 0px;

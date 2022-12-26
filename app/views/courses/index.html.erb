@@ -7,7 +7,7 @@
   <%= render partial: "course_table", locals: { courses: @current_courses } %>
   <br>
 <% elsif !current_user.admin? %>
-  Nothing here yet.  When an administrator assigns you a session, it will appear here.
+  <div class="courses_empty_message">Nothing here yet.  When an administrator assigns you a session, it will appear here.</div>
   <br><br>
 <% end %>
 <% if current_user.admin? %>

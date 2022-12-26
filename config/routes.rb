@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   get '/admins/dashboard'
   post '/courses/clone/:id', to: 'courses#clone'
   post '/courses/teach/:id', to: 'courses#teach'
+  get  '/courses/teach/:id', to: 'courses#teach'
   get '/group_lessons/checkout'
   post  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'
   patch  '/group_lessons/checkout', to: 'group_lessons#finishCheckout'

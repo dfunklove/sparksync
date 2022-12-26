@@ -108,36 +108,23 @@ class CoursesController < ApplicationController
   end
 
   def teach
-    if session[:group_lesson_id]
-      logger.warn("create: group lesson already in progress")
-  		redirect_to "/group_lessons/checkout"
+    if handle_open_lesson
       return
-  	end
+    end
         
-    group_lesson = GroupLesson.new
-    group_lesson.teacher = current_user
-
-    # Round time to the second to prevent double form submission
-    group_lesson.time_in = Time.at((Time.now.to_f).round)
+    @group_lesson = GroupLesson.new
+    @group_lesson.teacher = current_user
 
     course = Course.find_by(id: params[:id])
-    group_lesson.course = course
+    @group_lesson.course = course
     course.students.each do |student|
       lesson = Lesson.new
       lesson.student = student
       lesson.school = course.school
-      group_lesson.lessons << lesson
+      @group_lesson.lessons << lesson
     end
 
-    respond_to do |format|
-      if group_lesson.save
-        session[:group_lesson_id] = group_lesson.id
-        format.html { redirect_to "/group_lessons/checkout" }
-      else
-        flash[:danger] = group_lesson.errors.messages.reduce("") { |big, small| "#{big}, #{small}" }
-        format.html { redirect_to "/courses" }
-      end
-    end
+    render "/group_lessons/new"
   end
 
   def teacher_user

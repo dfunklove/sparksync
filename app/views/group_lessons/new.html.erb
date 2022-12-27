@@ -4,6 +4,7 @@
 <% i = -1 %>
 <%= render '/shared/error_messages', object: @group_lesson %>
 <%= form_for(@group_lesson, url: '/group_lessons', remote: true, html: {id: "new_group_lesson"}) do |group_lesson| %>
+  <%= group_lesson.hidden_field(:course_id, value: @group_lesson.course_id) %>
 <table class="stdnt">
   <tr>
     <th><%= @group_lesson.course ? 'Present?' : '' %></th>

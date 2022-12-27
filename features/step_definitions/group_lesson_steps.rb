@@ -48,14 +48,6 @@ When('I select {int} students for the group lesson') do |int|
   end
 end
 
-When('I click Add Student') do
-  click_on("Add Student")
-end
-
-When('I click Start Lesson') do
-  click_on("Start Lesson")
-end
-
 When('I click Add Student and I click No on the confirmation dialog') do
   dismiss_confirm do
     click_on("Add Student")

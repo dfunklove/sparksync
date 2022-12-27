@@ -39,11 +39,15 @@ Given('I am logged in') do
   fill_in "session_email", with: @registered_user.email
   fill_in "session_password", with: @registered_user.password
   click_button "Log in"
-  assert_selector(:button, "New Course")
+  assert_selector(:link, "Logout")
 end
 
 When('I visit the homepage') do
   visit root_path
+end
+
+When('I go to My Records') do
+  visit '/lessons'
 end
 
 Given('I have not taught any lessons') do
@@ -52,6 +56,14 @@ end
 
 Then('The start time of the lesson is accurate') do
   expect Time.now - @lesson.time_in < 5.seconds
+end
+
+When('I click Add Student') do
+  click_on("Add Student")
+end
+
+When('I click Start Lesson') do
+  click_on("Start Lesson")
 end
 
 When('I click Finish Lesson') do

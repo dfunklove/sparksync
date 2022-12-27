@@ -1,4 +1,3 @@
-
 Given('Testing schools exist') do
   FactoryBot.create(:school,
     name: "Test1",
@@ -10,6 +9,21 @@ Given('Testing schools exist') do
     name: "Test3",
     id: 3)
 end
+
+Given('Testing students exist') do
+  FactoryBot.create(:student,
+    first_name: "Test1",
+    last_name: "Student",
+    school_id: 1)
+  FactoryBot.create(:student,
+    first_name: "Test2",
+    last_name: "Student",
+    school_id: 1)
+    FactoryBot.create(:student,
+      first_name: "Test3",
+      last_name: "Student",
+      school_id: 1)
+  end
 
 Given('Other students exist') do
   FactoryBot.create(:student,
@@ -81,9 +95,7 @@ Given('I have taught {int} students') do |int|
     form.fill_in("lesson[student_attributes][first_name]", with: "Test#{i+1}")
     form.fill_in("lesson[student_attributes][last_name]", with: "Student")
     form.select("Test1", from: "lesson[student_attributes][school_id]")
-    accept_confirm do
-      form.click_on("Start Lesson")
-    end
+    form.click_on("Start Lesson")
     click_on "Finish Lesson", wait: 5
   end
 end

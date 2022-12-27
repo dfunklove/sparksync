@@ -7,6 +7,7 @@ Background:
   Given I am registered as a teacher
   And I am logged in
   And Testing schools exist
+  And Testing students exist
 
 Scenario: See a link to page Start Group Lesson
   When I visit the homepage
@@ -17,45 +18,15 @@ Scenario: Go to page Start Group Lesson
   When I click the link to the Start Group Lesson page
   Then I am at the Start Group Lesson page
 
-Scenario: Prompt to confirm create first student on Group Lesson page
-  Given I have not taught any lessons
-  * I go to the Start Group Lesson page
-  * The first student is not in the database
-  When I enter the first student name
-  * I select a school
-  Then I click Add Student and I click No on the confirmation dialog
-
-Scenario: Cancel create first student on Group Lesson page
-  Given I have not taught any lessons
-  * I go to the Start Group Lesson page
-  * The first student is not in the database
-  * I enter the first student name
-  * I select a school
-  When I click Add Student and I click No on the confirmation dialog
-  Then I am at the Start Group Lesson page
-  * The first student is not in the database
-
-Scenario: Confirm create first student on Group Lesson page
-  Given I have not taught any lessons
-  * I go to the Start Group Lesson page
-  * The first student is not in the database
-  * I enter the first student name
-  * I select a school
-  When I click Add Student and I click Yes on the confirmation dialog
-  Then I am at the Start Group Lesson page
-  * The first student appears on the page
-
 Scenario: Finish first lesson
   Given I have not taught any lessons
   * I go to the Start Group Lesson page
-  * The first student is not in the database
-  * The second student is not in the database
   * I enter the first student name
   * I select a school
-  * I click Add Student and I click Yes on the confirmation dialog
+  * I click Add Student
   * I enter the second student name
   * I select a school
-  * I click Add Student and I click Yes on the confirmation dialog
+  * I click Add Student
   * I click Start Lesson
   * I am at the Group Lesson Checkout page
   * I enter notes for each student
@@ -129,10 +100,10 @@ Scenario: Add new students to a lesson in progress
   * I am at the Group Lesson Checkout page
   When I enter the first student name
   * I select a school
-  * I click Add Student and I click Yes on the confirmation dialog
+  * I click Add Student
   * I enter the second student name
   * I select a school
-  * I click Add Student and I click Yes on the confirmation dialog
+  * I click Add Student
   Then The first student appears on the page
   * The second student appears on the page
   * I click Finish Lesson

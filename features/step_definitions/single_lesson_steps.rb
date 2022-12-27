@@ -33,9 +33,7 @@ end
 
 When('I click Start Lesson on the add student form') do
   form = find("#add_student_form")
-  dismiss_confirm do
-    form.click_on("Start Lesson")
-  end
+  form.click_on("Start Lesson")
 end
 
 Then('I am prompted to confirm creation of the student before starting the lesson') do

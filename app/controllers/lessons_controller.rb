@@ -111,8 +111,8 @@ class LessonsController < ApplicationController
 
   def update
     @lesson = Lesson.find(params[:id])
-    if teacher_user and not @lesson.user_id == current_user.id
-      format.html { redirect_to '/lessons' }
+    if current_user.teacher? and not @lesson.user_id == current_user.id
+      redirect_to '/lessons'
       return
     end
     temp_params = lesson_params

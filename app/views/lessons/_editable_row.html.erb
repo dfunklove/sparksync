@@ -33,7 +33,7 @@
         <%= number_with_precision((lesson.time_out - lesson.time_in)/60, :precision =>2) || 0 %>
     </td>
     <% if group_lesson_heading %>
-      <td colspan="6"><%= course_name ? "Course: #{course_name}" : "Group Lesson" %></td>
+      <td colspan="6"><%= course_name ? "#{Course.model_name.human}: #{course_name}" : "Group Lesson" %></td>
     <% else %>
       <%= f.fields_for :ratings do |rating_f| %>
         <td>

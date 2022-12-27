@@ -64,6 +64,10 @@ When('I go to My Records') do
   visit '/lessons'
 end
 
+When('I go to My Students') do
+  visit '/students'
+end
+
 Given('I have not taught any lessons') do
   @registered_user.lessons.length == 0
 end

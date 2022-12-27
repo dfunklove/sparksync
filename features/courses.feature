@@ -40,3 +40,8 @@ Given I go to the courses page
 * I go to My Records
 * I expand the group lesson record
 * There are 2 students in the group lesson record
+
+Scenario: Students from courses appear in My Students
+Given Testing courses exist
+Given I go to My Students
+Then The students from the test courses are in the list

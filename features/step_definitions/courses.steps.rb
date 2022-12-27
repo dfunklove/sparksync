@@ -54,3 +54,9 @@ end
 Then('The test course is in the list') do
   expect(page).to have_text("#{Course.model_name.human}: Test1")
 end
+
+Then('The students from the test courses are in the list') do
+  expect(page).to have_text("Test1")
+  expect(page).to have_text("Test2")
+  expect(page).to have_text("Test3")
+end

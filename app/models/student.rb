@@ -40,6 +40,8 @@ class Student < ApplicationRecord
   end
 
   def self.find_by_teacher(teacher_id)
-    self.joins(:lessons).includes(:school, :goals).where(activated: true).where("lessons.user_id" => teacher_id).references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
+    part1 = self.joins(:lessons).includes(:school, :goals).where(activated: true).where("lessons.user_id" => teacher_id).references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
+    part2 = self.joins(:courses, :student_courses).includes(:school, :goals).where(activated: true).where("courses.user_id" => teacher_id).where("student_courses.course_id = courses.id").references(:school, :goals).order(:school_id, :last_name, :first_name, "goals.name")
+    return part1 + part2
   end
 end

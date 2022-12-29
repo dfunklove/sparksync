@@ -35,23 +35,11 @@ students_in_course = students_in_course.map { |student| student.id }
 </div>
 <div id="student_list_container" class="hidden">
   <ul id="student_list" class="student_list"></ul>
-  <div id="add_student">
-    <input type="text" id="new_student_first_name" placeholder="First name"/>
-    <input type="text" id="new_student_last_name" placeholder="Last name"/>
-    <button onclick="add_student_wrapper(event)">Add Student</button>
-  </div>
 </div>
   <br>
   <%= course_f.submit %>
 <% end %>
 <script>
-function add_student_wrapper(e) {
-  e.preventDefault()
-  let first_name = $("#new_student_first_name").val().trim()
-  let last_name = $("#new_student_last_name").val().trim()
-  let school_id = $("#course_school_id").val()
-  add_student(first_name, last_name, school_id)
-}
 function show_students() {
   let school_id = $("#course_school_id").val()
   if (!school_id) return
@@ -67,20 +55,7 @@ function student_checkbox(student) {
   let checked = students_in_course.includes(id) ? "checked" : ""
   return `<li><input type="checkbox" value="${id}" name="course[student_ids][]" id="course_student_ids_${id}" ${checked}><label for="course_student_ids_${id}">${first_name} ${last_name}</label></li>`
 }
-function student_found(student) {
-  let id = student.id
-  let school_id = $("#course_school_id").val()
-  if (students_in_course.includes(id) || school_to_students[school_id].map(student => student.id).includes(id)) {
-    set_error("Student is already in the list")
-    return false
-  }
-  students_in_course.push(id)
-  $("#student_list").append(student_checkbox(student))
-  $("#new_student_first_name").val('')
-  $("#new_student_last_name").val('')
-}
 $(function() {
   show_students();
 })
-<%= render partial: "shared/add_student", formats: :js %>
 </script>

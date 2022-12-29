@@ -96,17 +96,10 @@ In order to run this application, you will need to install the following:
         -  snap install node --classic
 8.  database: postgres
     - sudo apt install postgresql postgresql-contrib libpq-dev
-    - these steps seem to be obsolete on ubuntu 18.04 and postgres v10
-        1.  initdb \--locale \$LANG -E UTF8 -D \'/var/lib/postgres/data\'
+        1.  sudo -u postgres createuser -s $USER
         2.  systemctl start postgresql.service
         3.  systemctl enable postgresql.service
     - cd \$APPDIR
-    - rails db:setup
-    -  create app user (follow rails error message)
-        1.  sudo su - postgres
-        2.  psql
-        3.  create role X with login createdb superuser;
-        4.  Ctrl-D
     - rails db:setup
 9.  Run the app
     - rails s

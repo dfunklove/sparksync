@@ -124,4 +124,27 @@ Given('I have taught {int} students') do |int|
     click_on "Finish Lesson", wait: 5
   end
 end
-``
+
+When('I click the Active button') do
+  click_button('Active')
+end
+
+When('I click the All button') do
+  click_button('All')
+end
+
+When('I click the Inactive button') do
+  click_button('Inactive')
+end
+
+Then('I should see the Active button') do
+  expect(page).to have_button('Active')
+end
+
+Then('I should see the All button') do
+  expect(page).to have_button('All')
+end
+
+Then('I should see the Inactive button') do
+  expect(page).to have_button('Inactive')
+end

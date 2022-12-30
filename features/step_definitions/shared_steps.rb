@@ -1,3 +1,11 @@
+Given('Testing admins exist') do
+  FactoryBot.create(:admin,
+    first_name: "Test1",
+    last_name: "Admin",
+    email: "test1@example.com",
+    password: "Letters1!")
+end
+
 Given('Testing schools exist') do
   FactoryBot.create(:school,
     name: "Test1",
@@ -43,11 +51,19 @@ end
 Given('I am registered as a teacher') do
   @registered_user = Teacher.where(email: "test@example.com").first || FactoryBot.create(:teacher,
     email: "test@example.com",
-    password: "sparksISgr8*",
+    password: "Letters1!",
     first_name: "Test",
     last_name: "Teacher")
   end
 
+Given('I am registered as an admin') do
+  @registered_user = Admin.where(email: "test@example.com").first || FactoryBot.create(:admin,
+    email: "test@example.com",
+    password: "Letters1!",
+    first_name: "Test",
+    last_name: "Admin")
+  end
+  
 Given('I am logged in') do
   visit root_path
   fill_in "session_email", with: @registered_user.email
@@ -103,3 +119,4 @@ Given('I have taught {int} students') do |int|
     click_on "Finish Lesson", wait: 5
   end
 end
+``

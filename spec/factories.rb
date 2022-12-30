@@ -1,6 +1,8 @@
 FactoryBot.define do
-  factory :course do
+  factory :admin do
+  end
 
+  factory :course do
   end
   
   factory :school do

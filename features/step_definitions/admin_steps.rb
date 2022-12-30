@@ -62,7 +62,7 @@ When('I click Reset on an admin') do
   tr.find_button('Reset').click
 end
 
-When('I click modify on the admin') do
+When('I click Modify on the admin') do
   tr = find_row_with_email(admin_email)
   tr.find_button('Modify').click
 end

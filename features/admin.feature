@@ -1,7 +1,7 @@
 Feature: Admin
 
 As an Admin
-I should be able to create and/or modify admins, lessons, partners, schools, sessions, students, teachers.
+I should be able to create and/or modify admins
 
 Background:
 Given Testing admins exist
@@ -34,7 +34,7 @@ Then I should see the new admin
 
 Scenario: Update admin
 When I enter a new first name, last name, and email for the admin
-When I click modify on the admin
+When I click Modify on the admin
 Then I should be informed that the admin was modified
 Then I should see the updated admin
 

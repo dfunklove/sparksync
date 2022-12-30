@@ -1,5 +1,10 @@
 Given('Testing admins exist') do
   FactoryBot.create(:admin,
+    first_name: "Driver",
+    last_name: "Admin",
+    email: "driver@example.com",
+    password: "Letters1!")
+  FactoryBot.create(:admin,
     first_name: "Test1",
     last_name: "Admin",
     email: "test1@example.com",

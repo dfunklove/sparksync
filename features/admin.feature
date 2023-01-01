@@ -70,6 +70,6 @@ Examples:
 |model_name | record_id                 |
 |admin      | test_admin1@example.com   |
 |partner    | test_partner1@example.com |
-|school     | Test1                     |
+|school     | Test_NoStudents           |
 |student    | Test1                     |
 |teacher    | test_teacher1@example.com |

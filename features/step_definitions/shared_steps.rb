@@ -19,12 +19,15 @@ Given('Testing schools exist') do
   FactoryBot.create(:school,
     name: "Test1",
     id: 1)
-    FactoryBot.create(:school,
-      name: "Test2",
-      id: 2)
-    FactoryBot.create(:school,
+  FactoryBot.create(:school,
+    name: "Test2",
+    id: 2)
+  FactoryBot.create(:school,
     name: "Test3",
     id: 3)
+  FactoryBot.create(:school,
+    name: "Test_NoStudents",
+    id: 4)
 end
 
 Given('Testing students exist') do

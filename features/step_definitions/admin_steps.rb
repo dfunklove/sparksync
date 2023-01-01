@@ -103,7 +103,7 @@ Then(/I should see a Delete button for record (\S+)/) do |record_id|
 end
 
 Then(/I should not see record (\S+)/) do |record_id|
-  expect(page).to have_no_text("#{record_id}")
+  expect(page).to have_no_xpath(".//tr[.//input[@value='#{record_id}']]")
 end
 
 Then('I should be informed that a welcome email was sent to the new admin') do
@@ -119,11 +119,11 @@ Then('I should be informed that the admin was modified') do
 end
 
 Then('I should be informed that the record was activated') do
-  expect(page).to have_text("was activated")
+  expect(page).to have_text(/(was|have been) activated/)
 end
 
 Then('I should be informed that the record was deactivated') do
-  expect(page).to have_text("was deactivated")
+  expect(page).to have_text(/(was|have been) deactivated/)
 end
 
 Then('I should be informed that the record was deleted') do

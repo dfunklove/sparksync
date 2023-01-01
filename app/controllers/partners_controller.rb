@@ -35,6 +35,7 @@ class PartnersController < UsersController
     if @partner.save
       # send email
       @partner.send_welcome(@partner.id)
+      flash[:info] = "A welcome email was sent to #{@partner.email}"
       redirect_to partners_url
     else
       handle_error
@@ -45,43 +46,45 @@ class PartnersController < UsersController
     partner_id = params[:id]
     @partner = Partner.find(partner_id)
     if params[:modify]
-      puts "modify"
+      old_name = "#{@partner.first_name} #{@partner.last_name}"
       if @partner.update(school_id: partner_params[:school_id],
                         first_name: partner_params[:first_name],
                         last_name: partner_params[:last_name],
                         email: partner_params[:email])
+        flash[:info] = "#{old_name} was modified."
         redirect_to partners_url
       else
         handle_error
       end
     elsif params[:delete]
-      puts "delete"
       if @partner.activated
         # don't actually delete, set unactivated
         if @partner.update(activated: false)
+          flash[:info] = "#{@partner.first_name} #{@partner.last_name} was deactivated."
           redirect_to partners_url
         else
           handle_error
         end
       else
         if @partner.delete
+          flash[:info] = "#{@partner.first_name} #{@partner.last_name} was deleted."
           redirect_to partners_url
         else
           handle_error
         end
       end
     elsif params[:activate]
-      puts "activate"
       if @partner.update(activated: true)
+        flash[:info] = "#{@partner.first_name} #{@partner.last_name} was activated."
         redirect_to partners_url
       else
         handle_error
       end
     elsif params[:reset]
-      puts "reset"
       genword = genpassword(@partner)
       if @partner.update(password: genword)
         @partner.send_password_reset_email
+        flash[:info] = "A password reset email was sent to #{@partner.email}"
         redirect_to partners_url
       else
         handle_error

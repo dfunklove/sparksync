@@ -36,8 +36,8 @@ class AdminsController < UsersController
   def update
     admin_id = params[:id]
     @admin = Admin.find(admin_id)
-    old_name = "#{@admin.first_name} #{@admin.last_name}"
     if params[:modify]
+      old_name = "#{@admin.first_name} #{@admin.last_name}"
       if @admin.update(school_id: admin_params[:school_id],
                         first_name: admin_params[:first_name],
                         last_name: admin_params[:last_name],

@@ -1,3 +1,7 @@
+def find_row_with_string(query)
+  tr = page.find(:xpath, ".//tr[.//input[@value='#{query}']]")
+end
+
 Given('Testing admins exist') do
   FactoryBot.create(:admin,
     first_name: "Driver",
@@ -7,7 +11,7 @@ Given('Testing admins exist') do
   FactoryBot.create(:admin,
     first_name: "Test1",
     last_name: "Admin",
-    email: "test1@example.com",
+    email: "test_admin1@example.com",
     password: "Letters1!")
 end
 
@@ -53,6 +57,23 @@ Given('Other students exist') do
     school_id: 3)
 end
 
+Given('Testing partners exist') do
+  FactoryBot.create(:partner,
+    email: "test_partner1@example.com",
+    password: "Letters1!",
+    first_name: "Test1",
+    last_name: "Partner",
+    school_id: 1)
+end
+
+Given('Testing teachers exist') do
+  FactoryBot.create(:teacher,
+    email: "test_teacher1@example.com",
+    password: "Letters1!",
+    first_name: "Test1",
+    last_name: "Teacher")
+end
+
 Given('I am registered as a teacher') do
   @registered_user = Teacher.where(email: "test@example.com").first || FactoryBot.create(:teacher,
     email: "test@example.com",
@@ -87,6 +108,10 @@ end
 
 When('I go to My Students') do
   visit '/students'
+end
+
+When(/I go to the page for model (\S+)/) do |model_name|
+  visit "/#{model_name}s"
 end
 
 Given('I have not taught any lessons') do

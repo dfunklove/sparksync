@@ -76,6 +76,7 @@ class SchoolsController < ApplicationController
     @school = School.new(school_params)
     @school.activated = true
     if @school.save
+      flash[:info] = "New school #{@school.name} was created."
       redirect_to schools_url
     else
       handle_error
@@ -86,14 +87,14 @@ class SchoolsController < ApplicationController
     school_id = params[:id]
     @school = School.find(school_id)
     if params[:modify]
-      puts "modify"
+      old_name = @school.name
       if @school.update(name: school_params[:name])
+        flash[:info] = "#{old_name} was modified."
         redirect_to schools_url
       else
         handle_error
       end
     elsif params[:delete]
-      puts "delete"
       if @school.activated
         # don't actually delete, set unactivated
         if @school.update(activated: false)
@@ -105,7 +106,8 @@ class SchoolsController < ApplicationController
       else
         begin
           # should throw exception on error
-          @school.delete!
+          @school.destroy!
+          flash[:info] = "#{@school.name} was deleted"
           redirect_to schools_url
         rescue
           @school.errors.add(
@@ -116,7 +118,6 @@ class SchoolsController < ApplicationController
         end
       end
     elsif params[:activate]
-      puts "activate"
       if @school.update(activated: true)
         flash[:info] = "#{@school.name} and all of its students have been activated"
         redirect_to schools_url

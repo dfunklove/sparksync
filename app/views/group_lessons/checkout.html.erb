@@ -51,7 +51,7 @@
       <td>
         <select form="add_student_form" id="new_student_school_id">
           <option>School...</option>
-          <%= options_from_collection_for_select(School.all, :id, :name) %>
+          <%= options_from_collection_for_select(School.where(activated: true), :id, :name) %>
         </select>
       </td>
       <td colspan="3"><button type="submit" onclick="add_student_wrapper(event)" form="add_student_form">Add Student</button></td>

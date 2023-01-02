@@ -52,7 +52,7 @@
     <td>
       <select form="add_student_form" id="new_student_school_id">
         <option>School...</option>
-        <%= options_from_collection_for_select(School.all, :id, :name) %>
+        <%= options_from_collection_for_select(School.where(activated: true), :id, :name) %>
       </select>
     </td>
     <td style="text-align: center"><input form="add_student_form" type="checkbox" value="1" checked="checked" id="new_student_brought_instrument"></td>

@@ -35,11 +35,23 @@ Given('Testing students exist') do
     first_name: "TestStudent2",
     last_name: "Student",
     school_id: 1)
-    FactoryBot.create(:student,
-      first_name: "TestStudent3",
-      last_name: "Student",
-      school_id: 1)
-  end
+  FactoryBot.create(:student,
+    first_name: "TestStudent3",
+    last_name: "Student",
+    school_id: 1)
+  FactoryBot.create(:student,
+    first_name: "TestStudent4",
+    last_name: "Student",
+    school_id: 2)
+  FactoryBot.create(:student,
+    first_name: "TestStudent5",
+    last_name: "Student",
+    school_id: 2)
+  FactoryBot.create(:student,
+    first_name: "TestStudent6",
+    last_name: "Student",
+    school_id: 2)
+end
 
 Given('Other students exist') do
   FactoryBot.create(:student,
@@ -70,6 +82,11 @@ Given('Testing teachers exist') do
     email: "test_teacher1@example.com",
     password: "Letters1!",
     first_name: "TestTeacher1",
+    last_name: "Teacher")
+  FactoryBot.create(:teacher,
+    email: "test_teacher2@example.com",
+    password: "Letters1!",
+    first_name: "TestTeacher2",
     last_name: "Teacher")
 end
 

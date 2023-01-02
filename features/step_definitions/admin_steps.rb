@@ -114,8 +114,8 @@ Then('I should be informed that a password reset email was sent to the admin') d
   expect(page).to have_text("A password reset email was sent to #{admin_email}")
 end
 
-Then('I should be informed that the admin was modified') do
-  expect(page).to have_text("#{admin_first_name} #{admin_last_name} was modified")
+Then('I should be informed that the record was modified') do
+  expect(page).to have_text("was modified")
 end
 
 Then('I should be informed that the record was activated') do
@@ -259,12 +259,6 @@ When('I go to the teachers page') do
   visit '/teachers'
 end
 
-When('I should be asked to enter a first name, last name, and email') do
-  expect(page).to have_text("First name can't be blank")
-  expect(page).to have_text("Last name can't be blank")  
-  expect(page).to have_text("Email can't be blank")
-end
-
 When('I enter a first name, last name, and invalid email for a new teacher') do
   tr = find("tr.new_record")
   tr.fill_in("teacher_first_name", with: "MyTestTeacher1")
@@ -282,4 +276,104 @@ end
 When('I should see the new teacher') do
   tr = find_field("teacher_first_name", with: "MyTestTeacher1").find(:xpath, "../..")
   expect(tr).to have_button("Deactivate")
+end
+
+When('I fill in new info for the course') do
+  fill_in("course_name", with: "UpdatedCourse1")
+  select("TestSchool2", from: "course_school_id")
+  select("TestTeacher2", from: "course_user_id")
+  check("course_student_ids_4")
+  check("course_student_ids_5")
+end
+
+When('I click Update Session') do
+  click_button("Update Session")
+end
+
+When('I click Edit on the updated course') do
+  find(".td", text: "UpdatedCourse1").find(:xpath, "..").find_button("Edit").click
+end
+
+When('I should see the new course info I entered') do
+  expect(page).to have_field("course_name", with: "UpdatedCourse1")
+  expect(page).to have_select("course_school_id", selected: "TestSchool2")
+  expect(page).to have_select("course_user_id", selected: "TestTeacher2 Teacher")
+  expect(page).to have_checked_field("TestStudent4 Student")
+  expect(page).to have_checked_field("TestStudent5 Student")
+end
+
+When('I enter a new school, first name, last name, and valid email for a partner') do
+  tr = find_field("partner_first_name", with: "TestPartner1").find(:xpath, "../..")
+  tr.select("TestSchool2", from: "partner_school_id")
+  tr.fill_in("partner_first_name", with: "UpdatedPartner1")
+  tr.fill_in("partner_last_name", with: "Partnerz")
+  tr.fill_in("partner_email", with: "updatedpartner1@example.com")
+end
+
+When('I click Modify on the updated partner') do
+  tr = find_field("partner_first_name", with: "UpdatedPartner1").find(:xpath, "../..")
+  tr.click_button("Modify")
+end
+
+When('I should see the updated partner') do
+  tr = find_field("partner_first_name", with: "UpdatedPartner1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+  expect(tr).to have_select("partner_school_id", selected: "TestSchool2")
+  expect(tr).to have_field("partner_first_name", with: "UpdatedPartner1")
+  expect(tr).to have_field("partner_last_name", with: "Partnerz")
+  expect(tr).to have_field("partner_email", with: "updatedpartner1@example.com")
+end
+
+When('I enter a new name for a school') do
+  find_field("school_name", with: "TestSchool1").fill_in(with: "UpdatedSchool1")
+end
+
+When('I click Modify on the updated school') do
+  tr = find_field("school_name", with: "UpdatedSchool1").find(:xpath, "../..")
+  tr.click_button("Modify")
+end
+
+When('I should see the updated school') do
+  tr = find_field("school_name", with: "UpdatedSchool1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+end
+
+When('I enter a new first name, last name, and school for a student') do
+  tr = find_field("student_first_name", with: "TestStudent1").find(:xpath, "../..")
+  tr.select("TestSchool2", from: "student_school_id")
+  tr.fill_in("student_first_name", with: "UpdatedStudent1")
+  tr.fill_in("student_last_name", with: "Studentz")
+end
+
+When('I click Modify on the updated student') do
+  tr = find_field("student_first_name", with: "UpdatedStudent1").find(:xpath, "../..")
+  tr.click_button("Modify")
+end
+
+When('I should see the updated student') do
+  tr = find_field("student_first_name", with: "UpdatedStudent1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+  expect(tr).to have_select("student_school_id", selected: "TestSchool2")
+  expect(tr).to have_field("student_first_name", with: "UpdatedStudent1")
+  expect(tr).to have_field("student_last_name", with: "Studentz")
+end
+
+When('I enter a new first name, last name, and email for a teacher') do
+  tr = find_field("teacher_first_name", with: "TestTeacher1").find(:xpath, "../..")
+  tr.fill_in("teacher_first_name", with: "UpdatedTeacher1")
+  tr.fill_in("teacher_last_name", with: "Teacherz")
+  tr.fill_in("teacher_email", with: "updatedteacher1@example.com")
+end
+
+When('I click Modify on the updated teacher') do
+  tr = find_field("teacher_first_name", with: "UpdatedTeacher1").find(:xpath, "../..")
+  tr.click_button("Modify")
+end
+
+When('I should see the updated teacher') do
+  tr = find_field("teacher_first_name", with: "UpdatedTeacher1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+  expect(tr).to have_field("teacher_first_name", with: "UpdatedTeacher1")
+  expect(tr).to have_field("teacher_last_name", with: "Teacherz")
+  expect(tr).to have_field("teacher_email", with: "updatedteacher1@example.com")
 end

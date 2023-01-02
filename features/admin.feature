@@ -35,7 +35,7 @@ Then I should see the new admin
 Scenario: Update admin
 When I enter a new first name, last name, and email for the admin
 When I click Modify on the admin
-Then I should be informed that the admin was modified
+Then I should be informed that the record was modified
 Then I should see the updated admin
 
 Scenario: Reset admin password
@@ -94,6 +94,47 @@ When I go to the teachers page
 * I click Send
 * I should be informed that a welcome email was sent
 * I should see the new teacher
+
+Scenario: Modify course
+When I go to the courses page
+* I click New Session
+* I click Create Session
+* I should be asked to enter a name, teacher, school, and students
+* I fill in the info for the course
+* I click Create Session
+* I click Edit on the new course
+* I fill in new info for the course
+* I click Update Session
+* I click Edit on the updated course
+* I should see the new course info I entered
+
+Scenario: Modify partner
+When I go to the partners page
+* I enter a new school, first name, last name, and valid email for a partner
+* I click Modify on the updated partner
+* I should be informed that the record was modified
+* I should see the updated partner
+
+Scenario: Modify school
+When I go to the schools page
+* I enter a new name for a school
+* I click Modify on the updated school
+* I should be informed that the record was modified
+* I should see the updated school
+
+Scenario: Modify student
+When I go to the students page
+* I enter a new first name, last name, and school for a student
+* I click Modify on the updated student
+* I should be informed that the record was modified
+* I should see the updated student
+
+Scenario: Modify teacher
+When I go to the teachers page
+* I enter a new first name, last name, and email for a teacher
+* I click Modify on the updated teacher
+* I should be informed that the record was modified
+* I should see the updated teacher
 
 Scenario Outline: Activate, Deactivate and Delete
 When I go to the page for model <model_name>

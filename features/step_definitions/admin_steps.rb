@@ -259,7 +259,7 @@ When('I go to the teachers page') do
   visit '/teachers'
 end
 
-When('I should be asked to enter a irst name, last name, and email') do
+When('I should be asked to enter a first name, last name, and email') do
   expect(page).to have_text("First name can't be blank")
   expect(page).to have_text("Last name can't be blank")  
   expect(page).to have_text("Email can't be blank")

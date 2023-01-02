@@ -86,7 +86,7 @@ When I go to the students page
 Scenario: Create teacher
 When I go to the teachers page
 * I click Send
-* I should be asked to enter a irst name, last name, and email
+* I should be asked to enter a first name, last name, and email
 * I enter a first name, last name, and invalid email for a new teacher
 * I click Send
 * I should be asked to enter a valid email

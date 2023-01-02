@@ -9,7 +9,7 @@ Given('Testing admins exist') do
     email: "driver@example.com",
     password: "Letters1!")
   FactoryBot.create(:admin,
-    first_name: "Test1",
+    first_name: "TestAdmin1",
     last_name: "Admin",
     email: "test_admin1@example.com",
     password: "Letters1!")
@@ -17,30 +17,26 @@ end
 
 Given('Testing schools exist') do
   FactoryBot.create(:school,
-    name: "Test1",
-    id: 1)
+    name: "TestSchool1")
   FactoryBot.create(:school,
-    name: "Test2",
-    id: 2)
+    name: "TestSchool2")
   FactoryBot.create(:school,
-    name: "Test3",
-    id: 3)
+    name: "TestSchool3")
   FactoryBot.create(:school,
-    name: "Test_NoStudents",
-    id: 4)
+    name: "Test_NoStudents")
 end
 
 Given('Testing students exist') do
   FactoryBot.create(:student,
-    first_name: "Test1",
+    first_name: "TestStudent1",
     last_name: "Student",
     school_id: 1)
   FactoryBot.create(:student,
-    first_name: "Test2",
+    first_name: "TestStudent2",
     last_name: "Student",
     school_id: 1)
     FactoryBot.create(:student,
-      first_name: "Test3",
+      first_name: "TestStudent3",
       last_name: "Student",
       school_id: 1)
   end
@@ -64,7 +60,7 @@ Given('Testing partners exist') do
   FactoryBot.create(:partner,
     email: "test_partner1@example.com",
     password: "Letters1!",
-    first_name: "Test1",
+    first_name: "TestPartner1",
     last_name: "Partner",
     school_id: 1)
 end
@@ -73,7 +69,7 @@ Given('Testing teachers exist') do
   FactoryBot.create(:teacher,
     email: "test_teacher1@example.com",
     password: "Letters1!",
-    first_name: "Test1",
+    first_name: "TestTeacher1",
     last_name: "Teacher")
 end
 

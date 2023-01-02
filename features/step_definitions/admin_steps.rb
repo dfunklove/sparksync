@@ -1,5 +1,5 @@
 admin_email = "test_admin1@example.com"
-admin_first_name = "Test1"
+admin_first_name = "TestAdmin1"
 admin_last_name = "Admin"
 new_admin_email = "imadethis@example.com"
 
@@ -106,8 +106,8 @@ Then(/I should not see record (\S+)/) do |record_id|
   expect(page).to have_no_xpath(".//tr[.//input[@value='#{record_id}']]")
 end
 
-Then('I should be informed that a welcome email was sent to the new admin') do
-  expect(page).to have_text("A welcome email was sent to #{new_admin_email}")
+Then('I should be informed that a welcome email was sent') do
+  expect(page).to have_text("A welcome email was sent")
 end
 
 Then('I should be informed that a password reset email was sent to the admin') do
@@ -130,3 +130,156 @@ Then('I should be informed that the record was deleted') do
   expect(page).to have_text("was deleted")
 end
 
+When('I click New Session') do
+  click_button("New Session")
+end
+
+When('I click Create Session') do
+  click_button("Create Session")
+end
+
+When('I should be asked to enter a name, teacher, school, and students') do
+  expect(page).to have_text("Name can't be blank")
+  expect(page).to have_text("School can't be blank")
+  expect(page).to have_text("Teacher can't be blank")
+  expect(page).to have_text(/Please select \S+ or more students/)
+end
+
+When('I fill in the info for the course') do
+  fill_in("course_name", with: "TestCourse1")
+  select("TestSchool1", from: "course_school_id")
+  select("TestTeacher1", from: "course_user_id")
+  check("course_student_ids_1")
+  check("course_student_ids_2")
+end
+
+When('I should see the new course in the list') do
+  expect(page).to have_text("TestCourse1")
+end
+
+When('I click Edit on the new course') do
+  find(".td", text: "TestCourse1").find(:xpath, "..").find_button("Edit").click
+end
+
+When('I should see the course info I entered') do
+  expect(page).to have_field("course_name", with: "TestCourse1")
+  expect(page).to have_select("course_school_id", selected: "TestSchool1")
+  expect(page).to have_select("course_user_id", selected: "TestTeacher1 Teacher")
+  expect(page).to have_checked_field("TestStudent1 Student")
+  expect(page).to have_checked_field("TestStudent2 Student")
+end
+
+When('I go to the partners page') do
+  visit('/partners')
+end
+
+When('I should be asked to enter a school, first name, last name, and email') do
+  expect(page).to have_text("School can't be blank")
+  expect(page).to have_text("First name can't be blank")
+  expect(page).to have_text("Last name can't be blank")
+  expect(page).to have_text("Email can't be blank")
+end
+
+When('I enter a school, first name, last name, and invalid email for a new partner') do
+  tr = find("tr.new_record")
+  tr.select("TestSchool1", from: "partner_school_id")
+  tr.fill_in("partner_first_name", with: "MyTestPartner1")
+  tr.fill_in("partner_last_name", with: "Partner")
+  tr.fill_in("partner_email", with: "MyTestPartner1@example")
+end
+
+When('I enter a school, first name, last name, and valid email for a new partner') do
+  tr = find("tr.new_record")
+  tr.select("TestSchool1", from: "partner_school_id")
+  tr.fill_in("partner_first_name", with: "MyTestPartner1")
+  tr.fill_in("partner_last_name", with: "Partner")
+  tr.fill_in("partner_email", with: "MyTestPartner1@example.com")
+end
+
+When('I should see the new partner') do
+  tr = find_field("partner_first_name", with: "MyTestPartner1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+  expect(tr).to have_field("partner_last_name", with: "Partner")
+  expect(tr).to have_field("partner_email", with: "mytestpartner1@example.com")
+end
+
+When('I go to the schools page') do
+  visit '/schools'
+end
+
+When('I click Create') do
+  click_on('Create')
+end
+
+When('I should be asked to enter a name') do
+  expect(page).to have_text("Name can't be blank")
+end
+
+When('I enter a name for a new school') do
+  tr = find("tr.new_record")
+  tr.fill_in("school_name", with: "MyTestSchool1")
+end
+
+When('I should be informed that a new school was created') do
+  expect(page).to have_text("New school MyTestSchool1 was created")
+end
+
+When('I should see the new school') do
+  tr = find_field("school_name", with: "MyTestSchool1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+end
+
+When('I go to the students page') do
+  visit '/students'
+end
+
+When('I should be asked to enter a first name, last name, and school') do
+  expect(page).to have_text("School can't be blank")
+  expect(page).to have_text("First name can't be blank")
+  expect(page).to have_text("Last name can't be blank")
+end
+
+When('I enter a first name, last name, and school for a new student') do
+  tr = find("tr.new_record")
+  tr.select("TestSchool1", from: "student_school_id")
+  tr.fill_in("student_first_name", with: "MyTestStudent1")
+  tr.fill_in("student_last_name", with: "Student")
+end
+
+When('I should be informed that a new student was created') do
+  expect(page).to have_text("New student MyTestStudent1 Student was created")
+end
+
+When('I should see the new student') do
+  tr = find_field("student_first_name", with: "MyTestStudent1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+end
+
+When('I go to the teachers page') do
+  visit '/teachers'
+end
+
+When('I should be asked to enter a irst name, last name, and email') do
+  expect(page).to have_text("First name can't be blank")
+  expect(page).to have_text("Last name can't be blank")  
+  expect(page).to have_text("Email can't be blank")
+end
+
+When('I enter a first name, last name, and invalid email for a new teacher') do
+  tr = find("tr.new_record")
+  tr.fill_in("teacher_first_name", with: "MyTestTeacher1")
+  tr.fill_in("teacher_last_name", with: "Teacher")
+  tr.fill_in("teacher_email", with: "mytestteacher1@example")
+end
+
+When('I enter a first name, last name, and valid email for a new teacher') do
+  tr = find("tr.new_record")
+  tr.fill_in("teacher_first_name", with: "MyTestTeacher1")
+  tr.fill_in("teacher_last_name", with: "Teacher")
+  tr.fill_in("teacher_email", with: "mytestteacher1@example.com")
+end
+
+When('I should see the new teacher') do
+  tr = find_field("teacher_first_name", with: "MyTestTeacher1").find(:xpath, "../..")
+  expect(tr).to have_button("Deactivate")
+end

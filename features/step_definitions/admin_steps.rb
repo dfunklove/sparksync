@@ -377,3 +377,17 @@ When('I should see the updated teacher') do
   expect(tr).to have_field("teacher_last_name", with: "Teacherz")
   expect(tr).to have_field("teacher_email", with: "updatedteacher1@example.com")
 end
+
+When('I click Activate on a school') do
+  tr = find_field("school_name", with: "TestSchool1").find(:xpath, "../..")
+  tr.click_button("Activate")
+end
+
+When('I click Deactivate on a school') do
+  tr = find_field("school_name", with: "TestSchool1").find(:xpath, "../..")
+  tr.click_button("Deactivate")
+end
+
+When('I should not see any students from that school') do
+  expect(page).to have_no_select("#student_school_id", selected: "TestSchool1")
+end

@@ -136,6 +136,20 @@ When I go to the teachers page
 * I should be informed that the record was modified
 * I should see the updated teacher
 
+Scenario: Activate/Deactivate School and Students
+When I go to the schools page
+* I click Deactivate on a school
+* I go to the students page
+* I should not see any students from that school
+* I go to the schools page
+* I click the Active button
+* I click the All button
+* I should see the Inactive button
+* I click Activate on a school
+* I go to the students page
+* I should see the Inactive button
+* I should not see any students from that school
+
 Scenario Outline: Activate, Deactivate and Delete
 When I go to the page for model <model_name>
 When I click Deactivate on record <record_id>

@@ -38,16 +38,9 @@ class CoursesController < ApplicationController
 
   def create
     course = Course.new(course_params)
-    if !params[:course][:student_ids] || params[:course][:student_ids].length < 2
-      course.errors.add(
-        :base,
-        :add_more_students,
-        message: "Please select two or more students"
-      )
-    end
 
     respond_to do |format|
-      if course.errors.count == 0 && course.save
+      if course.save
         format.html { redirect_to "/courses" }
       else
         format.js { render '/shared/error', locals: { object: course } }

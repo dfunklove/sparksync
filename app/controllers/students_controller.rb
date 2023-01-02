@@ -110,20 +110,21 @@ class StudentsController < ApplicationController
     @student = Student.find(student_id)
     if params[:modify]
       old_name = @student.name
-      @student.goals.clear
-      student_params[:goals_attributes].each do |key, goal_params|
-        goal = Goal.find_by(id: goal_params[:id])
-        logger.error("goal = #{goal}")
-        if goal
-          begin
-            @student.goals << goal
-          rescue ActiveRecord::RecordInvalid => e
-            logger.error(e)
-            @student.errors.add(:goals, e.message)
+      if student_params[:goals_attributes]
+        @student.goals.clear
+        student_params[:goals_attributes].each do |key, goal_params|
+          goal = Goal.find_by(id: goal_params[:id])
+          logger.error("goal = #{goal}")
+          if goal
+            begin
+              @student.goals << goal
+            rescue ActiveRecord::RecordInvalid => e
+              logger.error(e)
+              @student.errors.add(:goals, e.message)
+            end
           end
         end
       end
-      logger.error("student.goals = #{@student.goals.to_a}")
       if @student.errors.count == 0 && @student.update(student_params)
         flash[:info] = "#{old_name} was modified."
         redirect_to students_url

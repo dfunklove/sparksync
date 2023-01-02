@@ -19,7 +19,7 @@
     <% end %>
 		</tr>
   <% end %>
-	<tr>
+	<tr class="new_record">
   <%= form_for(@school, url: schools_path) do |f| %>
     <td></td>
  	  <td><%= f.text_field :name, class: "fname", placeholder: 'New school...' %></td>

@@ -62,7 +62,7 @@
     <% end %> <!-- form_for -->
     </tr> 
     <% end %>
-  <tr>
+	<tr class="new_record">
   <% if @isadmin %>
     <%= form_for(@student, url: students_path) do |f| %>
       <!-- restrict to activated schools only, default is "choose school -->

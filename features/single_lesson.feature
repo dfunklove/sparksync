@@ -4,8 +4,7 @@ As a teacher
 I should be able to teach a lesson to one student
 
 Background:
-  Given I am registered as a teacher
-  And I am logged in
+  Given I am logged in as a teacher
   And Testing schools exist
   And Testing students exist
 

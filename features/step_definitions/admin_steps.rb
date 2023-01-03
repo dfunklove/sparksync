@@ -146,23 +146,23 @@ When('I should be asked to enter a name, teacher, school, and students') do
 end
 
 When('I fill in the info for the course') do
-  fill_in("course_name", with: "TestCourse1")
+  fill_in("course_name", with: "MyTestCourse1")
   select("TestSchool1", from: "course_school_id")
   select("TestTeacher1", from: "course_user_id")
-  check("course_student_ids_1")
-  check("course_student_ids_2")
+  check("course_student_ids_101")
+  check("course_student_ids_102")
 end
 
 When('I should see the new course in the list') do
-  expect(page).to have_text("TestCourse1")
+  expect(page).to have_text("MyTestCourse1")
 end
 
 When('I click Edit on the new course') do
-  find(".td", text: "TestCourse1").find(:xpath, "..").find_button("Edit").click
+  find(".td", text: "MyTestCourse1").find(:xpath, "..").find_button("Edit").click
 end
 
 When('I should see the course info I entered') do
-  expect(page).to have_field("course_name", with: "TestCourse1")
+  expect(page).to have_field("course_name", with: "MyTestCourse1")
   expect(page).to have_select("course_school_id", selected: "TestSchool1")
   expect(page).to have_select("course_user_id", selected: "TestTeacher1 Teacher")
   expect(page).to have_checked_field("TestStudent1 Student")
@@ -282,8 +282,8 @@ When('I fill in new info for the course') do
   fill_in("course_name", with: "UpdatedCourse1")
   select("TestSchool2", from: "course_school_id")
   select("TestTeacher2", from: "course_user_id")
-  check("course_student_ids_4")
-  check("course_student_ids_5")
+  check("course_student_ids_104")
+  check("course_student_ids_105")
 end
 
 When('I click Update Session') do
@@ -390,4 +390,36 @@ end
 
 When('I should not see any students from that school') do
   expect(page).to have_no_select("#student_school_id", selected: "TestSchool1")
+end
+
+When('I click Clone on a course') do
+  
+end
+
+When('I should see a copy of the course') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I click Edit on the copy of the course') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I should see the cloned course info') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I click Delete on a course and dismiss the popup') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I should see the course in the list') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I click Delete on a course and accept the popup') do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+When('I should not see the course in the list') do
+  pending # Write code here that turns the phrase above into concrete actions
 end

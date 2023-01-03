@@ -9,8 +9,8 @@ Given Testing partners exist
 Given Testing teachers exist
 Given Testing schools exist
 Given Testing students exist
-Given I am registered as an admin
-Given I am logged in
+Given Testing courses exist
+Given I am logged in as an admin
 Given I go to Admins
 
 Scenario: Change view from Active to All to Inactive
@@ -149,6 +149,20 @@ When I go to the schools page
 * I go to the students page
 * I should see the Inactive button
 * I should not see any students from that school
+
+Scenario: Clone course
+When I go to the courses page
+* I click Clone on a course
+* I should see a copy of the course
+* I click Edit on the copy of the course
+* I should see the cloned course info
+
+Scenario: Delete course
+When I go to the courses page
+* I click Delete on a course and dismiss the popup
+* I should see the course in the list
+* I click Delete on a course and accept the popup
+* I should not see the course in the list
 
 Scenario Outline: Activate, Deactivate and Delete
 When I go to the page for model <model_name>

@@ -1,13 +1,3 @@
-Given('Testing courses exist') do
-  FactoryBot.create(:course,
-    name: "Test1",
-    id: 1,
-    school_id: 1,
-    user_id: 1,
-    start_date: '2023-01-01',
-    student_ids: [1,2,3])
-end
-
 When('I go to the courses page') do
   visit courses_path
 end
@@ -52,11 +42,11 @@ When('I mark {int} students as not present') do |int|
 end
 
 Then('The test course is in the list') do
-  expect(page).to have_text("#{Course.model_name.human}: Test1")
+  expect(page).to have_text("#{Course.model_name.human}: TestCourse1")
 end
 
 Then('The students from the test courses are in the list') do
-  expect(page).to have_text("Test1")
-  expect(page).to have_text("Test2")
-  expect(page).to have_text("Test3")
+  expect(page).to have_text("TestStudent1")
+  expect(page).to have_text("TestStudent2")
+  expect(page).to have_text("TestStudent3")
 end

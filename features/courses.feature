@@ -5,9 +5,10 @@ I should be able to teach a course which has been assigned to me
 
 Background:
   Given Testing schools exist
+  Given Testing students exist
+  Given Testing teachers exist
   Given Other students exist
-  Given I am registered as a teacher
-  And I am logged in
+  Given I am logged in as a teacher
 
 Scenario: Message when no courses
 Given I go to the courses page

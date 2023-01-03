@@ -17,55 +17,65 @@ end
 
 Given('Testing schools exist') do
   FactoryBot.create(:school,
-    name: "TestSchool1")
+    name: "TestSchool1",
+    id: 101)
   FactoryBot.create(:school,
-    name: "TestSchool2")
+    name: "TestSchool2",
+    id: 102)
   FactoryBot.create(:school,
-    name: "TestSchool3")
+    name: "TestSchool3",
+    id: 103)
   FactoryBot.create(:school,
-    name: "Test_NoStudents")
+    name: "Test_NoStudents",
+    id: 104)
 end
 
 Given('Testing students exist') do
   FactoryBot.create(:student,
     first_name: "TestStudent1",
     last_name: "Student",
-    school_id: 1)
+    school_id: 101,
+    id: 101)
   FactoryBot.create(:student,
     first_name: "TestStudent2",
     last_name: "Student",
-    school_id: 1)
+    school_id: 101,
+    id: 102)
   FactoryBot.create(:student,
     first_name: "TestStudent3",
     last_name: "Student",
-    school_id: 1)
+    school_id: 101,
+    id: 103)
   FactoryBot.create(:student,
     first_name: "TestStudent4",
     last_name: "Student",
-    school_id: 2)
+    school_id: 102,
+    id: 104)
   FactoryBot.create(:student,
     first_name: "TestStudent5",
     last_name: "Student",
-    school_id: 2)
+    school_id: 102,
+    id: 105)
   FactoryBot.create(:student,
     first_name: "TestStudent6",
     last_name: "Student",
-    school_id: 2)
+    school_id: 102,
+    id: 106)
 end
 
 Given('Other students exist') do
   FactoryBot.create(:student,
     first_name: "Other1",
     last_name: "Student",
-    school_id: 1)
+    school_id: 101)
   FactoryBot.create(:student,
     first_name: "Other2",
     last_name: "Student",
-    school_id: 2)
+    school_id: 102)
   FactoryBot.create(:student,
     first_name: "Other3",
     last_name: "Student",
-    school_id: 3)
+    school_id: 103)
 end
 
 Given('Testing partners exist') do
@@ -74,7 +84,7 @@ Given('Testing partners exist') do
     password: "Letters1!",
     first_name: "TestPartner1",
     last_name: "Partner",
-    school_id: 1)
+    school_id: 101)
 end
 
 Given('Testing teachers exist') do
@@ -82,36 +92,44 @@ Given('Testing teachers exist') do
     email: "test_teacher1@example.com",
     password: "Letters1!",
     first_name: "TestTeacher1",
-    last_name: "Teacher")
+    last_name: "Teacher",
+    id: 101)
   FactoryBot.create(:teacher,
     email: "test_teacher2@example.com",
     password: "Letters1!",
     first_name: "TestTeacher2",
-    last_name: "Teacher")
+    last_name: "Teacher",
+    id: 102)
 end
 
-Given('I am registered as a teacher') do
-  @registered_user = Teacher.where(email: "test@example.com").first || FactoryBot.create(:teacher,
-    email: "test@example.com",
-    password: "Letters1!",
-    first_name: "Test",
-    last_name: "Teacher")
-  end
+Given('Testing courses exist') do
+  FactoryBot.create(:course,
+    name: "TestCourse1",
+    id: 101,
+    school_id: 101,
+    user_id: 101,
+    start_date: '2023-01-01',
+    student_ids: [101,102,103])
+end
 
-Given('I am registered as an admin') do
-  @registered_user = Admin.where(email: "test@example.com").first || FactoryBot.create(:admin,
-    email: "test@example.com",
-    password: "Letters1!",
-    first_name: "Test",
-    last_name: "Admin")
-  end
-  
-Given('I am logged in') do
+Given('I am logged in as an admin') do
   visit root_path
-  fill_in "session_email", with: @registered_user.email
-  fill_in "session_password", with: @registered_user.password
+  fill_in "session_email", with: "driver@example.com"
+  fill_in "session_password", with: "Letters1!"
   click_button "Log in"
   assert_selector(:link, "Logout")
+end
+
+Given('I am logged in as a teacher') do
+  visit root_path
+  fill_in "session_email", with: "test_teacher1@example.com"
+  fill_in "session_password", with: "Letters1!"
+  click_button "Log in"
+  assert_selector(:link, "Logout")
+end
+
+Given('I click Logout') do
+  click_on("Logout")
 end
 
 When('I visit the homepage') do

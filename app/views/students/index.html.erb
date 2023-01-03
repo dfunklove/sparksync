@@ -1,6 +1,6 @@
 <table>
 <tr>
-<% if @changev %>
+<% if @changev and @isadmin %>
   <td>
   <%= render partial: "sessions/change_view" %>
   </td>

@@ -5,6 +5,12 @@ FactoryBot.define do
   factory :course do
   end
   
+  factory :goal do
+  end
+  
+  factory :lesson do
+  end
+
   factory :partner do
   end
 

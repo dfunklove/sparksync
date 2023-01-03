@@ -15,6 +15,15 @@ Given('Testing admins exist') do
     password: "Letters1!")
 end
 
+Given('Testing goals exist') do
+  FactoryBot.create(:goal,
+    name: "TestGoal1")
+  FactoryBot.create(:goal,
+    name: "TestGoal2")
+  FactoryBot.create(:goal,
+    name: "TestGoal3")
+end
+
 Given('Testing schools exist') do
   FactoryBot.create(:school,
     name: "TestSchool1",
@@ -110,6 +119,17 @@ Given('Testing courses exist') do
     user_id: 101,
     start_date: '2023-01-01',
     student_ids: [101,102,103])
+end
+
+Given('Testing lessons exist') do
+  FactoryBot.create(:lesson,
+    school_id: 101,
+    user_id: 101,
+    student_id: 101,
+    time_in: "2023-01-01 1:00",
+    time_out: "2023-01-01 2:00",
+    notes: "TestLesson1"
+  )
 end
 
 Given('I am logged in as an admin') do

@@ -434,3 +434,62 @@ end
 When('I should not see the course in the list') do
   expect(page).to have_no_text("TestCourse1")
 end
+
+When('I go to the lessons page') do
+  visit '/lessons'
+end
+
+When('I change the lesson data') do
+  # skipped the dates because of formatting issues; works in browser but not in selenium
+  tr = find_field("lesson_notes", with: "TestLesson1").find(:xpath, "../..")
+  field = tr.find_field("lesson_ratings_attributes_0_goal_id")
+  tr.select("TestGoal1", from: "lesson_ratings_attributes_0_goal_id")
+  tr.select("TestGoal2", from: "lesson_ratings_attributes_1_goal_id")
+  tr.select("TestGoal3", from: "lesson_ratings_attributes_2_goal_id")
+  tr.select("1", from: "lesson_ratings_attributes_0_score")
+  tr.select("2", from: "lesson_ratings_attributes_1_score")
+  tr.select("3", from: "lesson_ratings_attributes_2_score")
+  tr.uncheck("lesson_brought_instrument")
+  tr.uncheck("lesson_brought_books")
+  tr.fill_in("lesson_notes", with: "updated_note")
+end
+
+When('I click Modify on the lesson') do
+  tr = find_field("lesson_notes", with: "updated_note").find(:xpath, "../..")
+  tr.click_button("Modify")
+end
+
+When('I should see a lesson with the new data') do
+  tr = find_field("lesson_notes", with: "updated_note").find(:xpath, "../..")
+  expect(tr).to have_select("lesson_ratings_attributes_0_goal_id", selected: "TestGoal1")
+  expect(tr).to have_select("lesson_ratings_attributes_1_goal_id", selected: "TestGoal2")
+  expect(tr).to have_select("lesson_ratings_attributes_2_goal_id", selected: "TestGoal3")
+  expect(tr).to have_select("lesson_ratings_attributes_0_score", selected: "1")
+  expect(tr).to have_select("lesson_ratings_attributes_1_score", selected: "2")
+  expect(tr).to have_select("lesson_ratings_attributes_2_score", selected: "3")
+  expect(tr).to have_unchecked_field("lesson_brought_instrument")
+  expect(tr).to have_unchecked_field("lesson_brought_books")
+end
+
+When('I click Delete on a lesson and dismiss the popup') do
+  tr = find_field("lesson_notes", with: "TestLesson1").find(:xpath, "../..")
+  dismiss_confirm do
+    tr.click_button("Delete")
+  end
+end
+
+When('I click Delete on a lesson and accept the popup') do
+  tr = find_field("lesson_notes", with: "TestLesson1").find(:xpath, "../..")
+  accept_confirm do
+    tr.click_button("Delete")
+  end
+end
+
+When('I should see the lesson in the list') do
+  expect(page).to have_field("lesson_notes", with: "TestLesson1")
+end
+
+
+When('I should not see the lesson in the list') do
+  expect(page).to have_no_field("lesson_notes", with: "TestLesson1")
+end

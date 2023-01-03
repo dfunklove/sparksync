@@ -5,11 +5,13 @@ I should be able to create and/or modify admins, courses, partners, schools, stu
 
 Background:
 Given Testing admins exist
+Given Testing goals exist
 Given Testing partners exist
 Given Testing teachers exist
 Given Testing schools exist
 Given Testing students exist
 Given Testing courses exist
+Given Testing lessons exist
 Given I am logged in as an admin
 Given I go to Admins
 
@@ -163,6 +165,21 @@ When I go to the courses page
 * I should see the course in the list
 * I click Delete on a course and accept the popup
 * I should not see the course in the list
+
+Scenario: Modify lesson
+When I go to the lessons page
+* I change the lesson data
+* I click Modify on the lesson
+* I should be informed that the record was modified
+* I should see a lesson with the new data
+
+Scenario: Delete lesson
+When I go to the lessons page
+* I click Delete on a lesson and dismiss the popup
+* I should see the lesson in the list
+* I click Delete on a lesson and accept the popup
+* I should be informed that the record was deleted
+* I should not see the lesson in the list
 
 Scenario Outline: Activate, Deactivate and Delete
 When I go to the page for model <model_name>

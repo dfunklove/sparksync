@@ -15,20 +15,20 @@ Then('I am at the Start Single Lesson page') do
 end
 
 Given('The student is not in the database') do
-  expect !Student.where(first_name: "Test1", last_name: "Student", school_id: 1).exists?
+  expect !Student.where(first_name: "TestStudent1", last_name: "Student", school_id: 1).exists?
 end
 
 # TODO: find the form first
 
 When('I enter a student name') do
   form = find("#add_student_form")
-  form.fill_in("lesson[student_attributes][first_name]", with: "Test1")
+  form.fill_in("lesson[student_attributes][first_name]", with: "TestStudent1")
   form.fill_in("lesson[student_attributes][last_name]", with: "Student")
 end
 
 When('I select a school from the add student form') do
   form = find("#add_student_form")
-  form.select("Test1", from: "lesson[student_attributes][school_id]")
+  form.select("TestSchool1", from: "lesson[student_attributes][school_id]")
 end
 
 When('I click Start Lesson on the add student form') do
@@ -66,19 +66,11 @@ Then('I am at the Single Lesson Checkout page') do
 end
 
 #TODO use the UI to test these
-Then('The student is in the database') do
-  @student = Student.where(first_name: "Test1", last_name: "Student", school_id: 1).first
-  expect @student
-end
-
-Then('A lesson with the student is in the database') do
-  @student = Student.where(first_name: "Test1", last_name: "Student", school_id: 1).first
-  @lesson = Lesson.where(student_id: @student.id, user_id: @registered_user.id).first
-  expect @lesson
-end
-
-Then('The lesson contains my note') do
-  expect @lesson.notes == "test note"
+Then('I see the lesson I created') do
+  tr = find_field("lesson_notes", with: "test note").find(:xpath, "../..")
+  expect(tr).to have_text("TestStudent1")
+  expect(tr).to have_text("TestSchool1")
+  expect(tr).to have_text("TestTeacher1")
 end
 
 Then('I have the option to teach a single lesson to {int} students') do |int|

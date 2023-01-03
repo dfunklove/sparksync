@@ -121,11 +121,12 @@ Given('Testing courses exist') do
     student_ids: [101,102,103])
 end
 
+# do not use teacher 1 or student 1 because this will prevent them being deleted
 Given('Testing lessons exist') do
   FactoryBot.create(:lesson,
     school_id: 101,
-    user_id: 101,
-    student_id: 101,
+    user_id: 102,
+    student_id: 103,
     time_in: "2023-01-01 1:00",
     time_out: "2023-01-01 2:00",
     notes: "TestLesson1"
@@ -168,10 +169,6 @@ When(/I go to the page for model (\S+)/) do |model_name|
   visit "/#{model_name}s"
 end
 
-Given('I have not taught any lessons') do
-  @registered_user.lessons.length == 0
-end
-
 Then('The start time of the lesson is accurate') do
   expect Time.now - @lesson.time_in < 5.seconds
 end
@@ -196,9 +193,9 @@ Given('I have taught {int} students') do |int|
   int.times do |i|
     click_link "Single Lesson"
     form = find("#add_student_form")
-    form.fill_in("lesson[student_attributes][first_name]", with: "Test#{i+1}")
+    form.fill_in("lesson[student_attributes][first_name]", with: "TestStudent#{i+1}")
     form.fill_in("lesson[student_attributes][last_name]", with: "Student")
-    form.select("Test1", from: "lesson[student_attributes][school_id]")
+    form.select("TestSchool1", from: "lesson[student_attributes][school_id]")
     form.click_on("Start Lesson")
     click_on "Finish Lesson", wait: 5
   end

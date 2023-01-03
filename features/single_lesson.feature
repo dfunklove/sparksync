@@ -4,9 +4,10 @@ As a teacher
 I should be able to teach a lesson to one student
 
 Background:
-  Given I am logged in as a teacher
-  And Testing schools exist
+  Given Testing schools exist
   And Testing students exist
+  And Testing teachers exist
+  And I am logged in as a teacher
 
 Scenario: See a link to page Start Single Lesson
   When I visit the homepage
@@ -18,8 +19,7 @@ Scenario: Go to page Start Single Lesson
   Then I am at the Start Single Lesson page
 
 Scenario: Finish first lesson
-  Given I have not taught any lessons
-  * I go to the Start Single Lesson page
+  Given I go to the Start Single Lesson page
   * I enter a student name
   * I select a school from the add student form
   * I click Start Lesson on the add student form
@@ -27,9 +27,8 @@ Scenario: Finish first lesson
   * I enter a note
   When I click Finish Lesson
   Then I am at the Start Single Lesson page
-  * A lesson with the student is in the database
-  * The end time of the lesson is accurate
-  * The lesson contains my note
+  * I go to My Records
+  * I see the lesson I created
 
 Scenario: Student list size 1
   Given I have taught 1 students

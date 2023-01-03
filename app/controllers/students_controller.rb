@@ -94,6 +94,7 @@ class StudentsController < ApplicationController
     @student.activated = true
     respond_to do |format|
       if @student.save
+        flash[:info] = "New student #{@student.name} was created."
         format.html { redirect_to students_url }
         format.json { render json: @student }
       else
@@ -108,45 +109,48 @@ class StudentsController < ApplicationController
     student_id = params[:id]
     @student = Student.find(student_id)
     if params[:modify]
-      puts "modify"
-      @student.goals.clear
-      student_params[:goals_attributes].each do |key, goal_params|
-        goal = Goal.find_by(id: goal_params[:id])
-        logger.error("goal = #{goal}")
-        if goal
-          begin
-            @student.goals << goal
-          rescue ActiveRecord::RecordInvalid => e
-            logger.error(e)
-            @student.errors.add(:goals, e.message)
+      old_name = @student.name
+      if student_params[:goals_attributes]
+        @student.goals.clear
+        student_params[:goals_attributes].each do |key, goal_params|
+          goal = Goal.find_by(id: goal_params[:id])
+          logger.error("goal = #{goal}")
+          if goal
+            begin
+              @student.goals << goal
+            rescue ActiveRecord::RecordInvalid => e
+              logger.error(e)
+              @student.errors.add(:goals, e.message)
+            end
           end
         end
       end
-      logger.error("student.goals = #{@student.goals.to_a}")
       if @student.errors.count == 0 && @student.update(student_params)
+        flash[:info] = "#{old_name} was modified."
         redirect_to students_url
       else
         handle_error
       end
     elsif params[:delete]
-      puts "delete"
       if @student.activated
         # don't actually delete, set unactivated
         if @student.update( activated: false)
+          flash[:info] = "#{@student.first_name} #{@student.last_name} was deactivated."
           redirect_to students_url
         else
           handle_error
         end
       else
         if @student.delete
+          flash[:info] = "#{@student.first_name} #{@student.last_name} was deleted."
           redirect_to students_url
         else
           handle_error
         end
       end
     elsif params[:activate]
-      puts "activate"
       if @student.update(activated: true)
+        flash[:info] = "#{@student.first_name} #{@student.last_name} was activated."
         redirect_to students_url
       else
         handle_error

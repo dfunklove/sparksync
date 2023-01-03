@@ -20,19 +20,6 @@ function add_student(first_name, last_name, school_id) {
       student_not_found(first_name, last_name, school_id)
     })
 }
-function create_student(first_name, last_name, school_id) {
-  $.ajax("/students",
-    { method: "POST", dataType: "json", data: { student: { first_name: first_name, last_name: last_name, school_id: school_id }}})
-    .done(function(student) {
-      if (student && student.id)
-        student_found(student)
-      else
-        set_error("Unable to create student")
-    })
-    .fail(function(result) {
-      set_error("Unable to create student")
-    })
-}
 function clear_error() {
   $("#error_wrapper").html('')
 }
@@ -40,7 +27,5 @@ function set_error(message) {
   $("#error_wrapper").html(`<ul><li>${message}</li></ul>`)
 }
 function student_not_found(first_name, last_name, school_id) {
-  if (confirm("No student by that name at that school.  Are you trying to add a new student?")) {
-    create_student(first_name, last_name, school_id)
-  }
+  alert("No student by that name at that school.")
 }

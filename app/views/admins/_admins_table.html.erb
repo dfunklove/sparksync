@@ -18,13 +18,13 @@
         <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
         <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
       <% else %>
-        <td><%= f.submit "Activate", class: "delete", name: "activate" %></td>
         <td><%= f.submit "Delete", class: "delete", name: "delete", :onclick => "return confirm('#{@delete_warning}')" %></td>
+        <td><%= f.submit "Activate", class: "delete", name: "activate" %></td>
       <% end %>
     <% end %>
 		</tr>
   <% end %>
-	<tr>
+	<tr class="new_record">
   <%= form_for(@admin, url: admins_path) do |f| %>
  	  <td>
       <%= f.text_field :first_name, class: "fname", placeholder: 'Enter new...' %>

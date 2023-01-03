@@ -1,9 +1,9 @@
 class Course < ApplicationRecord
-  validates :name, presence: true, uniqueness: { scope: [:school, :teacher] }
+  validates :name, presence: true, uniqueness: true
   validates :school, presence: true
   validates :start_date, presence: true
   validates :teacher, presence: true
-  validates :students, length: { minimum: 2, message: "Please select two or more students" }
+  validate :min_students
   validate :start_date_before_end_date
 
   belongs_to :school
@@ -11,6 +11,12 @@ class Course < ApplicationRecord
 
   has_many :student_courses
   has_many :students, through: :student_courses
+
+  def min_students
+    if students.length < 2
+      errors.add(:base, "Please select two or more students")
+    end
+  end
 
   def start_date_before_end_date
     if end_date && end_date <= start_date

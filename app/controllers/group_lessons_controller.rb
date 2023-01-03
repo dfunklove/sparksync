@@ -7,20 +7,8 @@ class GroupLessonsController < ApplicationController
   end
 
   def new
-    @students = Student.find_by_teacher(current_user.id)
-
-    error_message = 'Please finish open lesson before starting a new one'
-    open_lesson = current_user.lessons_in_progress.first
-    open_group_lesson = current_user.group_lessons_in_progress.first
-    if open_group_lesson
-      session[:group_lesson_id] = open_group_lesson.id
-      flash[:danger] = error_message
-      redirect_to "/group_lessons/checkout"
-    elsif open_lesson
-      session[:lesson_id] = open_lesson.id
-      flash[:danger] = error_message
-      redirect_to "/lessons/checkout"
-    else
+    if not handle_open_lesson
+      @students = Student.find_by_teacher(current_user.id)
       @group_lesson = GroupLesson.new
 
       # populate lessons from students
@@ -41,6 +29,7 @@ class GroupLessonsController < ApplicationController
     
     group_lesson  = GroupLesson.new
     group_lesson.teacher = current_user
+    group_lesson.course_id = params[:group_lesson][:course_id]
 
     # Round time to the second to prevent double form submission
     group_lesson.time_in = Time.at((Time.now.to_f).round)
@@ -129,7 +118,7 @@ class GroupLessonsController < ApplicationController
 
   private
     def group_lesson_params
-      params.require(:group_lesson).permit(:id, :notes, lessons_attributes: 
+      params.require(:group_lesson).permit(:id, :course_id, :notes, lessons_attributes: 
           [:id, :brought_books, :brought_instrument, :student_id, :school_id, :notes, 
           ratings_attributes: [:id, :score, :goal_id],
           student_attributes: [:id, :permissions]])

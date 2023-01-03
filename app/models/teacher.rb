@@ -15,6 +15,10 @@ class Teacher < User
 	def group_lessons_in_progress
 		self.group_lessons.where(time_out: nil)
 	end
+
+	def name
+    return "#{first_name} #{last_name}"
+  end
 	
 	# Singleton methods
 

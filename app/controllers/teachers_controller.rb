@@ -100,6 +100,7 @@ class TeachersController < UsersController
     @teacher.activated = true
     if @teacher.save
       @teacher.send_welcome(@teacher.id)
+      flash[:info] = "A welcome email was sent to #{@teacher.email}"
       redirect_to teachers_url
     else
       handle_error
@@ -111,33 +112,35 @@ class TeachersController < UsersController
     @teacher = Teacher.find(teacher_id)
     success = true
     if params[:modify]
-      puts "modify"
+      old_name = @teacher.name
       if @teacher.update(first_name: teacher_params[:first_name],
                         last_name: teacher_params[:last_name],
                         email: teacher_params[:email])      
+        flash[:info] = "#{old_name} was modified."
         redirect_to teachers_url
       else
         handle_error
       end
     elsif params[:delete]
-      puts "delete"
       if @teacher.activated
         # don't actually delete, set unactivated
         if @teacher.update(activated: false)
+          flash[:info] = "#{@teacher.first_name} #{@teacher.last_name} was deactivated."
           redirect_to teachers_url
         else
           handle_error
         end
       else
         if @teacher.delete
+          flash[:info] = "#{@teacher.first_name} #{@teacher.last_name} was deleted."
           redirect_to teachers_url
         else
           handle_error
         end
       end
     elsif params[:activate]
-      puts "activate"
       if @teacher.update(activated: true)
+        flash[:info] = "#{@teacher.first_name} #{@teacher.last_name} was activated."
         redirect_to teachers_url
       else
         handle_error
@@ -147,6 +150,7 @@ class TeachersController < UsersController
       genword = genpassword(@teacher)
       if @teacher.update(password: genword)
         @teacher.send_password_reset_email
+        flash[:info] = "A password reset email was sent to #{@teacher.email}"
         redirect_to teachers_url
       else
         handle_error

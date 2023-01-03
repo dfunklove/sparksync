@@ -25,22 +25,9 @@ class LessonsController < ApplicationController
   end
 
   def prepare_new
-    @students = Student.find_by_teacher(current_user.id)
-
-    error_message = 'Please finish open lesson before starting a new one'
-    open_lesson = current_user.lessons_in_progress.first
-    open_group_lesson = current_user.group_lessons_in_progress.first
-    if open_lesson
-      @lesson = open_lesson
-      session[:lesson_id] = open_lesson.id
-      flash.now[:danger] = error_message
-      redirect_to "/lessons/checkout"
-    elsif open_group_lesson
-      session[:group_lesson_id] = open_group_lesson.id
-      flash[:danger] = error_message
-      redirect_to "/group_lessons/checkout"
-    else
-      @lesson ||= Lesson.new
+    if not handle_open_lesson
+      @students = Student.find_by_teacher(current_user.id)
+      @lesson = Lesson.new
       if !@lesson.student
         @lesson.student = Student.new
       end
@@ -124,8 +111,8 @@ class LessonsController < ApplicationController
 
   def update
     @lesson = Lesson.find(params[:id])
-    if teacher_user and not @lesson.user_id == current_user.id
-      format.html { redirect_to '/lessons' }
+    if current_user.teacher? and not @lesson.user_id == current_user.id
+      redirect_to '/lessons'
       return
     end
     temp_params = lesson_params
@@ -134,9 +121,11 @@ class LessonsController < ApplicationController
       logger.error("lesson.attributes: #{@lesson.attributes}")
       if @lesson.errors.count == 0
         @lesson.update(temp_params)
+        flash[:info] = "Lesson was modified"
       end
     elsif params[:delete]
       @lesson.delete
+      flash[:info] = "Lesson was deleted"
     else
       raise Exception.new('not modify or delete. who called lesson update?')
     end
@@ -152,6 +141,7 @@ class LessonsController < ApplicationController
     end
   end
 
+  # TODO migrate this to JS like group_lesson
   def create
     add_student_confirmed = params[:add_student_confirmed]
     lesson = Lesson.new(lesson_params)

@@ -27,7 +27,7 @@
     <% end %>
 		</tr>
   <% end %>
-	<tr>
+	<tr class="new_record">
   <%= form_for(@partner, url: partners_path) do |f| %>
  	  <td>
         <%= f.collection_select :school_id, School.where("activated=?", true).order(:name),:id,:name, :prompt => "School..." %>

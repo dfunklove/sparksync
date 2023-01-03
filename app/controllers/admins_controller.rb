@@ -26,7 +26,7 @@ class AdminsController < UsersController
     if @admin.save
       # send email
       @admin.send_welcome(@admin.id)
-      #flash[:info] = "A welcome email was sent to #{@admin.email}"
+      flash[:info] = "A welcome email was sent to #{@admin.email}"
       redirect_to admins_url
     else
       handle_error
@@ -37,47 +37,45 @@ class AdminsController < UsersController
     admin_id = params[:id]
     @admin = Admin.find(admin_id)
     if params[:modify]
-      puts "modify"
+      old_name = "#{@admin.first_name} #{@admin.last_name}"
       if @admin.update(school_id: admin_params[:school_id],
                         first_name: admin_params[:first_name],
                         last_name: admin_params[:last_name],
                         email: admin_params[:email])
-        #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was modified."
+        flash[:info] = "#{old_name} was modified."
         redirect_to admins_url
       else
         handle_error
       end
     elsif params[:delete]
-      puts "delete"
       if @admin.activated
         # don't actually delete, set unactivated
         if @admin.update(activated: false)
-          #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was deactivated."
+          flash[:info] = "#{@admin.first_name} #{@admin.last_name} was deactivated."
           redirect_to admins_url
         else
           handle_error
         end
       else
         if @admin.delete
-          #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was deleted."
+          flash[:info] = "#{@admin.first_name} #{@admin.last_name} was deleted."
           redirect_to admins_url
         else
           handle_error
         end
       end
     elsif params[:activate]
-      puts "activate"
       if @admin.update(activated: true)
-        #flash[:info] = "#{@admin.first_name} #{@admin.last_name} was activated."
+        flash[:info] = "#{@admin.first_name} #{@admin.last_name} was activated."
         redirect_to admins_url
       else
         handle_error
       end
     elsif params[:reset]
-      puts "reset"
       genword = genpassword(@admin)
       if @admin.update(password: genword)
-        @admin.send_password_reset_email
+        message = @admin.send_password_reset_email
+        flash[:info] = "A password reset email was sent to #{@admin.email}"
         redirect_to admins_url
       else
         handle_error

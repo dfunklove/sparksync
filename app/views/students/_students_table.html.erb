@@ -8,6 +8,7 @@
       <th>Goals</th>
     <% end %>
     <th>Permissions</th>
+    <th>Added</th>
     <% if @isadmin %>
       <th colspan="2"></th>
     <% else %>
@@ -18,14 +19,15 @@
 		<tr>
     <td> <%= button_to "View", student_path(student.id), method: :get %> </td>
     <%= form_for(student, url: student_path(student.id)) do |f| %>
+      <% created_at = student.created_at.strftime('%Y-%m-%d') %>
       <% if @isadmin %>
-        <!-- restrict to activated schools only, default is "choose school -->
         <td><%= f.text_field :first_name, class: "fname", placeholder: student.first_name %></td>
         <td><%= f.text_field :last_name, class: "lname", placeholder: student.last_name %></td>
         <td>
           <%= f.collection_select :school_id, School.all.order(:name),:id,:name %>
         </td>
         <td><%= f.text_field :permissions %></td>
+        <td><%= created_at %></td>
         <% if student.activated %>
           <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
           <td><%= f.submit "Deactivate", class: "delete", name: "delete" %></td>
@@ -53,12 +55,13 @@
           <% end %>
         </td>
         <td><%= f.text_field :permissions %></td>
+        <td><%= created_at %></td>
         <td><%= f.submit "Modify", class: "delete", name: "modify" %></td>
       <% end %>
     <% end %> <!-- form_for -->
     </tr> 
     <% end %>
-  <tr>
+	<tr class="new_record">
   <% if @isadmin %>
     <%= form_for(@student, url: students_path) do |f| %>
       <!-- restrict to activated schools only, default is "choose school -->

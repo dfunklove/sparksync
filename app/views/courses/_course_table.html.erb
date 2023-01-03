@@ -2,6 +2,9 @@
 <div class="thead">
   <div class="tr">
     <span class="td">Name</span>
+    <% if current_user.admin? %>
+      <span class="td">Teacher</span>
+    <% end %>
     <span class="td">School</span>
     <span class="td">Start</span>
     <span class="td">End</span>
@@ -9,14 +12,20 @@
 </div>
 <% courses.each do |course| %>
   <div class="tr">    
-    <% course_link = url_for action: 'teach', id: course.id %>
-    <span class="td"><%= button_to course.name, (url_for action: 'teach', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
+    <span class="td"><%= course.name %></span>
+    <% if current_user.admin? %>
+      <span class="td"><%= course.teacher.name %></span>
+    <% end %>
     <span class="td"><%= course.school.name %></span>
     <span class="td"><%= course.start_date %></span>
     <span class="td"><%= course.end_date || "?" %></span>
-    <span class="td"><%= button_to "Edit", course, method: :get %></span>
-    <span class="td"><%= button_to "Clone", (url_for action: 'clone', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
-    <span class="td"><%= button_to "Delete", course, method: :delete, remote: true, data: { disable_with: "Please wait..." }, onclick: "return confirm('Deleting this course is irreversible.  Are you sure?')"  %></span>
+    <% if current_user.admin? %>
+      <span class="td"><%= button_to "Edit", course, method: :get %></span>
+      <span class="td"><%= button_to "Clone", (url_for action: 'clone', id: course.id), remote: true, data: { disable_with: "Please wait..." } %></span>
+      <span class="td"><%= button_to "Delete", course, method: :delete, remote: true, data: { disable_with: "Please wait..." }, onclick: "return confirm('Deleting this course is irreversible.  Are you sure?')"  %></span>
+    <% else %>
+      <span class="td"><%= button_to "Teach this session", (url_for action: 'teach', id: course.id), data: { disable_with: "Please wait..." } %></span>
+    <% end %>
   </div>
 <% end %>
 </div>

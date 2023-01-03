@@ -393,33 +393,44 @@ When('I should not see any students from that school') do
 end
 
 When('I click Clone on a course') do
-  
+  find(".td", text: "TestCourse1").find(:xpath, "..").find_button("Clone").click
 end
 
 When('I should see a copy of the course') do
-  pending # Write code here that turns the phrase above into concrete actions
+  expect(page).to have_text("TestCourse1 (1)")
 end
 
 When('I click Edit on the copy of the course') do
-  pending # Write code here that turns the phrase above into concrete actions
+  find(".td", text: "TestCourse1 (1)").find(:xpath, "..").find_button("Edit").click
 end
 
 When('I should see the cloned course info') do
-  pending # Write code here that turns the phrase above into concrete actions
+  expect(page).to have_field("course_name", with: "TestCourse1 (1)")
+  expect(page).to have_select("course_school_id", selected: "TestSchool1")
+  expect(page).to have_select("course_user_id", selected: "TestTeacher1 Teacher")
+  expect(page).to have_checked_field("TestStudent1 Student")
+  expect(page).to have_checked_field("TestStudent2 Student")
+  expect(page).to have_checked_field("TestStudent3 Student")
 end
 
 When('I click Delete on a course and dismiss the popup') do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When('I should see the course in the list') do
-  pending # Write code here that turns the phrase above into concrete actions
+  delete_button = find(".td", text: "TestCourse1").find(:xpath, "..").find_button("Delete")
+  dismiss_confirm do
+    delete_button.click
+  end
 end
 
 When('I click Delete on a course and accept the popup') do
-  pending # Write code here that turns the phrase above into concrete actions
+  delete_button = find(".td", text: "TestCourse1").find(:xpath, "..").find_button("Delete")
+  accept_confirm do
+    delete_button.click
+  end
+end
+
+When('I should see the course in the list') do
+  expect(page).to have_text("TestCourse1")
 end
 
 When('I should not see the course in the list') do
-  pending # Write code here that turns the phrase above into concrete actions
+  expect(page).to have_no_text("TestCourse1")
 end

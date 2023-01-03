@@ -4,9 +4,10 @@ As a teacher
 I should be able to teach a lesson to a group of students
 
 Background:
-Given I am logged in as a teacher
-  And Testing schools exist
+  Given Testing schools exist
   And Testing students exist
+  And Testing teachers exist
+  And I am logged in as a teacher
 
 Scenario: See a link to page Start Group Lesson
   When I visit the homepage
@@ -18,8 +19,7 @@ Scenario: Go to page Start Group Lesson
   Then I am at the Start Group Lesson page
 
 Scenario: Finish first lesson
-  Given I have not taught any lessons
-  * I go to the Start Group Lesson page
+  Given I go to the Start Group Lesson page
   * I enter the first student name
   * I select a school
   * I click Add Student

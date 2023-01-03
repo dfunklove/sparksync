@@ -19,12 +19,12 @@ Then('I am at the Group Lesson Checkout page') do
 end
 
 When('I enter the first student name') do
-  fill_in("new_student_first_name", with: "Test1")
+  fill_in("new_student_first_name", with: "TestStudent1")
   fill_in("new_student_last_name", with: "Student")
 end
 
 When('I enter the second student name') do
-  fill_in("new_student_first_name", with: "Test2")
+  fill_in("new_student_first_name", with: "TestStudent2")
   fill_in("new_student_last_name", with: "Student")
 end
 
@@ -34,11 +34,11 @@ When('I enter the other student name {int}') do |int|
 end
 
 When('I select a school') do
-  select("Test1", from: "new_student_school_id")
+  select("TestSchool1", from: "new_student_school_id")
 end
 
 When('I select school {int}') do |int|
-  select("Test#{int}", from: "new_student_school_id")
+  select("TestSchool#{int}", from: "new_student_school_id")
 end
 
 When('I select {int} students for the group lesson') do |int|
@@ -74,7 +74,7 @@ end
 
 #TODO use the UI to test these
 Given('The first student is not in the database') do
-  expect !Student.where(first_name: "Test1", last_name: "Student", school_id: 1).exists?
+  expect !Student.where(first_name: "TestStudent1", last_name: "Student", school_id: 1).exists?
 end
 
 Given('The second student is not in the database') do
@@ -82,7 +82,7 @@ Given('The second student is not in the database') do
 end
 
 Then('The first student is in the database') do
-  @student = Student.where(first_name: "Test1", last_name: "Student", school_id: 1).first
+  @student = Student.where(first_name: "TestStudent1", last_name: "Student", school_id: 1).first
   expect @student
 end
 
@@ -129,9 +129,9 @@ Then('No students are listed in group lesson') do
 end
 
 Then('The first student appears on the page') do
-  assert_selector("td.first_name", text: "Test1")
+  assert_selector("td.first_name", text: "TestStudent1")
 end
 
 Then('The second student appears on the page') do
-  assert_selector("td.first_name", text: "Test2")
+  assert_selector("td.first_name", text: "TestStudent2")
 end

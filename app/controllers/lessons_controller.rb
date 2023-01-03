@@ -121,9 +121,11 @@ class LessonsController < ApplicationController
       logger.error("lesson.attributes: #{@lesson.attributes}")
       if @lesson.errors.count == 0
         @lesson.update_attributes(temp_params)
+        flash[:info] = "Lesson was modified"
       end
     elsif params[:delete]
       @lesson.delete
+      flash[:info] = "Lesson was deleted"
     else
       raise Exception.new('not modify or delete. who called lesson update?')
     end

@@ -22,7 +22,7 @@ class Student < ApplicationRecord
   # Do not allow students to be activated if their school is deactivated
   private
     def check_school_activated
-      if !school.activated? && activated_change[1] == true
+      if !school.activated?
         errors.add(
           :base,
           :student_deactivated,

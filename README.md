@@ -81,27 +81,23 @@ In order to run this application, you will need to install the following:
     -  mkdir -p "$(rbenv root)"/plugins
     -  git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
 3.  ruby
-    -  rbenv install 2.5.1
+    -  rbenv install $(cat .ruby-version)
     -  rbenv rehash
-4.  bundler
-    -  gem install bundler
-5.  rbenv-bundler
-    -  git clone -- https://github.com/carsomyr/rbenv-bundler.git ~/.rbenv/plugins/bundler
-6.  rails + puma
+4.  rails + puma
     -  cd \$APPDIR
     -  bundle install
-7.  js runtime
+5.  js runtime
     -  install nodejs
     -  There are many ways to do this.  Here is the current command on Ubuntu:
         -  snap install node --classic
-8.  database: postgres
+6.  database: postgres
     - sudo apt install postgresql postgresql-contrib libpq-dev
         1.  sudo -u postgres createuser -s $USER
         2.  systemctl start postgresql.service
         3.  systemctl enable postgresql.service
     - cd \$APPDIR
     - rails db:setup
-9.  Run the app
+7.  Run the app
     - rails s
     - Open a browser and go to localhost:3000
     - Try to login using credentials from \$APPDIR/db/seeds.rb
